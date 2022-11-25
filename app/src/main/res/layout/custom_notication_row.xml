@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_CustomNotificationRow"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="horizontal"
+    android:padding="6dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="3dp"
+        android:src="@drawable/dp_placeholder_sm" />
+
+
+    <TextView
+        android:id="@+id/tv_NotificationMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="20"
+        android:paddingLeft="10dp"
+        android:text="Notification"
+        android:textColor="#1e1d1d"
+        android:textSize="20dp" />
+
+
+
+</LinearLayout>
