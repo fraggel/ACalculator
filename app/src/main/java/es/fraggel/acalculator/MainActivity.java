@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             savedInstanceState=null;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-            checkPermissions();
+            //checkPermissions();
             int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.cancel(id_channel);
@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     if(mValueOne==1404){
                         crunchifyEditText.setText("");
                         Intent i = new Intent (v.getContext(), TextActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         startActivityForResult(i, 0);
                     }else{
                         switch(operation){
