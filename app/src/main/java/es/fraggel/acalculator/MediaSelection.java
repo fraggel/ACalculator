@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -68,7 +69,7 @@ public class MediaSelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File f = new File(Environment.getExternalStorageDirectory()+"/Calculator/"+"/images/", "temp.img");
+                File f = new File(ContextCompat.getExternalFilesDirs(v.getContext(), null)[0]+"/Calculator/"+"/images/", "temp.img");
                 f.getParentFile().mkdirs();
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                 startActivityForResult(intent, TAKE_IMAGE);
@@ -78,7 +79,7 @@ public class MediaSelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                File f = new File(Environment.getExternalStorageDirectory()+"/Calculator/"+"/videos/", "temp.vid");
+                File f = new File(ContextCompat.getExternalFilesDirs(v.getContext(), null)[0]+"/Calculator/"+"/videos/", "temp.vid");
                 f.getParentFile().mkdirs();
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
@@ -90,7 +91,7 @@ public class MediaSelection extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TAKE_IMAGE && resultCode == Activity.RESULT_OK) {
-            File f = new File(Environment.getExternalStorageDirectory() +"/Calculator/"+ "/images/");
+            File f = new File(ContextCompat.getExternalFilesDirs(this, null)[0] +"/Calculator/"+ "/images/");
             f.mkdirs();
             for (File temp : f.listFiles()) {
                 if (temp.getName().equals("temp.img")) {
@@ -102,14 +103,14 @@ public class MediaSelection extends AppCompatActivity {
             //super.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            File f = new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/images/");
+            File f = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/images/");
             f.mkdirs();
             Uri data1 = data.getData();
             createThumbnailAndUpload(RealPathUtil.getRealPathFromURI(this,data1));
             //super.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == TAKE_VIDEO && resultCode == Activity.RESULT_OK) {
-            File f = new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/videos/");
+            File f = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/");
             f.mkdirs();
             for (File temp : f.listFiles()) {
                 if (temp.getName().equals("temp.vid")) {
@@ -121,7 +122,7 @@ public class MediaSelection extends AppCompatActivity {
             //super.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == PICK_VIDEO && resultCode == Activity.RESULT_OK) {
-            File f = new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/videos/");
+            File f = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/");
             f.mkdirs();
             Uri data1 = data.getData();
             createThumbnailVideoAndUpload(RealPathUtil.getRealPathFromURI(this,data1));
@@ -156,19 +157,19 @@ public class MediaSelection extends AppCompatActivity {
             bitmapOptions.inJustDecodeBounds = false; // now we want to load the image
 
 // Let's load just the part of the image necessary for creating the thumbnail, not the whole image
-            Bitmap thumbnail = BitmapFactory.decodeFile(imageUri, bitmapOptions);
+            /////////Bitmap thumbnail = BitmapFactory.decodeFile(imageUri, bitmapOptions);
 
 // Save the thumbnail
-            File thumbnailFile = new File(Environment.getExternalStorageDirectory() +"/Calculator/"+ "/images/thmb_" + timeInMillis + ".img");
+            File thumbnailFile = new File(ContextCompat.getExternalFilesDirs(this, null)[0] +"/Calculator/"+ "/images/thmb_" + timeInMillis + ".img");
             FileOutputStream fos = new FileOutputStream(thumbnailFile);
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            //////////thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.flush();
             fos.close();
 
 // Use the thumbail on an ImageView or recycle it!
 
             FileInputStream inStream = new FileInputStream(imageUri);
-            FileOutputStream outStream = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Calculator/"+"/images/" + timeInMillis + ".img");
+            FileOutputStream outStream = new FileOutputStream(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/images/" + timeInMillis + ".img");
             FileChannel inChannel = inStream.getChannel();
             FileChannel outChannel = outStream.getChannel();
             inChannel.transferTo(0, inChannel.size(), outChannel);
@@ -184,7 +185,7 @@ public class MediaSelection extends AppCompatActivity {
             StorageReference mountainImagesRef = storageRef.child("images/"+timeInMillis+".img");
             StorageReference mountainImagesThmbRef = storageRef.child("images/thmb_"+timeInMillis+".img");
 
-            UploadTask uploadTask = mountainImagesRef.putFile(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/images/" + timeInMillis + ".img")));
+            UploadTask uploadTask = mountainImagesRef.putFile(Uri.fromFile(new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/images/" + timeInMillis + ".img")));
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
@@ -198,7 +199,7 @@ public class MediaSelection extends AppCompatActivity {
                     finish();
                 }
             });
-            UploadTask uploadTaskThmb = mountainImagesThmbRef.putFile(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/images/thmb_" + timeInMillis + ".img")));
+            UploadTask uploadTaskThmb = mountainImagesThmbRef.putFile(Uri.fromFile(new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/images/thmb_" + timeInMillis + ".img")));
             uploadTaskThmb.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
@@ -251,7 +252,7 @@ public class MediaSelection extends AppCompatActivity {
 
 
             Bitmap thumbnail=retriveVideoFrameFromVideo(imageUri);
-            File thumbnailFile = new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img");
+            File thumbnailFile = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img");
             FileOutputStream fos = new FileOutputStream(thumbnailFile);
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.flush();
@@ -279,14 +280,14 @@ public class MediaSelection extends AppCompatActivity {
 // Let's load just the part of the image necessary for creating the thumbnail, not the whole image
             thumbnail = BitmapFactory.decodeFile(thumbnailFile.getAbsolutePath(), bitmapOptions);
 // Use the thumbail on an ImageView or recycle it!
-            thumbnailFile = new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img");
+            thumbnailFile = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img");
             fos = new FileOutputStream(thumbnailFile);
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.flush();
             fos.close();
 
             FileInputStream inStream = new FileInputStream(imageUri);
-            FileOutputStream outStream = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Calculator/"+"/videos/" + timeInMillis + ".vid");
+            FileOutputStream outStream = new FileOutputStream(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/" + timeInMillis + ".vid");
             FileChannel inChannel = inStream.getChannel();
             FileChannel outChannel = outStream.getChannel();
             inChannel.transferTo(0, inChannel.size(), outChannel);
@@ -302,7 +303,7 @@ public class MediaSelection extends AppCompatActivity {
             StorageReference mountainImagesRef = storageRef.child("videos/"+timeInMillis+".vid");
             StorageReference mountainImagesThmbRef = storageRef.child("videos/thmb_"+timeInMillis+".img");
 
-            UploadTask uploadTask = mountainImagesRef.putFile(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/videos/" + timeInMillis + ".vid")));
+            UploadTask uploadTask = mountainImagesRef.putFile(Uri.fromFile(new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/" + timeInMillis + ".vid")));
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
@@ -317,7 +318,7 @@ public class MediaSelection extends AppCompatActivity {
                     finish();
                 }
             });
-            UploadTask uploadTaskThmb = mountainImagesThmbRef.putFile(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img")));
+            UploadTask uploadTaskThmb = mountainImagesThmbRef.putFile(Uri.fromFile(new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img")));
             uploadTaskThmb.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {

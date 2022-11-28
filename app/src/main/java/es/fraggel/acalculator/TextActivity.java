@@ -61,12 +61,6 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 
 public class TextActivity extends AppCompatActivity {
-    //App para eva
-    //String EMAIL="fraggelillo666@gmail,com";
-    //String NOMBRE="Pablo";
-    //App para mi
-    String EMAIL="evablazaro@gmail,com";
-    String NOMBRE="Eva";
     DataContext db = new DataContext(this, null, null, 1);
     EditText messageArea;
     ScrollView scrollView;
@@ -91,6 +85,7 @@ public class TextActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        savedInstanceState=null;
         super.onCreate(savedInstanceState);
 
         Firebase.setAndroidContext(this);
@@ -152,7 +147,7 @@ public class TextActivity extends AppCompatActivity {
                 } else {
                     // show typing status
                     String typingStatus = dataSnapshot.getValue().toString();
-                    if (typingStatus.equals("Typing")) {
+                    if (typingStatus.equals("Escribiendo")) {
                         getSupportActionBar().setSubtitle(typingStatus + "...");
                     }
                 }
@@ -166,7 +161,7 @@ public class TextActivity extends AppCompatActivity {
                     getSupportActionBar().setSubtitle(typingStatus + "...");
                 } else {
                     // check if online
-                    getSupportActionBar().setSubtitle("Online");
+                    getSupportActionBar().setSubtitle("En línea");
                 }
             }
 
@@ -174,7 +169,7 @@ public class TextActivity extends AppCompatActivity {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 //layout.removeAllViews();
                 if (dataSnapshot.getKey().equals("TypingStatus")) {
-                    getSupportActionBar().setSubtitle("Online");
+                    getSupportActionBar().setSubtitle("En línea\"");
 
                 }
             }
@@ -192,7 +187,7 @@ public class TextActivity extends AppCompatActivity {
         refFriendListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.getKey().equals("Status")) {
+                /*if (dataSnapshot.getKey().equals("Status")) {
                     // check if subtitle is not Typing
                     CharSequence subTitle = getSupportActionBar().getSubtitle();
                     if (subTitle != null) {
@@ -212,17 +207,17 @@ public class TextActivity extends AppCompatActivity {
                     }
 
 
-                }
+                }*/
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                String friendStatus = dataSnapshot.getValue().toString();
+               /* String friendStatus = dataSnapshot.getValue().toString();
                 if (!friendStatus.equals("Online")) {
                     friendStatus = Tools.lastSeenProper(friendStatus);
                 }
-                getSupportActionBar().setSubtitle(friendStatus);
+                getSupportActionBar().setSubtitle(friendStatus);*/
             }
 
             @Override
@@ -241,16 +236,16 @@ public class TextActivity extends AppCompatActivity {
             }
         };
         Bundle extras = getIntent().getExtras();
-        friendEmail = EMAIL;//extras.getString("FriendEmail");
+        friendEmail = Util.EMAIL;//extras.getString("FriendEmail");
         List<Message> chatList = db.getChat(user.Email, friendEmail, 1);
         for (Message item : chatList) {
             int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
             appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo);
         }
 
-        friendFullName = NOMBRE;//extras.getString("FriendFullName");
+        friendFullName = Util.NOMBRE;//extras.getString("FriendFullName");
 
-        getSupportActionBar().setTitle(friendFullName);
+        //getSupportActionBar().setTitle(friendFullName);
         reference1 = new Firebase(StaticInfo.MessagesEndPoint + "/" + user.Email + "-@@-" + friendEmail);
         reference2 = new Firebase(StaticInfo.MessagesEndPoint + "/" + friendEmail + "-@@-" + user.Email);
         refFriend = new Firebase(StaticInfo.UsersURL + "/" + friendEmail);
@@ -271,7 +266,7 @@ public class TextActivity extends AppCompatActivity {
                 if (messageArea.getText().toString().length() == 0) {
                     reference2.child(StaticInfo.TypingStatus).setValue("");
                 } else if (messageArea.getText().toString().length() == 1) {
-                    reference2.child(StaticInfo.TypingStatus).setValue("Typing");
+                    reference2.child(StaticInfo.TypingStatus).setValue("Escribiendo");
                     // change color here
                     //  submit_btn.setColorFilter(R.color.colorPrimary);
 
@@ -353,7 +348,7 @@ public class TextActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Bundle extras = getIntent().getExtras();
-        friendEmail = EMAIL;//extras.getString("FriendEmail");
+        friendEmail = Util.EMAIL;//extras.getString("FriendEmail");
 
         // getSupportActionBar().setTitle(extras.getString("FriendFullName"));
         // getSupportActionBar().setIcon(R.drawable.dp_placeholder_sm);
@@ -366,7 +361,7 @@ public class TextActivity extends AppCompatActivity {
         });
         StaticInfo.UserCurrentChatFriendEmail = friendEmail;
         // update status to online
-        refUser.child("Status").setValue("Online");
+        refUser.child("Status").setValue("En línea");
         reference1.addChildEventListener(reference1Listener);
     }
 
@@ -374,14 +369,17 @@ public class TextActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        StaticInfo.UserCurrentChatFriendEmail = "";
         reference1.removeEventListener(reference1Listener);
+        reference2.child(StaticInfo.TypingStatus).setValue("");
+        finish();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         StaticInfo.UserCurrentChatFriendEmail = friendEmail;
-        refUser.child("Status").setValue("Online");
+        refUser.child("Status").setValue("En línea");
     }
 
     @Override
@@ -390,6 +388,7 @@ public class TextActivity extends AppCompatActivity {
         StaticInfo.UserCurrentChatFriendEmail = "";
         reference1.removeEventListener(reference1Listener);
         reference2.child(StaticInfo.TypingStatus).setValue("");
+        finish();
     }
 
     @Override
@@ -412,7 +411,7 @@ public class TextActivity extends AppCompatActivity {
         layout.removeAllViews();
         friendEmail = extras.getString("FriendEmail");
         friendFullName = extras.getString("FriendFullName");
-        getSupportActionBar().setTitle(friendFullName);
+        //getSupportActionBar().setTitle(friendFullName);
         List<Message> chatList = db.getChat(user.Email, friendEmail, 1);
         for (Message item : chatList) {
             int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
@@ -733,7 +732,7 @@ public class TextActivity extends AppCompatActivity {
         if (requestCode == StaticInfo.ChatAciviityRequestCode && resultCode == Activity.RESULT_OK) {
             User updatedFriend = db.getFriendByEmailFromLocalDB(friendEmail);
             friendFullName = updatedFriend.FirstName;
-            getSupportActionBar().setTitle(updatedFriend.FirstName);
+            //getSupportActionBar().setTitle(updatedFriend.FirstName);
         }
         if(requestCode==0 && resultCode==StaticInfo.ImageActivityRequestCode){
             String urlImagen="/images/" + timeInMillis + ".img";

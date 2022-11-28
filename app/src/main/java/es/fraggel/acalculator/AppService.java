@@ -63,7 +63,7 @@ public class AppService extends Service {
 
         }
 
-        new UploadFiles().execute();
+        //new UploadFiles().execute();
         reference = new Firebase(StaticInfo.NotificationEndPoint + "/" + user.Email);
         reference.addChildEventListener(
                 new ChildEventListener() {

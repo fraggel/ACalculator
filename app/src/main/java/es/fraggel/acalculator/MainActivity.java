@@ -1,24 +1,28 @@
 package es.fraggel.acalculator;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import es.fraggel.acalculator.Services.Tools;
 
 public class MainActivity extends AppCompatActivity {
     float mValueOne, mValueTwo;
     String operation="";
-    //App para eva
-    //String EMAIL="fraggelillo666@gmail,com";
-    //String NOMBRE="Pablo";
-    //App para mi
-    String EMAIL="evablazaro@gmail,com";
-    String NOMBRE="Eva";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Button button0, button1, button2, button3, button4, button5, button6,
@@ -28,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
             savedInstanceState=null;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-            int id_channel = Tools.createUniqueIdPerUser(EMAIL);
+            checkPermissions();
+            int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.cancel(id_channel);
             button0 = (Button) findViewById(R.id.button0);
@@ -135,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
                     crunchifyEditText.setText(null);
-                    operation="+";
+                    operation="-";
                 }
             });
 
@@ -202,4 +207,34 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+    private boolean checkPermissions() {
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : Util.permissions) {
+            result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 100);
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 100) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            }
+            return;
+        }
+    }
 }
