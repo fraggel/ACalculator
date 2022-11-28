@@ -1,6 +1,5 @@
 package es.fraggel.acalculator;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -8,15 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import com.firebase.client.Firebase;
 
-import java.util.List;
-
-import es.fraggel.acalculator.Models.Message;
-import es.fraggel.acalculator.Models.StaticInfo;
-import es.fraggel.acalculator.Models.User;
-import es.fraggel.acalculator.Services.DataContext;
-import es.fraggel.acalculator.Services.LocalUserService;
 import es.fraggel.acalculator.Services.Tools;
 
 public class MainActivity extends AppCompatActivity {
@@ -172,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     mValueOne= Float.parseFloat(crunchifyEditText.getText() + "");
                     if(mValueOne==1404){
                         crunchifyEditText.setText("");
-                        Intent i = new Intent (v.getContext(), ChatActivity.class);
+                        Intent i = new Intent (v.getContext(), TextActivity.class);
                         startActivityForResult(i, 0);
                     }else{
                         switch(operation){

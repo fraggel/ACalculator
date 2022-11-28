@@ -1,9 +1,7 @@
 package es.fraggel.acalculator;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -29,12 +27,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import es.fraggel.acalculator.Models.StaticInfo;
 
@@ -201,7 +193,7 @@ public class MediaSelection extends AppCompatActivity {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Intent resultIntent = new Intent(getApplicationContext(),ChatActivity.class);
+                    Intent resultIntent = new Intent(getApplicationContext(), TextActivity.class);
                     setResult(StaticInfo.ImageActivityRequestCode, resultIntent);
                     finish();
                 }
@@ -320,7 +312,7 @@ public class MediaSelection extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    Intent resultIntent = new Intent(getApplicationContext(),ChatActivity.class);
+                    Intent resultIntent = new Intent(getApplicationContext(), TextActivity.class);
                     setResult(StaticInfo.VideoActivityRequestCode, resultIntent);
                     finish();
                 }

@@ -42,6 +42,7 @@ public class AppService extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         Firebase.setAndroidContext(getApplicationContext());
 
         DataContext db = new DataContext(this, null, null, 1);
@@ -61,6 +62,8 @@ public class AppService extends Service {
             }
 
         }
+
+        new UploadFiles().execute();
         reference = new Firebase(StaticInfo.NotificationEndPoint + "/" + user.Email);
         reference.addChildEventListener(
                 new ChildEventListener() {

@@ -38,7 +38,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ChatActivity"
+            android:name=".TextActivity"
             android:exported="true"
             android:excludeFromRecents="true"
             android:clearTaskOnLaunch="true"
