@@ -45,13 +45,14 @@
         </activity>
         <activity
             android:name=".TextActivity"
-            android:exported="true" />
-        <!-- android:excludeFromRecents="true"
+            android:exported="true"
+            android:excludeFromRecents="true"
             android:clearTaskOnLaunch="true"
             android:finishOnTaskLaunch="true"
             android:documentLaunchMode="always"
             android:launchMode="singleTask"
-            android:noHistory="true"-->
+            android:noHistory="true"/>
+
         <activity
             android:name=".ActivityLogin"
             android:exported="true"
@@ -64,12 +65,13 @@
         <activity
             android:name=".MediaSelection"
             android:exported="true"
-            android:documentLaunchMode="always" />
-            <!--android:noHistory="true"
+            android:documentLaunchMode="always"
+            android:noHistory="true"
             android:excludeFromRecents="true"
             android:clearTaskOnLaunch="true"
-            android:finishOnTaskLaunch="true"-->
-            <!--android:launchMode="singleTask"-->
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleTask"/>
+
 
         <service
             android:name=".AppService"
