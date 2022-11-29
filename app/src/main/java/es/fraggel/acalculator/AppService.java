@@ -8,6 +8,8 @@ import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -150,7 +152,8 @@ public class AppService extends Service {
             notificationManager.createNotificationChannel(channel);
         }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(alarmSound);
         notificationManager.notify(id_channel, builder.build());
     }
 }
