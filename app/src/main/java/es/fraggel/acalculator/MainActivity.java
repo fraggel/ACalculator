@@ -32,7 +32,14 @@ public class MainActivity extends AppCompatActivity {
             savedInstanceState=null;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-            //checkPermissions();
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null){
+            String cerrarApp = extras.getString("cerrarApp");
+            if("true".equals(cerrarApp)){
+                finish();
+            }
+        }
+        //checkPermissions();
             int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.cancel(id_channel);

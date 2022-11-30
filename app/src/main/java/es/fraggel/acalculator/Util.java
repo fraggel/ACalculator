@@ -22,7 +22,7 @@ public class Util {
     //public static String EMAIL="fraggelillo666@gmail,com";
     //public static String NOMBRE="Pablo";
     //App para mi
-    public static String EMAIL="evablazaro@gmail,com";
+    public static String EMAIL="eva@gmail,com";
     public static String NOMBRE="Eva";
     //App pruebas
     //public static String EMAIL="pruebas@gmail,com";

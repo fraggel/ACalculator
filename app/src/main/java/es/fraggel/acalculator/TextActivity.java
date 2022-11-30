@@ -20,6 +20,7 @@ import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -372,7 +373,14 @@ public class TextActivity extends AppCompatActivity {
         StaticInfo.UserCurrentChatFriendEmail = "";
         reference1.removeEventListener(reference1Listener);
         reference2.child(StaticInfo.TypingStatus).setValue("");
-        finish();
+        user = LocalUserService.getLocalUserFromPreferences(this);
+        if (user.Email != null) {
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("cerrarApp", "true");
+            i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            startActivityForResult(i, 0);
+            finish();
+        }
     }
 
     @Override
@@ -785,6 +793,4 @@ public class TextActivity extends AppCompatActivity {
             appendMessage("--[VIDEO]--", sentDate, 1, false,urlImagen,urlVideo);
         }
     }
-
-
 }
