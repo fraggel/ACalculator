@@ -37,6 +37,7 @@ import com.firebase.client.FirebaseError;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -417,7 +418,7 @@ public class TextActivity extends AppCompatActivity {
             i.putExtra("cerrarApp", "true");
             i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             startActivityForResult(i, 0);
-            finish();
+            //finish();
         }
     }
 
@@ -439,7 +440,7 @@ public class TextActivity extends AppCompatActivity {
         StaticInfo.UserCurrentChatFriendEmail = "";
         reference1.removeEventListener(reference1Listener);
         reference2.child(StaticInfo.TypingStatus).setValue("");
-        finish();
+        //finish();
     }
 
     @Override
@@ -569,8 +570,15 @@ public class TextActivity extends AppCompatActivity {
         textView.setLayoutParams(lp);
         if("--[IMAGE]--".equals(mess.trim())){
             final MyImageView imgView=new MyImageView(this);
-
-            FirebaseApp.initializeApp(this);
+            FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
+                    .setApplicationId("chat-8459f")
+                    .setStorageBucket("chat-8459f.appspot.com")
+                    .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
+                    .setDatabaseUrl("https://chat-8459f.firebaseio.com")
+                    .build();
+            try {
+                FirebaseApp.initializeApp(this, firebaseOptions);
+            }catch(Exception e){}
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference ref = storageRef.child(urlImagen.replaceFirst("images/","images/thmb_"));
@@ -615,7 +623,15 @@ public class TextActivity extends AppCompatActivity {
 
                     String value=((MyImageView)v).getClave();
                     if(!new File(value).exists()){
-                        FirebaseApp.initializeApp(getApplicationContext());
+                        FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
+                                .setApplicationId("chat-8459f")
+                                .setStorageBucket("chat-8459f.appspot.com")
+                                .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
+                                .setDatabaseUrl("https://chat-8459f.firebaseio.com")
+                                .build();
+                        try {
+                            FirebaseApp.initializeApp(getApplicationContext(), firebaseOptions);
+                        }catch(Exception e){}
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());
@@ -651,8 +667,15 @@ public class TextActivity extends AppCompatActivity {
             layout.addView(imgView);
         }else if("--[VIDEO]--".equals(mess.trim())) {
             final MyImageView imgView=new MyImageView(this);
-
-            FirebaseApp.initializeApp(this);
+            FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
+                    .setApplicationId("chat-8459f")
+                    .setStorageBucket("chat-8459f.appspot.com")
+                    .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
+                    .setDatabaseUrl("https://chat-8459f.firebaseio.com")
+                    .build();
+            try {
+                FirebaseApp.initializeApp(this, firebaseOptions);
+            }catch(Exception e){}
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference ref = storageRef.child((urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
@@ -697,7 +720,15 @@ public class TextActivity extends AppCompatActivity {
 
                     String value=((MyImageView)v).getClave();
                     if(!new File(value).exists()){
-                        FirebaseApp.initializeApp(getApplicationContext());
+                        FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
+                                .setApplicationId("chat-8459f")
+                                .setStorageBucket("chat-8459f.appspot.com")
+                                .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
+                                .setDatabaseUrl("https://chat-8459f.firebaseio.com")
+                                .build();
+                        try {
+                            FirebaseApp.initializeApp(getApplicationContext(), firebaseOptions);
+                        }catch(Exception e){}
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());

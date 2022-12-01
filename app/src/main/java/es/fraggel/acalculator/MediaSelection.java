@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Size;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -28,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.List;
 
 import es.fraggel.acalculator.Models.StaticInfo;
 
@@ -69,7 +73,7 @@ public class MediaSelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File f = new File(ContextCompat.getExternalFilesDirs(v.getContext(), null)[0]+"/Calculator/"+"/images/", "temp.img");
+                File f = new File(ContextCompat.getExternalFilesDirs(getApplicationContext(), null)[0]+"/Calculator/"+"/images/", "temp.img");
                 f.getParentFile().mkdirs();
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                 startActivityForResult(intent, TAKE_IMAGE);
@@ -79,7 +83,7 @@ public class MediaSelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                File f = new File(ContextCompat.getExternalFilesDirs(v.getContext(), null)[0]+"/Calculator/"+"/videos/", "temp.vid");
+                File f = new File(Environment.getExternalStorageDirectory()+"/Calculator/"+"/videos/", "temp.vid");
                 f.getParentFile().mkdirs();
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
@@ -100,14 +104,14 @@ public class MediaSelection extends AppCompatActivity {
                 }
             }
             createThumbnailAndUpload(f.getAbsolutePath());
-            //super.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             File f = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/images/");
             f.mkdirs();
             Uri data1 = data.getData();
             createThumbnailAndUpload(RealPathUtil.getRealPathFromURI(this,data1));
-            //super.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == TAKE_VIDEO && resultCode == Activity.RESULT_OK) {
             File f = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/");
@@ -119,14 +123,14 @@ public class MediaSelection extends AppCompatActivity {
                 }
             }
             createThumbnailVideoAndUpload(f.getAbsolutePath());
-            //super.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, data);
         }
         if (requestCode == PICK_VIDEO && resultCode == Activity.RESULT_OK) {
             File f = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/");
             f.mkdirs();
             Uri data1 = data.getData();
             createThumbnailVideoAndUpload(RealPathUtil.getRealPathFromURI(this,data1));
-            //super.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -136,37 +140,13 @@ public class MediaSelection extends AppCompatActivity {
             TextView txt=(TextView)findViewById(R.id.textView6);
             img.setVisibility(View.VISIBLE);
             txt.setVisibility(View.VISIBLE);
-
-            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-            bitmapOptions.inJustDecodeBounds = true; // obtain the size of the image, without loading it in memory
-            BitmapFactory.decodeFile(imageUri, bitmapOptions);
-
-// find the best scaling factor for the desired dimensions
-            int desiredWidth = 200;
-            int desiredHeight = 100;
-            float widthScale = (float) bitmapOptions.outWidth / desiredWidth;
-            float heightScale = (float) bitmapOptions.outHeight / desiredHeight;
-            float scale = Math.min(widthScale, heightScale);
-
-            int sampleSize = 1;
-            while (sampleSize < scale) {
-                sampleSize *= 2;
-            }
-            bitmapOptions.inSampleSize = sampleSize; // this value must be a power of 2,
-            // this is why you can not have an image scaled as you would like
-            bitmapOptions.inJustDecodeBounds = false; // now we want to load the image
-
-// Let's load just the part of the image necessary for creating the thumbnail, not the whole image
-            /////////Bitmap thumbnail = BitmapFactory.decodeFile(imageUri, bitmapOptions);
-
-// Save the thumbnail
+            Bitmap imageThumbnail = ThumbnailUtils.createImageThumbnail(new File(imageUri), new Size(200, 100), null);
             File thumbnailFile = new File(ContextCompat.getExternalFilesDirs(this, null)[0] +"/Calculator/"+ "/images/thmb_" + timeInMillis + ".img");
             FileOutputStream fos = new FileOutputStream(thumbnailFile);
-            //////////thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            imageThumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.flush();
             fos.close();
 
-// Use the thumbail on an ImageView or recycle it!
 
             FileInputStream inStream = new FileInputStream(imageUri);
             FileOutputStream outStream = new FileOutputStream(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/images/" + timeInMillis + ".img");
@@ -176,10 +156,16 @@ public class MediaSelection extends AppCompatActivity {
             inStream.close();
             outStream.close();
 
-            /*ImageView imageView = new ImageView(this);
-            imageView.setImageBitmap(thumbnail);
-*/
-            FirebaseApp.initializeApp(this);
+
+            FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
+                    .setApplicationId("chat-8459f")
+                    .setStorageBucket("chat-8459f.appspot.com")
+                    .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
+                    .setDatabaseUrl("https://chat-8459f.firebaseio.com")
+                    .build();
+            try {
+                FirebaseApp.initializeApp(this, firebaseOptions);
+            }catch(Exception e){}
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference mountainImagesRef = storageRef.child("images/"+timeInMillis+".img");
@@ -200,7 +186,7 @@ public class MediaSelection extends AppCompatActivity {
                 }
             });
             UploadTask uploadTaskThmb = mountainImagesThmbRef.putFile(Uri.fromFile(new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/images/thmb_" + timeInMillis + ".img")));
-            uploadTaskThmb.addOnFailureListener(new OnFailureListener() {
+            /*uploadTaskThmb.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle unsuccessful uploads
@@ -208,11 +194,11 @@ public class MediaSelection extends AppCompatActivity {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    /*Intent resultIntent = new Intent(getApplicationContext(),ActivityChat.class);
+                    Intent resultIntent = new Intent(getApplicationContext(),TextActivity.class);
                     setResult(StaticInfo.ImageActivityRequestCode, resultIntent);
-                    finish();*/
+                    finish();
                 }
-            });
+            });*/
         }catch(Exception e){
             e.printStackTrace();
         }
