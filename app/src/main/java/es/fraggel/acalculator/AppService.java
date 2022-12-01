@@ -120,7 +120,9 @@ public class AppService extends Service {
         super.onDestroy();
         // check if user is login
         if (LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Email != null) {
-            startService(new Intent(this, AppService.class));
+            try {
+                startService(new Intent(this, AppService.class));
+            }catch(Exception e){}
         }
 
 

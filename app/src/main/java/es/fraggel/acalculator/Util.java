@@ -10,6 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.google.firebase.FirebaseOptions;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,11 +24,11 @@ public class Util {
     //public static String EMAIL="fraggelillo666@gmail,com";
     //public static String NOMBRE="Pablo";
     //App para mi
-    public static String EMAIL="eva@gmail,com";
-    public static String NOMBRE="Eva";
+    //public static String EMAIL="eva@gmail,com";
+    //public static String NOMBRE="Eva";
     //App pruebas
-    //public static String EMAIL="pruebas@gmail,com";
-    //public static String NOMBRE="Pruebas";
+    public static String EMAIL="pruebas@gmail,com";
+    public static String NOMBRE="Pruebas";
 
     public static String[] permissions = new String[]{
             Manifest.permission.INTERNET,
@@ -36,6 +38,7 @@ public class Util {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.RECEIVE_BOOT_COMPLETED,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
             Manifest.permission.FOREGROUND_SERVICE};
 
 

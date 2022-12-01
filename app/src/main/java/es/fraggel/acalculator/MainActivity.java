@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
-        //checkPermissions();
+        checkPermissions();
             int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.cancel(id_channel);
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
+        //finish();
     }
     private boolean checkPermissions() {
         int result;
