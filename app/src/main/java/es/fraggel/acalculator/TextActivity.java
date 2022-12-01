@@ -369,6 +369,9 @@ public class TextActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        messageArea.setVisibility(View.INVISIBLE);
+        layout.setVisibility(View.INVISIBLE);
+        scrollView.setVisibility(View.INVISIBLE);
         super.onPause();
         StaticInfo.UserCurrentChatFriendEmail = "";
         reference1.removeEventListener(reference1Listener);
@@ -392,6 +395,9 @@ public class TextActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        messageArea.setVisibility(View.INVISIBLE);
+        layout.setVisibility(View.INVISIBLE);
+        scrollView.setVisibility(View.INVISIBLE);
         super.onStop();
         StaticInfo.UserCurrentChatFriendEmail = "";
         reference1.removeEventListener(reference1Listener);
@@ -401,6 +407,9 @@ public class TextActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        messageArea.setVisibility(View.INVISIBLE);
+        layout.setVisibility(View.INVISIBLE);
+        scrollView.setVisibility(View.INVISIBLE);
         super.onDestroy();
         StaticInfo.UserCurrentChatFriendEmail = "";
         // set last seen
