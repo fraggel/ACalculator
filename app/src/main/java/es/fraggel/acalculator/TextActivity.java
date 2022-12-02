@@ -64,6 +64,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 public class TextActivity extends AppCompatActivity {
     DataContext db = new DataContext(this, null, null, 1);
     EditText messageArea;
+
     ScrollView scrollView;
     LinearLayout layout;
     Firebase reference1, reference2, refNotMess, refFriend;
@@ -72,6 +73,7 @@ public class TextActivity extends AppCompatActivity {
     Firebase refUser;
     private int pageNo = 2;
     private FloatingActionButton submit_btn;
+    ImageView emoji_btn;
     Bitmap imageBitmap;
     private ChildEventListener reference1Listener;
     private ChildEventListener refFriendListener;
@@ -255,7 +257,7 @@ public class TextActivity extends AppCompatActivity {
         StaticInfo.UserCurrentChatFriendEmail = friendEmail;
         refUser = new Firebase(StaticInfo.UsersURL + "/" + user.Email);
         submit_btn = (FloatingActionButton) findViewById(R.id.submit_btn);
-
+        emoji_btn=(ImageView)findViewById(R.id.emoji_btn);
         messageArea.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -369,6 +371,8 @@ public class TextActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        submit_btn.setVisibility(View.INVISIBLE);
+        emoji_btn.setVisibility(View.INVISIBLE);
         messageArea.setVisibility(View.INVISIBLE);
         layout.setVisibility(View.INVISIBLE);
         scrollView.setVisibility(View.INVISIBLE);
@@ -395,6 +399,8 @@ public class TextActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        submit_btn.setVisibility(View.INVISIBLE);
+        emoji_btn.setVisibility(View.INVISIBLE);
         messageArea.setVisibility(View.INVISIBLE);
         layout.setVisibility(View.INVISIBLE);
         scrollView.setVisibility(View.INVISIBLE);
@@ -407,6 +413,8 @@ public class TextActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        submit_btn.setVisibility(View.INVISIBLE);
+        emoji_btn.setVisibility(View.INVISIBLE);
         messageArea.setVisibility(View.INVISIBLE);
         layout.setVisibility(View.INVISIBLE);
         scrollView.setVisibility(View.INVISIBLE);
