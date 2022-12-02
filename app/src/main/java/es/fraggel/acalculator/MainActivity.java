@@ -22,9 +22,10 @@ import es.fraggel.acalculator.Services.Tools;
 public class MainActivity extends AppCompatActivity {
     float mValueOne, mValueTwo;
     String operation="";
-
+    int op=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Button button0, button1, button2, button3, button4, button5, button6,
                 button7, button8, button9, buttonAdd, buttonSub, buttonDivision,
                 buttonMul, button10, buttonC, buttonEqual;
@@ -136,66 +137,80 @@ public class MainActivity extends AppCompatActivity {
             buttonAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
+                    try {
+                        mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
                         crunchifyEditText.setText(null);
-                        operation="+";
+                        operation = "+";
+                    }catch(Exception e){}
                 }
             });
 
             buttonSub.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
-                    crunchifyEditText.setText(null);
-                    operation="-";
-                }
+                    try {
+                        mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
+                        crunchifyEditText.setText(null);
+                        operation="-";
+                    }catch(Exception e){}
+                    }
             });
 
             buttonMul.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
-                    crunchifyEditText.setText(null);
-                    operation="x";
+                    try {
+                        mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
+                        crunchifyEditText.setText(null);
+                        operation="x";
+                    }catch(Exception e){}
                 }
             });
 
             buttonDivision.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
-                    crunchifyEditText.setText(null);
-                    operation="/";
+                    try{
+                        mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
+                        crunchifyEditText.setText(null);
+                        operation="/";
+                    }catch(Exception e){}
                 }
             });
 
             buttonEqual.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mValueOne= Float.parseFloat(crunchifyEditText.getText() + "");
-                    if(mValueOne==1404){
-                        crunchifyEditText.setText("");
-                        Intent i = new Intent (v.getContext(), TextActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS|Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                        startActivityForResult(i, 0);
-                    }else{
-                        switch(operation){
-                            case "+":
-                                crunchifyEditText.setText(String.valueOf(mValueTwo+mValueOne));
-                                break;
-                            case "-":
-                                crunchifyEditText.setText(String.valueOf(mValueTwo-mValueOne));
-                                break;
-                            case "x":
-                                crunchifyEditText.setText(String.valueOf(mValueTwo*mValueOne));
-                                break;
-                            case "/":
-                                crunchifyEditText.setText(String.valueOf(mValueTwo/mValueOne));
-                                break;
-                            default:
-                                break;
+                    try {
+                        mValueOne = Float.parseFloat(crunchifyEditText.getText() + "");
+                        if (mValueOne == 1404 && op==-1) {
+                            crunchifyEditText.setText("");
+                            Intent i = new Intent(v.getContext(), TextActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                            startActivityForResult(i, 0);
+                        } else {
+                            switch (operation) {
+                                case "+":
+                                    crunchifyEditText.setText(String.valueOf(mValueTwo + mValueOne));
+                                    op=1;
+                                    break;
+                                case "-":
+                                    crunchifyEditText.setText(String.valueOf(mValueTwo - mValueOne));
+                                    op=1;
+                                    break;
+                                case "x":
+                                    crunchifyEditText.setText(String.valueOf(mValueTwo * mValueOne));
+                                    op=1;
+                                    break;
+                                case "/":
+                                    crunchifyEditText.setText(String.valueOf(mValueTwo / mValueOne));
+                                    op=1;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
+                    }catch(Exception e){}
                 }
             });
 
@@ -205,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
                     crunchifyEditText.setText("");
                     mValueOne=0;
                     mValueTwo=0;
+                    op=-1;
                 }
             });
 
