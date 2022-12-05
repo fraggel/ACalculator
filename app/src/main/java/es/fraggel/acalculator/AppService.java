@@ -165,7 +165,9 @@ public class AppService extends Service {
         super.onDestroy();
         // check if user is login
         //if (LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Email != null) {
-            //startService(new Intent(this, AppService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, AppService.class));
+        }
         //}
 
 
