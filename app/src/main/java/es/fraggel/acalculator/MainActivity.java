@@ -13,14 +13,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.fraggel.acalculator.Models.StaticInfo;
+import es.fraggel.acalculator.Models.User;
+import es.fraggel.acalculator.Services.DataContext;
+import es.fraggel.acalculator.Services.LocalUserService;
 import es.fraggel.acalculator.Services.Tools;
 
 public class MainActivity extends AppCompatActivity {
     float mValueOne, mValueTwo;
+    User user;
+    Firebase refUser;
     String operation="";
     int op=-1;
     @Override
@@ -39,6 +47,21 @@ public class MainActivity extends AppCompatActivity {
             if("true".equals(cerrarApp)){
                 finish();
             }
+        }
+        Firebase.setAndroidContext(this);
+
+        user = LocalUserService.getLocalUserFromPreferences(this);
+        if (user.Email == null) {
+            // send to activitylogin
+            Intent intent = new Intent(this, ActivityLogin.class);
+            startActivityForResult(intent, 100);
+//
+        } else {
+            startService(new Intent(this, AppService.class));
+            if (refUser == null) {
+                refUser = new Firebase(StaticInfo.UsersURL + "/" + user.Email);
+            }
+
         }
         //checkPermissions();
             int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);

@@ -102,7 +102,7 @@ public class TextActivity extends AppCompatActivity {
             startActivityForResult(intent, 100);
 //
         } else {
-            startService(new Intent(this, AppService.class));
+            //startService(new Intent(this, AppService.class));
             if (refUser == null) {
                 refUser = new Firebase(StaticInfo.UsersURL + "/" + user.Email);
             }
@@ -487,7 +487,9 @@ public class TextActivity extends AppCompatActivity {
 
         }
     }
+    public void removeMessage(String mess, String sentDate, int messType, final boolean scrollUp,String urlImagen,String urlVideo) {
 
+    }
     public void appendMessage(String mess, String sentDate, int messType, final boolean scrollUp,String urlImagen,String urlVideo) {
 
         EmojiconTextView textView = new EmojiconTextView(this);
