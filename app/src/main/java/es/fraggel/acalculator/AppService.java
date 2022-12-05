@@ -60,7 +60,7 @@ public class AppService extends Service {
 //
             System.out.println("No login");
         } else {
-            startService(new Intent(this, AppService.class));
+            //startService(new Intent(this, AppService.class));
             if (refUser == null) {
                 refUser = new Firebase(StaticInfo.UsersURL + "/" + user.Email);
             }
@@ -122,7 +122,7 @@ public class AppService extends Service {
         super.onDestroy();
         // check if user is login
         //if (LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Email != null) {
-            startService(new Intent(this, AppService.class));
+            //startService(new Intent(this, AppService.class));
         //}
 
 

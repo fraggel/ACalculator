@@ -190,37 +190,40 @@ public class TextActivity extends AppCompatActivity {
         refFriendListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                /*if (dataSnapshot.getKey().equals("Status")) {
+                if (dataSnapshot.getKey().equals("Status")) {
                     // check if subtitle is not Typing
-                    CharSequence subTitle = getSupportActionBar().getSubtitle();
-                    if (subTitle != null) {
-                        if (!subTitle.equals("Typing...")) {
+                    if (Util.NOMBRE.equals("Eva")) {
+                        CharSequence subTitle = getSupportActionBar().getSubtitle();
+                        if (subTitle != null) {
+                            if (!subTitle.equals("Escribiendo...")) {
+                                String friendStatus = dataSnapshot.getValue().toString();
+                                if (!friendStatus.equals("En línea")) {
+                                    friendStatus = Tools.lastSeenProper(friendStatus);
+                                }
+                                getSupportActionBar().setSubtitle(friendStatus);
+                            }
+                        } else {
                             String friendStatus = dataSnapshot.getValue().toString();
-                            if (!friendStatus.equals("Online")) {
+                            if (!friendStatus.equals("En línea")) {
                                 friendStatus = Tools.lastSeenProper(friendStatus);
                             }
                             getSupportActionBar().setSubtitle(friendStatus);
                         }
-                    } else {
-                        String friendStatus = dataSnapshot.getValue().toString();
-                        if (!friendStatus.equals("Online")) {
-                            friendStatus = Tools.lastSeenProper(friendStatus);
-                        }
-                        getSupportActionBar().setSubtitle(friendStatus);
+
                     }
-
-
-                }*/
+                }
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-               /* String friendStatus = dataSnapshot.getValue().toString();
-                if (!friendStatus.equals("Online")) {
-                    friendStatus = Tools.lastSeenProper(friendStatus);
+                if (Util.NOMBRE.equals("Eva")) {
+                    String friendStatus = dataSnapshot.getValue().toString();
+                    if (!friendStatus.equals("En línea")) {
+                        friendStatus = Tools.lastSeenProper(friendStatus);
+                    }
+                    getSupportActionBar().setSubtitle(friendStatus);
                 }
-                getSupportActionBar().setSubtitle(friendStatus);*/
             }
 
             @Override
@@ -481,7 +484,6 @@ public class TextActivity extends AppCompatActivity {
 
             // save in local db
             db.saveMessageOnLocakDB(user.Email, friendEmail, message, sentDate,urlImagen,urlVideo);
-
             // appendmessage
             appendMessage(message, sentDate, 1, false,urlImagen,urlVideo);
 

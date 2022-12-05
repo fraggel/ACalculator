@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 100);
 //
         } else {
-            startService(new Intent(this, AppService.class));
+            //startService(new Intent(this, AppService.class));
             if (refUser == null) {
                 refUser = new Firebase(StaticInfo.UsersURL + "/" + user.Email);
             }

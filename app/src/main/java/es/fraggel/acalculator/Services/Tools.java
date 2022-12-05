@@ -115,7 +115,21 @@ public class Tools {
         String cuurentDateString = dateFormat.format(currentDate);
         Date nw = null;
         Date seen = null;
+        String[] originalDate = lastSeenDate.split(" ");
         try {
+            Date parse;
+            if(originalDate[4].indexOf("p")!=-1){
+                parse = dateFormat.parse(new String(originalDate[0]+" "+originalDate[1]+" "+originalDate[2]+" "+originalDate[3]+" PM"));
+            }else{
+                parse = dateFormat.parse(new String(originalDate[0]+" "+originalDate[1]+" "+originalDate[2]+" "+originalDate[3]+" AM"));
+            }
+            parse.getTime();
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
+        return "Visto " + originalDate[0] + " " + Tools.toCharacterMonth(Integer.parseInt(originalDate[1])) + " " + originalDate[2]+ " "+originalDate[3]+" "+originalDate[4] ;
+        /*try {
             nw = dateFormat.parse(cuurentDateString);
             seen = dateFormat.parse(lastSeenDate);
             long diff = nw.getTime() - seen.getTime();
@@ -123,21 +137,21 @@ public class Tools {
             long diffHours = diff / (60 * 60 * 1000) % 24;
             long diffMinutes = diff / (60 * 1000) % 60;
             if (diffDays > 0) {
-                String[] originalDate = lastSeenDate.split(" ");
-                return "Last seen " + originalDate[0] + " " + Tools.toCharacterMonth(Integer.parseInt(originalDate[1])) + " " + originalDate[2];
+                originalDate = lastSeenDate.split(" ");
+                return "Visto " + originalDate[0] + " " + Tools.toCharacterMonth(Integer.parseInt(originalDate[1])) + " " + originalDate[2]+ " "+originalDate[3]+" "+originalDate[4]+" "+originalDate[5];
             } else if (diffHours > 0)
-                return "Last seen " + diffHours + " hours ago";
+                return "Visto hace " + diffHours + " horas";
             else if (diffMinutes > 0) {
                 if (diffMinutes <= 1) {
-                    return "Last seen 1 minute ago";
+                    return "Visto hace 1 minuto";
                 } else {
-                    return "Last seen " + diffMinutes + " minutes ago";
+                    return "Visto hace " + diffMinutes + " minutos";
                 }
-            } else return "Last seen a moment ago";
+            } else return "Visto hace un momento";
         } catch (Exception e) {
             e.printStackTrace();
             return "";
-        }
+        }*/
 
 
     }
@@ -151,10 +165,10 @@ public class Tools {
         int todayMonth = cal.get(Calendar.MONTH) + 1;
         int todayDay = cal.get(Calendar.DAY_OF_MONTH);
         if (todayMonth == Integer.parseInt(date[1]) && todayDay == Integer.parseInt(date[0])) {
-            properDate = "Today" + " " + date[3] + " " + date[4];
+            properDate = "Hoy" + " " + date[3] + " " + date[4];
             // 06 11 17 12:28 AM
         } else if (todayMonth == Integer.parseInt(date[1]) && (todayDay - 1) == Integer.parseInt(date[0])) {
-            properDate = "Yesterday" + " " + date[3] + " " + date[4];
+            properDate = "Ayer" + " " + date[3] + " " + date[4];
         } else {
             properDate = date[0] + " " + Tools.toCharacterMonth(Integer.parseInt(date[1])) + " " + date[2] + " " + date[3] + " " + date[4];
         }
