@@ -8,16 +8,20 @@ import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import com.firebase.client.ChildEventListener;
@@ -36,6 +40,8 @@ import es.fraggel.acalculator.Services.Tools;
 
 public class AppService extends Service {
     Firebase reference;
+    int asd=0;
+    int asd2=0;
     public AppService() {
     }
     Firebase refUser;
@@ -43,11 +49,19 @@ public class AppService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    MediaPlayer mp;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        /*mp = MediaPlayer.create(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
+        mp.start();*/
+    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        Firebase.setAndroidContext(getApplicationContext());
-
+        try{
+            Firebase.setAndroidContext(getApplicationContext());
+        }catch(Exception e){}
         DataContext db = new DataContext(this, null, null, 1);
 
         // check if user exists in local db
@@ -137,19 +151,23 @@ public class AppService extends Service {
                 this, 0, notifyIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, String.valueOf(id_channel))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(notifyPendingIntent)
                 .setAutoCancel(true)
                 .setContentTitle("Nueva versión")
                 .setContentText("Nueva versión")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "ACalculator";
             String description = "ACalculator";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(String.valueOf(id_channel), name, importance);
             channel.setDescription(description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            channel.setImportance(importance);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }

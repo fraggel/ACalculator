@@ -1,5 +1,7 @@
 package es.fraggel.acalculator;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -31,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
     Firebase refUser;
     String operation="";
     int op=-1;
+    private void setAlarm() {
+        Intent intent = new Intent(this, AppService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 30000, pendingIntent);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -48,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+        setAlarm();
         Firebase.setAndroidContext(this);
 
         user = LocalUserService.getLocalUserFromPreferences(this);
