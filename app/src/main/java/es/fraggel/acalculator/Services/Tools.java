@@ -125,8 +125,6 @@ public class Tools {
             }
             parse.getTime();
         }catch(Exception e){
-            e.printStackTrace();
-
         }
         return "Visto " + originalDate[0] + " " + Tools.toCharacterMonth(Integer.parseInt(originalDate[1])) + " " + originalDate[2]+ " "+originalDate[3]+" "+originalDate[4] ;
         /*try {

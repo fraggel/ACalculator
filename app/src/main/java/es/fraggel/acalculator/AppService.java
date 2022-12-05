@@ -28,6 +28,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 
 
 import java.util.Map;
@@ -51,14 +52,39 @@ public class AppService extends Service {
     }
 
     MediaPlayer mp;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        /*mp = MediaPlayer.create(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
-        mp.start();*/
+        Intent notifyIntent = new Intent(this, MainActivity.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, String.valueOf(0))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(notifyPendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "ACalculator";
+            String description = "ACalculator";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(String.valueOf(0), name, importance);
+            channel.setDescription(description);
+            channel.setImportance(importance);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        startForeground(1337, builder.build());
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         try{
             Firebase.setAndroidContext(getApplicationContext());
         }catch(Exception e){}
@@ -83,6 +109,7 @@ public class AppService extends Service {
 
         //new UploadFiles().execute();
         reference = new Firebase(StaticInfo.NotificationEndPoint + "/" + user.Email);
+        reference.orderByValue();
         reference.addChildEventListener(
                 new ChildEventListener() {
                     @Override
@@ -128,6 +155,7 @@ public class AppService extends Service {
                     }
                 }
         );
+        stopForeground(true);
         return START_STICKY;
     }
 
@@ -176,4 +204,5 @@ public class AppService extends Service {
         builder.setSound(alarmSound);
         notificationManager.notify(id_channel, builder.build());
     }
+
 }
