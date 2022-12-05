@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 public class autostart extends BroadcastReceiver
 {
@@ -15,6 +16,7 @@ public class autostart extends BroadcastReceiver
         } else {
             context.startService(intent);
         }*/
+        Log.d("PRUEBAAAA","PRUEBA1");
         Intent intent = new Intent(context,hollo.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
