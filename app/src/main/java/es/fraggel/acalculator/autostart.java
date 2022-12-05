@@ -13,7 +13,7 @@ public class autostart extends BroadcastReceiver
     public void onReceive(Context context, Intent arg1)
     {
         if(arg1.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
-            setAlarm(context);
+            //setAlarm(context);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(new Intent(context, AppService.class));
             }

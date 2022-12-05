@@ -41,6 +41,7 @@ import es.fraggel.acalculator.Services.Tools;
 
 public class AppService extends Service {
     Firebase reference;
+    Firebase reference2;
     int asd=0;
     int asd2=0;
     public AppService() {
@@ -106,7 +107,7 @@ public class AppService extends Service {
             }
 
         }
-
+        reference2 = new Firebase(StaticInfo.UsersURL + "/" + Util.NOMBRE);
         //new UploadFiles().execute();
         reference = new Firebase(StaticInfo.NotificationEndPoint + "/" + user.Email);
         reference.orderByValue();

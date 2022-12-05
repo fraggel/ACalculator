@@ -35,10 +35,14 @@ public class MainActivity extends AppCompatActivity {
     String operation="";
     int op=-1;
     private void setAlarm() {
-        Intent intent = new Intent(this, AppService.class);
+        /*Intent intent = new Intent(this, AppService.class);
         PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 30000, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 30000, pendingIntent);*/
+        Intent intent = new Intent(this, AppService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+        //CheckVersion myTask = new CheckVersion();
+        //myTask.execute();
         setAlarm();
         Firebase.setAndroidContext(this);
-
         user = LocalUserService.getLocalUserFromPreferences(this);
         if (user.Email == null) {
             // send to activitylogin
