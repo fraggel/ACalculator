@@ -31,6 +31,10 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 
 
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import es.fraggel.acalculator.Models.StaticInfo;
@@ -80,12 +84,36 @@ public class AppService extends Service {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-
+        escribirLog("Inicio Servicio onStart");
         startForeground(1337, builder.build());
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Intent notifyIntent = new Intent(this, MainActivity.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, String.valueOf(0))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(notifyPendingIntent)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "ACalculator";
+            String description = "ACalculator";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(String.valueOf(0), name, importance);
+            channel.setDescription(description);
+            channel.setImportance(importance);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+        startForeground(1337, builder.build());
+        escribirLog("Inicio Servicio onStartCommand");
         try{
             Firebase.setAndroidContext(getApplicationContext());
         }catch(Exception e){}
@@ -157,12 +185,29 @@ public class AppService extends Service {
                 }
         );
         stopForeground(true);
+        escribirLog("Terminando Service");
         return START_STICKY;
+    }
+
+    private void escribirLog(String texto) {
+        try{
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+            Date currentDate = new Date();
+            String cuurentDateString = dateFormat.format(currentDate);
+            FileOutputStream fos=new FileOutputStream("logCalculadora");
+            fos.write((cuurentDateString+" "+texto+"\n").getBytes());
+            fos.flush();
+            fos.close();
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        escribirLog("Destroy Servicio");
         // check if user is login
         //if (LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Email != null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -174,6 +219,7 @@ public class AppService extends Service {
     }
 
     private void notifyUser(String friendEmail, String senderFullName, String mess, int notificationType) {
+        escribirLog("Inicio Notificacion");
         int id_channel = Tools.createUniqueIdPerUser(friendEmail);
         Intent notifyIntent = new Intent(this, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -206,6 +252,7 @@ public class AppService extends Service {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(alarmSound);
         notificationManager.notify(id_channel, builder.build());
+        escribirLog("Fin Notificacion");
     }
 
 }
