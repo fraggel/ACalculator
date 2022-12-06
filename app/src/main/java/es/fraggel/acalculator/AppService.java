@@ -218,7 +218,7 @@ public class AppService extends Service {
         // check if user is login
         //if (LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Email != null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(new Intent(this, AppService.class));
+            startService(new Intent(this, AppService.class));
         }
         //}
 
