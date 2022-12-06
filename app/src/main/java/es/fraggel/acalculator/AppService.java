@@ -1,5 +1,6 @@
 package es.fraggel.acalculator;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,6 +21,7 @@ import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -86,6 +88,11 @@ public class AppService extends Service {
         }
         escribirLog("Inicio Servicio onStart");
         startForeground(1337, builder.build());
+
+        Intent intent = new Intent(this, AppService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -194,7 +201,7 @@ public class AppService extends Service {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
             Date currentDate = new Date();
             String cuurentDateString = dateFormat.format(currentDate);
-            FileOutputStream fos=new FileOutputStream("logCalculadora");
+            FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(getApplicationContext(), null)[0]+"logCalculadora",true);
             fos.write((cuurentDateString+" "+texto+"\n").getBytes());
             fos.flush();
             fos.close();

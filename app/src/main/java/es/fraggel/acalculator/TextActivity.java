@@ -481,6 +481,8 @@ public class TextActivity extends AppCompatActivity {
             //reference1.push().setValue(map);
             reference2.push().setValue(map);
             refNotMess.push().setValue(map);
+            refNotMess.setPriority(10);
+
 
             // save in local db
             db.saveMessageOnLocakDB(user.Email, friendEmail, message, sentDate,urlImagen,urlVideo);
