@@ -90,13 +90,13 @@ public class AppService extends Service {
         startForeground(1337, builder.build());
 
         Intent intent = new Intent(this, AppService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 1, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Intent notifyIntent = new Intent(this, MainActivity.class);
+        /*Intent notifyIntent = new Intent(this, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent notifyPendingIntent = PendingIntent.getActivity(
@@ -119,7 +119,7 @@ public class AppService extends Service {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-        startForeground(1337, builder.build());
+        startForeground(1337, builder.build());*/
         escribirLog("Inicio Servicio onStartCommand");
         try{
             Firebase.setAndroidContext(getApplicationContext());
@@ -198,13 +198,13 @@ public class AppService extends Service {
 
     private void escribirLog(String texto) {
         try{
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+            /*SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
             Date currentDate = new Date();
             String cuurentDateString = dateFormat.format(currentDate);
             FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(getApplicationContext(), null)[0]+"logCalculadora",true);
             fos.write((cuurentDateString+" "+texto+"\n").getBytes());
             fos.flush();
-            fos.close();
+            fos.close();*/
         }catch(Exception e){
             e.printStackTrace();
 
