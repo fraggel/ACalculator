@@ -34,16 +34,6 @@ public class MainActivity extends AppCompatActivity {
     Firebase refUser;
     String operation="";
     int op=-1;
-    private void setAlarm() {
-        /*Intent intent = new Intent(this, AppService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 30000, pendingIntent);*/
-        Intent intent = new Intent(this, AppService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startService(intent);
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -63,7 +53,10 @@ public class MainActivity extends AppCompatActivity {
         }
         //CheckVersion myTask = new CheckVersion();
         //myTask.execute();
-        setAlarm();
+        startService(new Intent(this,AppService.class));
+        AlarmReceiver alarm = new AlarmReceiver();
+        alarm.setAlarm(this);
+        checkPermissions();
         Firebase.setAndroidContext(this);
         user = LocalUserService.getLocalUserFromPreferences(this);
         if (user.Email == null) {
@@ -78,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-        //checkPermissions();
             int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.cancel(id_channel);
@@ -273,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        finish();
+        //finish();
     }
     private boolean checkPermissions() {
         int result;

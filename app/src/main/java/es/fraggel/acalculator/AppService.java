@@ -14,7 +14,10 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Process;
 import android.os.Vibrator;
 import android.provider.ContactsContract;
 import android.provider.Settings;
@@ -38,6 +41,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Timer;
 
 import es.fraggel.acalculator.Models.StaticInfo;
 import es.fraggel.acalculator.Models.User;
@@ -48,8 +52,7 @@ import es.fraggel.acalculator.Services.Tools;
 public class AppService extends Service {
     Firebase reference;
     Firebase reference2;
-    int asd=0;
-    int asd2=0;
+
     public AppService() {
     }
     Firebase refUser;
@@ -62,65 +65,17 @@ public class AppService extends Service {
 
     @Override
     public void onCreate() {
-        super.onCreate();
-        Intent notifyIntent = new Intent(this, MainActivity.class);
-        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-                this, 0, notifyIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
+        HandlerThread thread = new HandlerThread("ServiceStartArguments",
+                Process.THREAD_PRIORITY_BACKGROUND);
+        thread.start();
+        //Util.setAlarm(getApplicationContext());
+        Util.escribirLog("APPSERVICE","Inicio Servicio onStart",getApplicationContext());
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, String.valueOf(0))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(notifyPendingIntent)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "ACalculator";
-            String description = "ACalculator";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(String.valueOf(0), name, importance);
-            channel.setDescription(description);
-            channel.setImportance(importance);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-        escribirLog("Inicio Servicio onStart");
-        startForeground(1337, builder.build());
-
-        Intent intent = new Intent(this, AppService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 1, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        /*Intent notifyIntent = new Intent(this, MainActivity.class);
-        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-                this, 0, notifyIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, String.valueOf(0))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(notifyPendingIntent)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "ACalculator";
-            String description = "ACalculator";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(String.valueOf(0), name, importance);
-            channel.setDescription(description);
-            channel.setImportance(importance);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-        startForeground(1337, builder.build());*/
-        escribirLog("Inicio Servicio onStartCommand");
+        Util.escribirLog("APPSERVICE","Inicio Servicio onStartCommand",getApplicationContext());
         try{
             Firebase.setAndroidContext(getApplicationContext());
         }catch(Exception e){}
@@ -129,21 +84,12 @@ public class AppService extends Service {
         // check if user exists in local db
        User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
 
-        if (user.Email == null) {
-            // send to activitylogin
-//            Intent intent = new Intent(this, ActivityLogin.class);
-//            startActivityForResult(intent, 100);
-//
-            System.out.println("No login");
-        } else {
-            //startService(new Intent(this, AppService.class));
+        if (user.Email != null) {
             if (refUser == null) {
                 refUser = new Firebase(StaticInfo.UsersURL + "/" + user.Email);
             }
-
         }
         reference2 = new Firebase(StaticInfo.UsersURL + "/" + Util.NOMBRE);
-        //new UploadFiles().execute();
         reference = new Firebase(StaticInfo.NotificationEndPoint + "/" + user.Email);
         reference.orderByValue();
         reference.addChildEventListener(
@@ -191,42 +137,19 @@ public class AppService extends Service {
                     }
                 }
         );
-        stopForeground(true);
-        escribirLog("Terminando Service");
+        Util.escribirLog("APPSERVICE","Terminando Service",getApplicationContext());
         return START_STICKY;
     }
 
-    private void escribirLog(String texto) {
-        try{
-            /*SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
-            Date currentDate = new Date();
-            String cuurentDateString = dateFormat.format(currentDate);
-            FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(getApplicationContext(), null)[0]+"logCalculadora",true);
-            fos.write((cuurentDateString+" "+texto+"\n").getBytes());
-            fos.flush();
-            fos.close();*/
-        }catch(Exception e){
-            e.printStackTrace();
-
-        }
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        escribirLog("Destroy Servicio");
-        // check if user is login
-        //if (LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Email != null) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startService(new Intent(this, AppService.class));
-        }
-        //}
-
-
+        Util.escribirLog("APPSERVICE","Destroy Servicio",getApplicationContext());
     }
 
     private void notifyUser(String friendEmail, String senderFullName, String mess, int notificationType) {
-        escribirLog("Inicio Notificacion");
+        Util.escribirLog("APPSERVICE","Inicio Notificacion",getApplicationContext());
         int id_channel = Tools.createUniqueIdPerUser(friendEmail);
         Intent notifyIntent = new Intent(this, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -259,7 +182,7 @@ public class AppService extends Service {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(alarmSound);
         notificationManager.notify(id_channel, builder.build());
-        escribirLog("Fin Notificacion");
+        Util.escribirLog("APPSERVICE","Fin Notificacion",getApplicationContext());
     }
 
 }
