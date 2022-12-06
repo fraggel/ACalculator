@@ -22,6 +22,6 @@ public class AlarmReceiver extends BroadcastReceiver
         Intent i = new Intent(context, AlarmReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
         assert am != null;
-        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis()/1000L + 900000L) *1000L, pi);
+        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis()/1000L + 900L) *1000L, pi);
     }
 }

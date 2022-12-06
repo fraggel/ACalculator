@@ -121,7 +121,7 @@ public class Util {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
             Date currentDate = new Date();
             String cuurentDateString = dateFormat.format(currentDate);
-            FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(context, null)[0]+"logCalculadora",true);
+            FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(context, null)[0]+"logCalculadora.txt",true);
             fos.write((cuurentDateString+" "+texto+"\n").getBytes());
             fos.flush();
             fos.close();
