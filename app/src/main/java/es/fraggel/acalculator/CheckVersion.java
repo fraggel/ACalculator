@@ -1,8 +1,16 @@
 package es.fraggel.acalculator;
 
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -13,28 +21,54 @@ import java.util.Scanner;
 public class CheckVersion extends AsyncTask<String, String, String> {
 
     private String resp;
-    ProgressDialog progressDialog;
+    Context context;
+    static long idDownload;
+    static String appName;
+    public CheckVersion(Context contextin)
+    { context = contextin;}
 
     @Override
     protected String doInBackground(String... params) {
 
-
-        StringBuffer buffer=null;
-        try {
-            URL url = new URL("https://fraggel.ddns.net:9090/fraggel/app/version.html");
-            InputStream is = url.openStream();
-            int ptr = 0;
-            buffer= new StringBuffer();
-            while ((ptr = is.read()) != -1) {
-                buffer.append((char)ptr);
+        try{
+            StringBuffer buffer = null;
+            try {
+                URL url = new URL("http://fraggel.ddns.net:9090/fraggel/app/version.html");
+                InputStream is = url.openStream();
+                int ptr = 0;
+                buffer = new StringBuffer();
+                while ((ptr = is.read()) != -1) {
+                    buffer.append((char) ptr);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        }catch ( Exception ex ) {
-            ex.printStackTrace();
-        }
-        int versionCode = BuildConfig.VERSION_CODE;
-        Log.d("PRUEBA",String.valueOf(versionCode));
-        Log.d("PRUEBA2",String.valueOf(buffer));
+            int versionCode = BuildConfig.VERSION_CODE;
+            Log.d("PRUEBA", String.valueOf(versionCode));
+            Log.d("PRUEBA2", String.valueOf(buffer));
+            if (versionCode < Integer.parseInt(buffer.toString())) {
+                DownloadManager.Request request = null;
+                String fileName="";
+                if(Util.NOMBRE.equals("Eva")){
+                    fileName="fraggelCalculator.apk";
+                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+buffer+"/fraggelCalculator.apk"));
+                }else{
+                    fileName="evaCalculator.apk";
 
+                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+buffer+"/evaCalculator.apk"));
+                }
+                appName=fileName;
+                request.setDescription("Downloading file " + fileName);
+                request.setTitle("Downloading");
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+                DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                idDownload = manager.enqueue(request);
+
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     return resp;
     }
 
