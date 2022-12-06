@@ -1,8 +1,10 @@
 package es.fraggel.acalculator;
 
 import android.app.AlarmManager;
+import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     User user;
     Firebase refUser;
     String operation="";
+    DonwloadCompleteReceiver dcr=null;
     int op=-1;
     private void setAlarm() {
         /*Intent intent = new Intent(this, AppService.class);
@@ -61,8 +64,11 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
-        //CheckVersion myTask = new CheckVersion();
-        //myTask.execute();
+        checkPermissions();
+        CheckVersion myTask = new CheckVersion(this);
+        myTask.execute();
+        dcr= new DonwloadCompleteReceiver();
+        registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         setAlarm();
         Firebase.setAndroidContext(this);
         user = LocalUserService.getLocalUserFromPreferences(this);
@@ -78,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-        //checkPermissions();
+
             int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.cancel(id_channel);
@@ -273,6 +279,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        try{
+            unregisterReceiver(dcr);
+        }catch(Exception e){}
         finish();
     }
     private boolean checkPermissions() {
