@@ -104,13 +104,13 @@ public class Util {
     static void escribirLog(String TAG,String texto,Context context) {
         try{
             Log.d(TAG,texto);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+            /*SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
             Date currentDate = new Date();
             String cuurentDateString = dateFormat.format(currentDate);
             FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(context, null)[0]+"logCalculadora.txt",true);
             fos.write((cuurentDateString+" "+texto+"\n").getBytes());
             fos.flush();
-            fos.close();
+            fos.close();*/
         }catch(Exception e){
             e.printStackTrace();
 
