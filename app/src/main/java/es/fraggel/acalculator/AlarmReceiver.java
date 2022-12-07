@@ -25,7 +25,7 @@ public class AlarmReceiver extends BroadcastReceiver
 
         if (alarmUp)
         {
-            Util.escribirLog("ALARMRECEIVER", "Alarma YA establecida no creamos más",context);
+            Util.escribirLog("ALARMRECEIVER", "Alarma YA establecida",context);
         }else {
 
         }
