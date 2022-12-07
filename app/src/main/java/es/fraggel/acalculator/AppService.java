@@ -65,10 +65,6 @@ public class AppService extends Service {
 
     @Override
     public void onCreate() {
-        HandlerThread thread = new HandlerThread("ServiceStartArguments",
-                Process.THREAD_PRIORITY_BACKGROUND);
-        thread.start();
-        //Util.setAlarm(getApplicationContext());
         Util.escribirLog("APPSERVICE","Inicio Servicio onStart",getApplicationContext());
 
     }
