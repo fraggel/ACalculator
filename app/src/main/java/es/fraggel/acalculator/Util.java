@@ -93,10 +93,7 @@ public class Util {
 
         }
     }
-    static void setAlarm(Context context) {
-        AlarmReceiver alarm = new AlarmReceiver();
-        alarm.setAlarm(context,false);
-    }
+
     static void setAlarmNow(Context context) {
         AlarmReceiver alarm = new AlarmReceiver();
         alarm.setAlarm(context,true);
