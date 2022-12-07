@@ -94,37 +94,23 @@ public class Util {
         }
     }
     static void setAlarm(Context context) {
-        /*
-        Intent intent = new Intent(context, AppService.class);
-        PendingIntent pendingIntent = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            pendingIntent = PendingIntent.getForegroundService(context, 1, intent, 0);
-        }
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 30000, pendingIntent);
-        */
         AlarmReceiver alarm = new AlarmReceiver();
-        alarm.setAlarm(context);
-        /*AlarmManager aMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AppService.class);
-        PendingIntent pendingIntent = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            pendingIntent = PendingIntent.getService(context, 1, intent, 0);
-        }
-        //aMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60 * 5), pendingIntent);
-        aMgr.cancel(pendingIntent);
-        aMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000), pendingIntent);*/
+        alarm.setAlarm(context,false);
+    }
+    static void setAlarmNow(Context context) {
+        AlarmReceiver alarm = new AlarmReceiver();
+        alarm.setAlarm(context,true);
     }
     static void escribirLog(String TAG,String texto,Context context) {
         try{
             Log.d(TAG,texto);
-            /*SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
             Date currentDate = new Date();
             String cuurentDateString = dateFormat.format(currentDate);
             FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(context, null)[0]+"logCalculadora.txt",true);
             fos.write((cuurentDateString+" "+texto+"\n").getBytes());
             fos.flush();
-            fos.close();*/
+            fos.close();
         }catch(Exception e){
             e.printStackTrace();
 

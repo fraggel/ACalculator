@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         //myTask.execute();
         startService(new Intent(this,AppService.class));
         AlarmReceiver alarm = new AlarmReceiver();
-        alarm.setAlarm(this);
+        alarm.setAlarm(this,true);
         checkPermissions();
         Firebase.setAndroidContext(this);
         user = LocalUserService.getLocalUserFromPreferences(this);

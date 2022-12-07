@@ -12,12 +12,16 @@ public class AlarmReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        Intent in = new Intent(context, AppService.class);
-        context.startService(in);
-        setAlarm(context);
+        try {
+            Intent in = new Intent(context, AppService.class);
+            context.startService(in);
+        }catch(Exception e){
+
+        }
+        setAlarm(context,false);
     }
 
-    public void setAlarm(Context context)
+    public void setAlarm(Context context,boolean ahora)
     {
         boolean alarmUp = (PendingIntent.getBroadcast(context, 0,
                 new Intent(context,AlarmReceiver.class),
@@ -33,11 +37,17 @@ public class AlarmReceiver extends BroadcastReceiver
         }else {
 
         }
-            Util.escribirLog("ALARMRECEIVER", "Alarma establecida",context);
+
             AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(context, AlarmReceiver.class);
             PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
             assert am != null;
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis()/1000L + 300L) *1000L, pi);
+            if(ahora){
+                Util.escribirLog("ALARMRECEIVER", "Alarma establecida ahora",context);
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis() / 1000L + 2L) * 1000L, pi);
+            }else {
+                Util.escribirLog("ALARMRECEIVER", "Alarma establecida 300",context);
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis() / 1000L + 300L) * 1000L, pi);
+            }
     }
 }

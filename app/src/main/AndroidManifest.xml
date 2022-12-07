@@ -80,7 +80,6 @@
             android:stopWithTask="false"
             android:process=":remote"/>
         <receiver android:name=".AlarmReceiver" android:process=":remote" />
-        <activity android:name=".hollo"></activity>
     </application>
 
 </manifest>
