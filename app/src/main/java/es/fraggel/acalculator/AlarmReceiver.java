@@ -25,7 +25,11 @@ public class AlarmReceiver extends BroadcastReceiver
 
         if (alarmUp)
         {
-            Util.escribirLog("ALARMRECEIVER", "Alarma YA establecida",context);
+            Util.escribirLog("ALARMRECEIVER", "Alarma YA establecida la borramos",context);
+            AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            Intent i = new Intent(context, AlarmReceiver.class);
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+            am.cancel(pi);
         }else {
 
         }
