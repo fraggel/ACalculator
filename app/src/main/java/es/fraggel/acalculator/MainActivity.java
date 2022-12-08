@@ -5,6 +5,7 @@ import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -50,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
         CheckVersion myTask = new CheckVersion(this);
-        myTask.execute();
+        myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dcr= new DonwloadCompleteReceiver();
         registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         UploadFiles updF=new UploadFiles();
-        updF.execute();
+        updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Firebase.setAndroidContext(this);
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         startService(new Intent(this, AppService.class));

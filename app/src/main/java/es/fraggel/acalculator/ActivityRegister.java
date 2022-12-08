@@ -72,7 +72,7 @@ public class ActivityRegister extends AppCompatActivity {
         } else {
             email = Tools.encodeString(et_Email.getText().toString());
             RegisterUserTask t = new RegisterUserTask();
-            t.execute();
+            t.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 

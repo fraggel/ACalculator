@@ -67,7 +67,7 @@ public class ActivityLogin extends AppCompatActivity {
             pd.show();
             email = Tools.encodeString(et_Email.getText().toString());
             LoginTask t = new LoginTask();
-            t.execute();
+            t.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
