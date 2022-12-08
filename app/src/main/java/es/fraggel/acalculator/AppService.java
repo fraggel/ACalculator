@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -71,7 +72,8 @@ public class AppService extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        UploadFiles updF=new UploadFiles(getApplicationContext());
+        updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Util.escribirLog("APPSERVICE","Inicio Servicio onStartCommand",getApplicationContext());
         String notify = intent.getStringExtra("notify");
         User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
