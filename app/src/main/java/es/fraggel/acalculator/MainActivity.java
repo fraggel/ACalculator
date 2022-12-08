@@ -51,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
-
         checkPermissions();
+        startService(new Intent(this, AppService.class));
+        AlarmReceiver alarm = new AlarmReceiver();
+        alarm.setAlarm(this, true);
         CheckVersion myTask = new CheckVersion(this);
         myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dcr= new DonwloadCompleteReceiver();
@@ -61,9 +63,7 @@ public class MainActivity extends AppCompatActivity {
         updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Firebase.setAndroidContext(this);
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
-        startService(new Intent(this, AppService.class));
-        AlarmReceiver alarm = new AlarmReceiver();
-        alarm.setAlarm(this, true);
+
         if (user.Email == null) {
             // send to activitylogin
             Intent intent = new Intent(this, ActivityLogin.class);
