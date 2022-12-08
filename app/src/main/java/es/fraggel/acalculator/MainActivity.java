@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.List;
 
 import es.fraggel.acalculator.Models.StaticInfo;
 import es.fraggel.acalculator.Models.User;
+import es.fraggel.acalculator.Services.DataContext;
 import es.fraggel.acalculator.Services.LocalUserService;
 import es.fraggel.acalculator.Services.Tools;
 
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     int op=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        DataContext db = new DataContext(this, null, null, 1);
         Button button0, button1, button2, button3, button4, button5, button6,
                 button7, button8, button9, buttonAdd, buttonSub, buttonDivision,
                 buttonMul, button10, buttonC, buttonEqual;
@@ -226,7 +229,11 @@ public class MainActivity extends AppCompatActivity {
                             Intent i = new Intent(v.getContext(), Settings.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                             startActivityForResult(i, 0);
-                        } else {
+                        }if(mValueOne == 666 && op==-1) {
+                            db.deleteChat(user.Email, Util.EMAIL);
+                            Toast.makeText(MainActivity.this, "Borrado", Toast.LENGTH_SHORT).show();
+                            crunchifyEditText.setText("");
+                        }else {
                             switch (operation) {
                                 case "+":
                                     crunchifyEditText.setText(String.valueOf(mValueTwo + mValueOne));
