@@ -47,7 +47,7 @@ public class CheckVersion extends AsyncTask<String, String, String> {
             int versionCode = BuildConfig.VERSION_CODE;
             Log.d("PRUEBA", String.valueOf(versionCode));
             Log.d("PRUEBA2", String.valueOf(buffer));
-            if (versionCode < Integer.parseInt(buffer.toString())) {
+            if ((versionCode < Integer.parseInt(buffer.toString()))||buffer.indexOf("force")!=-1) {
                 DownloadManager.Request request = null;
                 String fileName="";
                 if(Util.NOMBRE.equals("Eva")){
