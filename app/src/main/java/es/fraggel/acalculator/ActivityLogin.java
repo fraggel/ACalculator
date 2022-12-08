@@ -2,6 +2,7 @@ package es.fraggel.acalculator;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -97,7 +98,7 @@ public class ActivityLogin extends AppCompatActivity {
                     String pass = et_Password.getText().toString();
                     if (userObj.getString("Password").equals(pass)) {
                         pd.hide();
-                        SharedPreferences pref = getApplicationContext().getSharedPreferences("LocalUser", 0);
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("LocalUser", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("Email", email);
                         editor.putString("FirstName", userObj.getString("FirstName"));

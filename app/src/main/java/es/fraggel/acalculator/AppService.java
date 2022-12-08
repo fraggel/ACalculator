@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -52,7 +53,7 @@ import es.fraggel.acalculator.Services.Tools;
 public class AppService extends Service {
     Firebase reference;
     Firebase reference2;
-
+    boolean notification=false;
     public AppService() {
     }
     Firebase refUser;
@@ -72,13 +73,23 @@ public class AppService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Util.escribirLog("APPSERVICE","Inicio Servicio onStartCommand",getApplicationContext());
+        String notify = intent.getStringExtra("notify");
+        User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
+        notification=user.Notificaciones;
+        if(notify!=null) {
+            notification=Boolean.valueOf(notify).booleanValue();
+            SharedPreferences pref = getApplicationContext().getSharedPreferences("LocalUser", 0);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("notify", Boolean.valueOf(notify).booleanValue());
+            editor.commit();
+        }
         try{
             Firebase.setAndroidContext(getApplicationContext());
         }catch(Exception e){}
         DataContext db = new DataContext(this, null, null, 1);
 
         // check if user exists in local db
-       User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
+
 
         if (user.Email != null) {
             if (refUser == null) {
@@ -92,7 +103,8 @@ public class AppService extends Service {
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if (LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Email != null) {
+
+                        if (user.Email != null ) {
                             Map map = dataSnapshot.getValue(Map.class);
                             String mess = map.get("Message").toString();
                             String senderEmail = map.get("SenderEmail").toString();
@@ -101,7 +113,7 @@ public class AppService extends Service {
                             int notificationType = 1; // Message
                             notificationType = map.get("NotificationType") == null ? 1 : Integer.parseInt(map.get("NotificationType").toString());
                             // check if user is on chat activity with senderEmail
-                            if (!StaticInfo.UserCurrentChatFriendEmail.equals(senderEmail)) {
+                            if (!StaticInfo.UserCurrentChatFriendEmail.equals(senderEmail) && notification) {
                                 notifyUser(senderEmail, senderFullName, mess, notificationType);
                                 // remove notification
                                 reference.child(dataSnapshot.getKey()).removeValue();

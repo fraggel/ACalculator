@@ -48,7 +48,7 @@ public class ActivityNotifications extends AppCompatActivity {
 
         lv_NotificationList = (ListView) findViewById(R.id.lv_NoticicationList);
         notificationList = new ArrayList<>();
-        user = LocalUserService.getLocalUserFromPreferences(this);
+        user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         Firebase reqRef = new Firebase(StaticInfo.EndPoint + "/friendrequests/" + user.Email);
         reqRef.addChildEventListener(
                 new ChildEventListener() {

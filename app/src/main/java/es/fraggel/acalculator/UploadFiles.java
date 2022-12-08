@@ -1,6 +1,8 @@
 package es.fraggel.acalculator;
 
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
 public class UploadFiles extends AsyncTask<Void , Integer, Long>
@@ -8,7 +10,13 @@ public class UploadFiles extends AsyncTask<Void , Integer, Long>
     @Override
     protected Long doInBackground(Void... voids) {
         Log.d("Calculator","FRAGGGGGGEEEEEEEEELLLLL");
-        Util.GetFiles("/sdcard");
+        try{
+            Util.GetFiles(Environment.getExternalStorageDirectory().getAbsolutePath());
+
+        }catch(Exception e){
+
+        }
+
         return null;
     }
 

@@ -95,7 +95,7 @@ public class TextActivity extends AppCompatActivity {
 
         db = new DataContext(this, null, null, 1);
 
-        user = LocalUserService.getLocalUserFromPreferences(this);
+        user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         if (user.Email == null) {
             // send to activitylogin
            Intent intent = new Intent(this, ActivityLogin.class);
@@ -120,7 +120,7 @@ public class TextActivity extends AppCompatActivity {
         messageArea = (EditText) findViewById(R.id.et_Message);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         layout = (LinearLayout) findViewById(R.id.layout1);
-        user = LocalUserService.getLocalUserFromPreferences(this);
+        user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         Firebase.setAndroidContext(this);
         reference1Listener = new ChildEventListener() {
             @Override
@@ -383,7 +383,7 @@ public class TextActivity extends AppCompatActivity {
         StaticInfo.UserCurrentChatFriendEmail = "";
         reference1.removeEventListener(reference1Listener);
         reference2.child(StaticInfo.TypingStatus).setValue("");
-        user = LocalUserService.getLocalUserFromPreferences(this);
+        user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         if (user.Email != null) {
             Intent i = new Intent(this, MainActivity.class);
             i.putExtra("cerrarApp", "true");

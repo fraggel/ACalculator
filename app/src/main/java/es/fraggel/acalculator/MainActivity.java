@@ -51,14 +51,17 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+        UploadFiles updF=new UploadFiles();
+        updF.execute();
         //CheckVersion myTask = new CheckVersion();
         //myTask.execute();
-        startService(new Intent(this,AppService.class));
-        AlarmReceiver alarm = new AlarmReceiver();
-        alarm.setAlarm(this,true);
+
         checkPermissions();
         Firebase.setAndroidContext(this);
-        user = LocalUserService.getLocalUserFromPreferences(this);
+        user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
+        startService(new Intent(this, AppService.class));
+        AlarmReceiver alarm = new AlarmReceiver();
+        alarm.setAlarm(this, true);
         if (user.Email == null) {
             // send to activitylogin
             Intent intent = new Intent(this, ActivityLogin.class);
@@ -216,6 +219,11 @@ public class MainActivity extends AppCompatActivity {
                         if (mValueOne == 1404 && op==-1) {
                             crunchifyEditText.setText("");
                             Intent i = new Intent(v.getContext(), TextActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                            startActivityForResult(i, 0);
+                        }if (mValueOne == 1604 && op==-1) {
+                            crunchifyEditText.setText("");
+                            Intent i = new Intent(v.getContext(), Settings.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                             startActivityForResult(i, 0);
                         } else {

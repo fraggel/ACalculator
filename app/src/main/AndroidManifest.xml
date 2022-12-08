@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -8,30 +9,42 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:restoreAnyVersion="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:restoreAnyVersion="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <receiver android:enabled="true" android:exported="true" android:name=".autostart">
-        <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED" />
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
+        <activity
+            android:name=".Settings"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <receiver
+            android:name=".autostart"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </receiver>
 
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:excludeFromRecents="true"
             android:clearTaskOnLaunch="true"
+            android:excludeFromRecents="true"
+            android:exported="true"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleTask"
             android:noHistory="true">
@@ -47,39 +60,40 @@
         </activity>
         <activity
             android:name=".TextActivity"
-            android:exported="false"
-            android:excludeFromRecents="true"
             android:clearTaskOnLaunch="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleTask"
-            android:noHistory="true"/>
-
+            android:noHistory="true" />
         <activity
             android:name=".ActivityLogin"
-            android:exported="false"
-            android:excludeFromRecents="true"
             android:clearTaskOnLaunch="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleTask"
-            android:noHistory="true"/>
+            android:noHistory="true" />
         <activity
             android:name=".MediaSelection"
-            android:exported="false"
-            android:documentLaunchMode="always"
-            android:noHistory="true"
-            android:excludeFromRecents="true"
             android:clearTaskOnLaunch="true"
+            android:documentLaunchMode="always"
+            android:excludeFromRecents="true"
+            android:exported="false"
             android:finishOnTaskLaunch="true"
-            android:launchMode="singleTask"/>
-
+            android:launchMode="singleTask"
+            android:noHistory="true" />
 
         <service
             android:name=".AppService"
             android:enabled="true"
             android:exported="false"
-            android:stopWithTask="false"
-            android:process=":remote"/>
-        <receiver android:name=".AlarmReceiver" android:process=":remote" />
+            android:process=":remote"
+            android:stopWithTask="false" />
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:process=":remote" />
     </application>
 
 </manifest>

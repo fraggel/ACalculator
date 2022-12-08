@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import es.fraggel.acalculator.Models.User;
+import es.fraggel.acalculator.Services.LocalUserService;
+
 public class autostart extends BroadcastReceiver
 {
     public void onReceive(Context context, Intent arg1)
