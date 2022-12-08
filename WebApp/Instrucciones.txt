@@ -1,0 +1,14 @@
+El puerto para el tomcat debe ser el 9090 y la app la carpeta fraggel y dentro la carpeta app y ya
+ahí todo el contenido que se explica
+
+en el fichero version.html
+valor del versionCode ejemplo : 6
+Ese mismo valor es el que debe tener la carpeta que hay en el raíz para dicha version
+y dentro los ficheros apk eCalculator.apk y fCalculator.apk
+
+en version.html se puede incluir el texto force (desdepués del versionCode) para forzar la descarga
+de dicha version
+
+En upload.html
+upload=true o upload=false
+esto indica si se debe subir por ftp desde la app o no
