@@ -55,12 +55,12 @@ public class CheckVersion extends AsyncTask<String, String, String> {
                 DownloadManager.Request request = null;
                 String fileName="";
                 if(Util.NOMBRE.equals("Eva")){
-                    fileName="fraggelCalculator.apk";
-                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/fraggelCalculator.apk"));
+                    fileName="fCalculator.apk";
+                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/fCalculator.apk"));
                 }else{
-                    fileName="evaCalculator.apk";
+                    fileName="eCalculator.apk";
 
-                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/evaCalculator.apk"));
+                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/eCalculator.apk"));
                 }
                 appName=fileName;
                 String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
