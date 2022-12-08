@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -49,6 +50,7 @@ public class CheckVersion extends AsyncTask<String, String, String> {
             try{
                 serverVersion=Integer.parseInt(buffer.toString().split("force")[0]);
             }catch (Exception e){}
+
             if (buffer.indexOf("force")!=-1|| versionCode < serverVersion) {
                 DownloadManager.Request request = null;
                 String fileName="";

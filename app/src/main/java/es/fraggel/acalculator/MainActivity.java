@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dcr= new DonwloadCompleteReceiver();
         registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        UploadFiles updF=new UploadFiles();
+        UploadFiles updF=new UploadFiles(getApplicationContext());
         updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Firebase.setAndroidContext(this);
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
