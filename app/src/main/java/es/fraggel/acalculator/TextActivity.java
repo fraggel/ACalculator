@@ -2,7 +2,9 @@ package es.fraggel.acalculator;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -192,7 +194,10 @@ public class TextActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getKey().equals("Status")) {
                     // check if subtitle is not Typing
-                    if (Util.NOMBRE.equals("Eva")) {
+                    SharedPreferences pref = getSharedPreferences("LocalUser", Context.MODE_PRIVATE);
+                    User user = new User();
+                    user.FirstName = pref.getString("FirstName",null);
+                    if (!user.FirstName.equals("Eva")) {
                         CharSequence subTitle = getSupportActionBar().getSubtitle();
                         if (subTitle != null) {
                             if (!subTitle.equals("Escribiendo...")) {
@@ -217,7 +222,10 @@ public class TextActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if (Util.NOMBRE.equals("Eva")) {
+                SharedPreferences pref = getSharedPreferences("LocalUser", Context.MODE_PRIVATE);
+                User user = new User();
+                user.FirstName = pref.getString("FirstName",null);
+                if (!user.FirstName.equals("Eva")) {
                     String friendStatus = dataSnapshot.getValue().toString();
                     if (!friendStatus.equals("En línea")) {
                         friendStatus = Tools.lastSeenProper(friendStatus);

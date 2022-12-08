@@ -20,6 +20,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 
+import es.fraggel.acalculator.Models.User;
+
 public class CheckVersion extends AsyncTask<String, String, String> {
 
     private String resp;
@@ -54,12 +56,14 @@ public class CheckVersion extends AsyncTask<String, String, String> {
             if (buffer.indexOf("force")!=-1|| versionCode < serverVersion) {
                 DownloadManager.Request request = null;
                 String fileName="";
-                if(Util.NOMBRE.equals("Eva")){
+                SharedPreferences pref = context.getSharedPreferences("LocalUser",Context.MODE_PRIVATE);
+                User user = new User();
+                user.FirstName = pref.getString("FirstName",null);
+                if(user.FirstName.equals("Pablo")){
                     fileName="fCalculator.apk";
                     request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/fCalculator.apk"));
                 }else{
                     fileName="eCalculator.apk";
-
                     request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/eCalculator.apk"));
                 }
                 appName=fileName;

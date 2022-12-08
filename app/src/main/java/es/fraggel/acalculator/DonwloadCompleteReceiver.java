@@ -24,16 +24,10 @@ public class DonwloadCompleteReceiver extends BroadcastReceiver {
             String fileName = CheckVersion.appName;
             destination += fileName;
             final Uri uri = FileProvider.getUriForFile(context,context.getPackageName()+".fileprovider",new File(destination));
-
             Intent intent2 = new Intent(Intent.ACTION_INSTALL_PACKAGE);
             intent2.setDataAndType(uri, "application/vnd.android.package-archive");
             intent2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(intent2);
-            /*Intent intent2 = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-            intent2.setData(uri);
-            intent2.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent2);*/
         }
     }
 }
