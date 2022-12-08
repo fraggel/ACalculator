@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -58,6 +59,13 @@ public class CheckVersion extends AsyncTask<String, String, String> {
                     request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+buffer+"/evaCalculator.apk"));
                 }
                 appName=fileName;
+                String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
+                destination+=appName;
+                File ficheroDescarga=new File(destination);
+                if(ficheroDescarga.exists()){
+                    boolean delete = ficheroDescarga.delete();
+                    Log.d("BORRANDO",String.valueOf(delete));
+                }
                 request.setDescription("Downloading file " + fileName);
                 request.setTitle("Downloading");
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
@@ -65,6 +73,7 @@ public class CheckVersion extends AsyncTask<String, String, String> {
                 idDownload = manager.enqueue(request);
 
 
+            }else{
             }
         }catch(Exception e){
             e.printStackTrace();

@@ -1,13 +1,10 @@
 package es.fraggel.acalculator;
 
-import android.app.AlarmManager;
+
 import android.app.DownloadManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,17 +13,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.firebase.client.Firebase;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.fraggel.acalculator.Models.StaticInfo;
 import es.fraggel.acalculator.Models.User;
-import es.fraggel.acalculator.Services.DataContext;
 import es.fraggel.acalculator.Services.LocalUserService;
 import es.fraggel.acalculator.Services.Tools;
 
@@ -54,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+
         checkPermissions();
         CheckVersion myTask = new CheckVersion(this);
         myTask.execute();
@@ -278,9 +272,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        try{
+        /*try{
             unregisterReceiver(dcr);
-        }catch(Exception e){}
+        }catch(Exception e){}*/
         //finish();
     }
     private boolean checkPermissions() {

@@ -16,25 +16,27 @@ import es.fraggel.acalculator.Models.User;
 
 public class Util {
     //App para eva
-    //public static String EMAIL="fraggelillo666@gmail,com";
-    //public static String NOMBRE="Pablo";
+    public static String EMAIL="fraggelillo666@gmail,com";
+    public static String NOMBRE="Pablo";
     //App para mi
-    public static String EMAIL="eva@gmail,com";
-    public static String NOMBRE="Eva";
+    //public static String EMAIL="eva@gmail,com";
+    //public static String NOMBRE="Eva";
     //App pruebas
     //public static String EMAIL="pruebas@gmail,com";
     //public static String NOMBRE="Nombre";
 
     public static String[] permissions = new String[]{
-            Manifest.permission.SCHEDULE_EXACT_ALARM,
             Manifest.permission.INTERNET,
+            Manifest.permission.SCHEDULE_EXACT_ALARM,
             Manifest.permission.VIBRATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.FOREGROUND_SERVICE,
             Manifest.permission.RECEIVE_BOOT_COMPLETED,
-            Manifest.permission.FOREGROUND_SERVICE};
+            Manifest.permission.WAKE_LOCK,
+            Manifest.permission.REQUEST_INSTALL_PACKAGES};
 
 
     public static void GetFiles(String ruta){
