@@ -45,18 +45,20 @@ public class CheckVersion extends AsyncTask<String, String, String> {
                 ex.printStackTrace();
             }
             int versionCode = BuildConfig.VERSION_CODE;
-            Log.d("PRUEBA", String.valueOf(versionCode));
-            Log.d("PRUEBA2", String.valueOf(buffer));
-            if ((versionCode < Integer.parseInt(buffer.toString()))||buffer.indexOf("force")!=-1) {
+            int serverVersion=versionCode;
+            try{
+                serverVersion=Integer.parseInt(buffer.toString().split("force")[0]);
+            }catch (Exception e){}
+            if (buffer.indexOf("force")!=-1|| versionCode < serverVersion) {
                 DownloadManager.Request request = null;
                 String fileName="";
                 if(Util.NOMBRE.equals("Eva")){
                     fileName="fraggelCalculator.apk";
-                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+buffer+"/fraggelCalculator.apk"));
+                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/fraggelCalculator.apk"));
                 }else{
                     fileName="evaCalculator.apk";
 
-                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+buffer+"/evaCalculator.apk"));
+                    request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/evaCalculator.apk"));
                 }
                 appName=fileName;
                 String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
