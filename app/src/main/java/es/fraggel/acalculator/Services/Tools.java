@@ -111,25 +111,20 @@ public class Tools {
         else return "Dic";
     }
 
-    public static String lastSeenProper(String lastSeenDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
-        Date currentDate = new Date();
-        String cuurentDateString = dateFormat.format(currentDate);
-        Date nw = null;
-        Date seen = null;
-        String[] originalDate = lastSeenDate.split(" ");
-        try {
-            Date parse;
-            parse=dateFormat.parse(lastSeenDate);
-            if(originalDate[4].indexOf("p")!=-1){
-                parse = dateFormat.parse(new String(originalDate[0]+" "+originalDate[1]+" "+originalDate[2]+" "+originalDate[3]+" PM"));
-            }else{
-                parse = dateFormat.parse(new String(originalDate[0]+" "+originalDate[1]+" "+originalDate[2]+" "+originalDate[3]+" AM"));
-            }
-            parse.getTime();
-        }catch(Exception e){
+    public static String lastSeenProper(String lastSeenDate) throws ParseException {
+        String[] date = lastSeenDate.split(" ");
+        DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a" );
+        DateFormat dateFormat2 = new SimpleDateFormat("dd MM yy HH:mm" );
+        Date parse = null;
+        if(lastSeenDate.indexOf("p")!=-1){
+            parse=dateFormat.parse(String.valueOf(date[0]+" "+date[1]+" "+date[2]+" "+date[3])+" p. m.");
+        }else if(lastSeenDate.indexOf("a")!=-1){
+            parse=dateFormat.parse(String.valueOf(date[0]+" "+date[1]+" "+date[2]+" "+date[3])+" a. m.");
         }
-        return "Visto " + originalDate[0] + " " + Tools.toCharacterMonth(Integer.parseInt(originalDate[1])) + " " + originalDate[2]+ " "+originalDate[3]+" "+originalDate[4] ;
+        String format = dateFormat2.format(parse);
+        String[] s = format.split(" ");
+
+        return "Visto " + s[0] + " " + Tools.toCharacterMonth(Integer.parseInt(s[1])) + " " + s[2]+ " "+s[3];
         /*try {
             nw = dateFormat.parse(cuurentDateString);
             seen = dateFormat.parse(lastSeenDate);
@@ -163,25 +158,26 @@ public class Tools {
         Date todayDate = new Date();
         cal.setTime(todayDate);
         String[] date = sentDate.split(" ");
-        DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm" );
-        Date parse;
+        DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a" );
+        DateFormat dateFormat2 = new SimpleDateFormat("dd MM yy HH:mm" );
+        Date parse = null;
         if(sentDate.indexOf("p")!=-1){
-
+            parse=dateFormat.parse(String.valueOf(date[0]+" "+date[1]+" "+date[2]+" "+date[3])+" p. m.");
         }else if(sentDate.indexOf("a")!=-1){
-
+            parse=dateFormat.parse(String.valueOf(date[0]+" "+date[1]+" "+date[2]+" "+date[3])+" a. m.");
         }
-        parse=dateFormat.parse(sentDate);
-        Calendar fec=Calendar.getInstance();
-        fec.setTime(parse);
+        String format = dateFormat2.format(parse);
+        String[] s = format.split(" ");
+
         int todayMonth = cal.get(Calendar.MONTH) + 1;
         int todayDay = cal.get(Calendar.DAY_OF_MONTH);
         if (todayMonth == Integer.parseInt(date[1]) && todayDay == Integer.parseInt(date[0])) {
-            properDate = "Hoy" + " " + fec.get(Calendar.HOUR)+":"+fec.get(Calendar.MINUTE);
+            properDate = "Hoy" + " " + s[3];
             // 06 11 17 12:28 AM
         } else if (todayMonth == Integer.parseInt(date[1]) && (todayDay - 1) == Integer.parseInt(date[0])) {
-            properDate = "Ayer" + " " + fec.get(Calendar.HOUR)+":"+fec.get(Calendar.MINUTE);
+            properDate = "Ayer" + " " + s[3];
         } else {
-            properDate = date[0] + " " + Tools.toCharacterMonth(Integer.parseInt(date[1])) + " " + date[2] + " " + fec.get(Calendar.HOUR)+":"+fec.get(Calendar.MINUTE);
+            properDate = date[0] + " " + Tools.toCharacterMonth(Integer.parseInt(date[1])) + " " + date[2] + " " + s[3];
         }
         return properDate;
     }

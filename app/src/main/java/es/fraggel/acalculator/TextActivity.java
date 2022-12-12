@@ -204,14 +204,22 @@ public class TextActivity extends AppCompatActivity {
                             if (!subTitle.equals("Escribiendo...")) {
                                 String friendStatus = dataSnapshot.getValue().toString();
                                 if (!friendStatus.equals("En línea")) {
-                                    friendStatus = Tools.lastSeenProper(friendStatus);
+                                    try {
+                                        friendStatus = Tools.lastSeenProper(friendStatus);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                                 getSupportActionBar().setSubtitle(friendStatus);
                             }
                         } else {
                             String friendStatus = dataSnapshot.getValue().toString();
                             if (!friendStatus.equals("En línea")) {
-                                friendStatus = Tools.lastSeenProper(friendStatus);
+                                try {
+                                    friendStatus = Tools.lastSeenProper(friendStatus);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                             getSupportActionBar().setSubtitle(friendStatus);
                         }
@@ -229,7 +237,11 @@ public class TextActivity extends AppCompatActivity {
                 if (!user.FirstName.equals("Eva")) {
                     String friendStatus = dataSnapshot.getValue().toString();
                     if (!friendStatus.equals("En línea")) {
-                        friendStatus = Tools.lastSeenProper(friendStatus);
+                        try {
+                            friendStatus = Tools.lastSeenProper(friendStatus);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                     getSupportActionBar().setSubtitle(friendStatus);
                 }
