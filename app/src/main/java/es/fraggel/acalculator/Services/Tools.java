@@ -163,10 +163,14 @@ public class Tools {
         Date todayDate = new Date();
         cal.setTime(todayDate);
         String[] date = sentDate.split(" ");
-        DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
+        DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm" );
         Date parse;
+        if(sentDate.indexOf("p")!=-1){
+
+        }else if(sentDate.indexOf("a")!=-1){
+
+        }
         parse=dateFormat.parse(sentDate);
-        String format = dateFormat.format(sentDate);
         Calendar fec=Calendar.getInstance();
         fec.setTime(parse);
         int todayMonth = cal.get(Calendar.MONTH) + 1;
