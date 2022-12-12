@@ -116,12 +116,15 @@ public class Tools {
         DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a" );
         DateFormat dateFormat2 = new SimpleDateFormat("dd MM yy HH:mm" );
         Date parse = null;
+        String format =lastSeenDate;
         if(lastSeenDate.indexOf("p")!=-1){
             parse=dateFormat.parse(String.valueOf(date[0]+" "+date[1]+" "+date[2]+" "+date[3])+" p. m.");
+            format=dateFormat2.format(parse);
         }else if(lastSeenDate.indexOf("a")!=-1){
             parse=dateFormat.parse(String.valueOf(date[0]+" "+date[1]+" "+date[2]+" "+date[3])+" a. m.");
+            format=dateFormat2.format(parse);
         }
-        String format = dateFormat2.format(parse);
+
         String[] s = format.split(" ");
 
         return "Visto " + s[0] + " " + Tools.toCharacterMonth(Integer.parseInt(s[1])) + " " + s[2]+ " "+s[3];
@@ -161,12 +164,16 @@ public class Tools {
         DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a" );
         DateFormat dateFormat2 = new SimpleDateFormat("dd MM yy HH:mm" );
         Date parse = null;
+        String format=null;
+        format=sentDate;
         if(sentDate.indexOf("p")!=-1){
             parse=dateFormat.parse(String.valueOf(date[0]+" "+date[1]+" "+date[2]+" "+date[3])+" p. m.");
+            format= dateFormat2.format(parse);
         }else if(sentDate.indexOf("a")!=-1){
             parse=dateFormat.parse(String.valueOf(date[0]+" "+date[1]+" "+date[2]+" "+date[3])+" a. m.");
+            format= dateFormat2.format(parse);
         }
-        String format = dateFormat2.format(parse);
+
         String[] s = format.split(" ");
 
         int todayMonth = cal.get(Calendar.MONTH) + 1;
