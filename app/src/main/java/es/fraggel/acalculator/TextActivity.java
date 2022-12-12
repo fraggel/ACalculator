@@ -44,6 +44,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
@@ -254,7 +255,11 @@ public class TextActivity extends AppCompatActivity {
         List<Message> chatList = db.getChat(user.Email, friendEmail, 1);
         for (Message item : chatList) {
             int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
-            appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo);
+            try {
+                appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         friendFullName = Util.NOMBRE;//extras.getString("FriendFullName");
@@ -297,7 +302,6 @@ public class TextActivity extends AppCompatActivity {
         EmojiconEditText emojiconEditText = (EmojiconEditText) findViewById(R.id.et_Message);
         ImageView emojiImageView = (ImageView) findViewById(R.id.emoji_btn);
         ImageView add2BtnImageView = (ImageView) findViewById(R.id.add_btn2);
-
         add2BtnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -338,7 +342,11 @@ public class TextActivity extends AppCompatActivity {
                 layout.removeAllViews();
                 for (Message item : chatList) {
                     int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
-                    appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                    try {
+                        appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
                 swipeRefreshLayout.setRefreshing(false);
                 pageNo++;
@@ -432,7 +440,7 @@ public class TextActivity extends AppCompatActivity {
         super.onDestroy();
         StaticInfo.UserCurrentChatFriendEmail = "";
         // set last seen
-        DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+        DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
         Date date = new Date();
         refUser.child("Status").setValue(dateFormat.format(date));
         reference1.removeEventListener(reference1Listener);
@@ -451,7 +459,11 @@ public class TextActivity extends AppCompatActivity {
         List<Message> chatList = db.getChat(user.Email, friendEmail, 1);
         for (Message item : chatList) {
             int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
-            appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo);
+            try {
+                appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         StaticInfo.UserCurrentChatFriendEmail = friendEmail;
@@ -467,7 +479,7 @@ public class TextActivity extends AppCompatActivity {
 
     }
 
-    public void btn_SendMessageClick(View view) {
+    public void btn_SendMessageClick(View view) throws ParseException {
 
         String message = messageArea.getText().toString().trim();
         messageArea.setText("");
@@ -478,7 +490,7 @@ public class TextActivity extends AppCompatActivity {
             map.put("FirstName", user.FirstName);
             map.put("LastName", user.LastName);
 
-            DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+            DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
             Date date = new Date();
             String sentDate = dateFormat.format(date);
             String urlImagen="";
@@ -502,7 +514,7 @@ public class TextActivity extends AppCompatActivity {
     public void removeMessage(String mess, String sentDate, int messType, final boolean scrollUp,String urlImagen,String urlVideo) {
 
     }
-    public void appendMessage(String mess, String sentDate, int messType, final boolean scrollUp,String urlImagen,String urlVideo) {
+    public void appendMessage(String mess, String sentDate, int messType, final boolean scrollUp,String urlImagen,String urlVideo) throws ParseException {
 
         EmojiconTextView textView = new EmojiconTextView(this);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -563,7 +575,11 @@ public class TextActivity extends AppCompatActivity {
                         layout.removeAllViews();
                         for (Message item : chatList) {
                             int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
-                            appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                            try {
+                                appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
                         pageNo++;
                         scrollView.fullScroll(View.FOCUS_DOWN);
@@ -641,7 +657,11 @@ public class TextActivity extends AppCompatActivity {
                         layout.removeAllViews();
                         for (Message item : chatList) {
                             int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
-                            appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                            try {
+                                appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
                         pageNo++;
                         scrollView.fullScroll(View.FOCUS_DOWN);
@@ -781,7 +801,7 @@ public class TextActivity extends AppCompatActivity {
             map.put("FirstName", user.FirstName);
             map.put("LastName", user.LastName);
 
-            DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+            DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
             Date date = new Date();
             String sentDate = dateFormat.format(date);
             String urlVideo="";
@@ -796,7 +816,11 @@ public class TextActivity extends AppCompatActivity {
             db.saveMessageOnLocakDB(user.Email, friendEmail, "--[IMAGE]--", sentDate,urlImagen,urlVideo);
 
             // appendmessage
-            appendMessage("--[IMAGE]--", sentDate, 1, false,urlImagen,urlVideo);
+            try {
+                appendMessage("--[IMAGE]--", sentDate, 1, false,urlImagen,urlVideo);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         if(requestCode==0 && resultCode==StaticInfo.VideoActivityRequestCode){
             String urlVideo="/videos/" + timeInMillis + ".vid";
@@ -806,7 +830,7 @@ public class TextActivity extends AppCompatActivity {
             map.put("FirstName", user.FirstName);
             map.put("LastName", user.LastName);
 
-            DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+            DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
             Date date = new Date();
             String sentDate = dateFormat.format(date);
             String urlImagen="";
@@ -821,7 +845,11 @@ public class TextActivity extends AppCompatActivity {
             db.saveMessageOnLocakDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
 
             // appendmessage
-            appendMessage("--[VIDEO]--", sentDate, 1, false,urlImagen,urlVideo);
+            try {
+                appendMessage("--[VIDEO]--", sentDate, 1, false,urlImagen,urlVideo);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

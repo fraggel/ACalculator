@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -110,7 +112,7 @@ public class Tools {
     }
 
     public static String lastSeenProper(String lastSeenDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
         Date currentDate = new Date();
         String cuurentDateString = dateFormat.format(currentDate);
         Date nw = null;
@@ -118,6 +120,7 @@ public class Tools {
         String[] originalDate = lastSeenDate.split(" ");
         try {
             Date parse;
+            parse=dateFormat.parse(lastSeenDate);
             if(originalDate[4].indexOf("p")!=-1){
                 parse = dateFormat.parse(new String(originalDate[0]+" "+originalDate[1]+" "+originalDate[2]+" "+originalDate[3]+" PM"));
             }else{
@@ -154,21 +157,27 @@ public class Tools {
 
     }
 
-    public static String messageSentDateProper(String sentDate) {
+    public static String messageSentDateProper(String sentDate) throws ParseException {
         String properDate = "";
         Calendar cal = Calendar.getInstance();
         Date todayDate = new Date();
         cal.setTime(todayDate);
         String[] date = sentDate.split(" ");
+        DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
+        Date parse;
+        parse=dateFormat.parse(sentDate);
+        String format = dateFormat.format(sentDate);
+        Calendar fec=Calendar.getInstance();
+        fec.setTime(parse);
         int todayMonth = cal.get(Calendar.MONTH) + 1;
         int todayDay = cal.get(Calendar.DAY_OF_MONTH);
         if (todayMonth == Integer.parseInt(date[1]) && todayDay == Integer.parseInt(date[0])) {
-            properDate = "Hoy" + " " + date[3] + " " + date[4];
+            properDate = "Hoy" + " " + fec.get(Calendar.HOUR)+":"+fec.get(Calendar.MINUTE);
             // 06 11 17 12:28 AM
         } else if (todayMonth == Integer.parseInt(date[1]) && (todayDay - 1) == Integer.parseInt(date[0])) {
-            properDate = "Ayer" + " " + date[3] + " " + date[4];
+            properDate = "Ayer" + " " + fec.get(Calendar.HOUR)+":"+fec.get(Calendar.MINUTE);
         } else {
-            properDate = date[0] + " " + Tools.toCharacterMonth(Integer.parseInt(date[1])) + " " + date[2] + " " + date[3] + " " + date[4];
+            properDate = date[0] + " " + Tools.toCharacterMonth(Integer.parseInt(date[1])) + " " + date[2] + " " + fec.get(Calendar.HOUR)+":"+fec.get(Calendar.MINUTE);
         }
         return properDate;
     }

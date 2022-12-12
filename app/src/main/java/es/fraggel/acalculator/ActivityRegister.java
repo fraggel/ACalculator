@@ -106,7 +106,7 @@ public class ActivityRegister extends AppCompatActivity {
                     firebase.child(email).child("LastName").setValue(et_LastName.getText().toString());
                     firebase.child(email).child("Email").setValue(email);
                     firebase.child(email).child("Password").setValue(et_Password.getText().toString());
-                    DateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+                    DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
                     Date date = new Date();
                     firebase.child(email).child("Status").setValue(dateFormat.format(date));
                     Toast.makeText(getApplicationContext(), "Signup Success", Toast.LENGTH_SHORT).show();
