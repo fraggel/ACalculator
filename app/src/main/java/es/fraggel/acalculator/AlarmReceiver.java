@@ -47,7 +47,7 @@ public class AlarmReceiver extends BroadcastReceiver
                 am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis() / 1000L + 2L) * 1000L, pi);
             }else {
                 Util.escribirLog("ALARMRECEIVER", "Alarma establecida 300",context);
-                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis() / 1000L + 300L) * 1000L, pi);
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis() / 1000L + 600L) * 1000L, pi);
             }
     }
 }
