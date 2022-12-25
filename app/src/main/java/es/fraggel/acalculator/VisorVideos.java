@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -13,7 +14,8 @@ public class VisorVideos extends AppCompatActivity {
     private VideoView myVideoView;
     private int position = 0;
     private ProgressDialog progressDialog;
-    private MediaController mediaControls;
+    private MediaPlayer mp=null;
+    boolean clickVideo=true;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,9 +24,6 @@ public class VisorVideos extends AppCompatActivity {
         setContentView(R.layout.activity_visor_videos);
         getSupportActionBar().hide();
         //set the media controller buttons
-        if (mediaControls == null) {
-            mediaControls = new MediaController(VisorVideos.this);
-        }
 
         //initialize the VideoView
         myVideoView = (VideoView) findViewById(R.id.videoView);
@@ -42,7 +41,6 @@ public class VisorVideos extends AppCompatActivity {
 
         try {
             //set the media controller in the VideoView
-            myVideoView.setMediaController(mediaControls);
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 String value = extras.getString("key");
@@ -56,12 +54,49 @@ public class VisorVideos extends AppCompatActivity {
         }
 
         myVideoView.requestFocus();
+        myVideoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(clickVideo) {
+                    mp.setVolume(1f, 1f);
+                    clickVideo=false;
+                }else{
+                    mp.setVolume(0f, 0f);
+                    clickVideo=true;
+                }
+            }
+        });
         //we also set an setOnPreparedListener in order to know when the video file is ready for playback
         myVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
             public void onPrepared(MediaPlayer mediaPlayer) {
                 // close the progress bar and play the video
                 progressDialog.dismiss();
+                MediaController mediaController = new MediaController(VisorVideos.this){
+                    @Override
+                    public void show(int timeout) {
+                        super.show(0);
+                    }
+
+                    @Override
+                    public void hide() {
+
+                    }
+                    @Override
+                    public boolean dispatchKeyEvent(KeyEvent event) {
+                        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK){
+                            mp.release();
+                            super.hide();//Hide mediaController
+                            finish();//Close this activity
+                            return true;//If press Back button, finish here
+                        }
+                        //If not Back button, other button (volume) work as usual.
+                        return super.dispatchKeyEvent(event);
+                    }
+                };
+                myVideoView.setMediaController(mediaController);
+                mp=mediaPlayer;
+                mediaPlayer.setVolume(0f,0f);
                 //if we have a position on savedInstanceState, the video playback should start from here
                 myVideoView.seekTo(position);
                 if (position == 0) {
@@ -111,5 +146,12 @@ public class VisorVideos extends AppCompatActivity {
         position = savedInstanceState.getInt("Position");
         myVideoView.seekTo(position);
     }*/
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        finish();
+        return super.onKeyDown(keyCode, event);
+
+    }
 }
 
