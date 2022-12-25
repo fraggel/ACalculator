@@ -18,6 +18,7 @@ public class VisorImagenes extends AppCompatActivity {
     private ScaleGestureDetector mScaleGestureDetector;
     private float mScaleFactor = 1.0f;
     private ImageView mImageView;
+    boolean onpause=false;
     String value =null;
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -67,5 +68,28 @@ public class VisorImagenes extends AppCompatActivity {
         mImageView.setImageBitmap(rotated);
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        /*TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        mImageView.setVisibility(View.INVISIBLE);*/
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        mImageView.setVisibility(View.INVISIBLE);
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        mImageView.setVisibility(View.INVISIBLE);
+        super.onDestroy();
+        finish();
     }
 }

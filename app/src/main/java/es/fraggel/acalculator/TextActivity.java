@@ -37,7 +37,6 @@ import com.firebase.client.FirebaseError;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -102,7 +101,7 @@ public class TextActivity extends AppCompatActivity {
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         if (user.Email == null) {
             // send to activitylogin
-           Intent intent = new Intent(this, ActivityLogin.class);
+            Intent intent = new Intent(this, ActivityLogin.class);
             startActivityForResult(intent, 100);
 //
         } else {
@@ -418,7 +417,7 @@ public class TextActivity extends AppCompatActivity {
             i.putExtra("cerrarApp", "true");
             i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             startActivityForResult(i, 0);
-            //finish();
+            finish();
         }
     }
 
@@ -440,7 +439,7 @@ public class TextActivity extends AppCompatActivity {
         StaticInfo.UserCurrentChatFriendEmail = "";
         reference1.removeEventListener(reference1Listener);
         reference2.child(StaticInfo.TypingStatus).setValue("");
-        //finish();
+        finish();
     }
 
     @Override
@@ -570,15 +569,8 @@ public class TextActivity extends AppCompatActivity {
         textView.setLayoutParams(lp);
         if("--[IMAGE]--".equals(mess.trim())){
             final MyImageView imgView=new MyImageView(this);
-            FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
-                    .setApplicationId("chat-8459f")
-                    .setStorageBucket("chat-8459f.appspot.com")
-                    .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
-                    .setDatabaseUrl("https://chat-8459f.firebaseio.com")
-                    .build();
-            try {
-                FirebaseApp.initializeApp(this, firebaseOptions);
-            }catch(Exception e){}
+
+            FirebaseApp.initializeApp(this);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference ref = storageRef.child(urlImagen.replaceFirst("images/","images/thmb_"));
@@ -623,15 +615,7 @@ public class TextActivity extends AppCompatActivity {
 
                     String value=((MyImageView)v).getClave();
                     if(!new File(value).exists()){
-                        FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
-                                .setApplicationId("chat-8459f")
-                                .setStorageBucket("chat-8459f.appspot.com")
-                                .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
-                                .setDatabaseUrl("https://chat-8459f.firebaseio.com")
-                                .build();
-                        try {
-                            FirebaseApp.initializeApp(getApplicationContext(), firebaseOptions);
-                        }catch(Exception e){}
+                        FirebaseApp.initializeApp(getApplicationContext());
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());
@@ -667,15 +651,8 @@ public class TextActivity extends AppCompatActivity {
             layout.addView(imgView);
         }else if("--[VIDEO]--".equals(mess.trim())) {
             final MyImageView imgView=new MyImageView(this);
-            FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
-                    .setApplicationId("chat-8459f")
-                    .setStorageBucket("chat-8459f.appspot.com")
-                    .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
-                    .setDatabaseUrl("https://chat-8459f.firebaseio.com")
-                    .build();
-            try {
-                FirebaseApp.initializeApp(this, firebaseOptions);
-            }catch(Exception e){}
+
+            FirebaseApp.initializeApp(this);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference ref = storageRef.child((urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
@@ -720,15 +697,7 @@ public class TextActivity extends AppCompatActivity {
 
                     String value=((MyImageView)v).getClave();
                     if(!new File(value).exists()){
-                        FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
-                                .setApplicationId("chat-8459f")
-                                .setStorageBucket("chat-8459f.appspot.com")
-                                .setApiKey("AIzaSyA2oG-tbvlkYuVocLg0B78R0D0IVvE6FGI")
-                                .setDatabaseUrl("https://chat-8459f.firebaseio.com")
-                                .build();
-                        try {
-                            FirebaseApp.initializeApp(getApplicationContext(), firebaseOptions);
-                        }catch(Exception e){}
+                        FirebaseApp.initializeApp(getApplicationContext());
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());
@@ -775,5 +744,124 @@ public class TextActivity extends AppCompatActivity {
                     scrollView.fullScroll(View.FOCUS_DOWN);
             }
         });
+    }
+
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        return true;
+    }*/
+/*
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_deleteConservation) {
+            new AlertDialog.Builder(this)
+                    .setTitle(friendFullName)
+                    .setMessage("Are you sure to delete this chat?")
+                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            db.deleteChat(user.Email, friendEmail);
+                            layout.removeAllViews();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+            return true;
+        }
+        if (id == R.id.menu_deleteContact) {
+            new AlertDialog.Builder(this)
+                    .setTitle(friendFullName)
+                    .setMessage("Are you sure to delete this contact?")
+                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Firebase ref = new Firebase(StaticInfo.EndPoint + "/friends/" + user.Email + "/" + friendEmail);
+                            ref.removeValue();
+                            // delete from local database
+                            db.deleteFriendByEmailFromLocalDB(friendEmail);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+            return true;
+        }
+
+        if (id == R.id.menu_friendProfile) {
+            Intent i = new Intent(ActivityChat.this, ActivityFriendProfile.class);
+            i.putExtra("Email", friendEmail);
+
+            startActivityForResult(i, StaticInfo.ChatAciviityRequestCode);
+        }
+        return true;
+    }*/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == StaticInfo.ChatAciviityRequestCode && resultCode == Activity.RESULT_OK) {
+            User updatedFriend = db.getFriendByEmailFromLocalDB(friendEmail);
+            friendFullName = updatedFriend.FirstName;
+            //getSupportActionBar().setTitle(updatedFriend.FirstName);
+        }
+        if(requestCode==0 && resultCode==StaticInfo.ImageActivityRequestCode){
+            String urlImagen="/images/" + timeInMillis + ".img";
+            Map<String, String> map = new HashMap<>();
+            map.put("Message", "--[IMAGE]--");
+            map.put("SenderEmail", user.Email);
+            map.put("FirstName", user.FirstName);
+            map.put("LastName", user.LastName);
+
+            DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
+            Date date = new Date();
+            String sentDate = dateFormat.format(date);
+            String urlVideo="";
+            map.put("SentDate", sentDate);
+            map.put("urlImagen",urlImagen);
+            map.put("urlVideo",urlVideo);
+            //reference1.push().setValue(map);
+            reference2.push().setValue(map);
+            refNotMess.push().setValue(map);
+
+            // save in local db
+            db.saveMessageOnLocakDB(user.Email, friendEmail, "--[IMAGE]--", sentDate,urlImagen,urlVideo);
+
+            // appendmessage
+            try {
+                appendMessage("--[IMAGE]--", sentDate, 1, false,urlImagen,urlVideo);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if(requestCode==0 && resultCode==StaticInfo.VideoActivityRequestCode){
+            String urlVideo="/videos/" + timeInMillis + ".vid";
+            Map<String, String> map = new HashMap<>();
+            map.put("Message", "--[VIDEO]--");
+            map.put("SenderEmail", user.Email);
+            map.put("FirstName", user.FirstName);
+            map.put("LastName", user.LastName);
+
+            DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
+            Date date = new Date();
+            String sentDate = dateFormat.format(date);
+            String urlImagen="";
+            map.put("SentDate", sentDate);
+            map.put("urlImagen",urlImagen);
+            map.put("urlVideo",urlVideo);
+            //reference1.push().setValue(map);
+            reference2.push().setValue(map);
+            refNotMess.push().setValue(map);
+
+            // save in local db
+            db.saveMessageOnLocakDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
+
+            // appendmessage
+            try {
+                appendMessage("--[VIDEO]--", sentDate, 1, false,urlImagen,urlVideo);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
