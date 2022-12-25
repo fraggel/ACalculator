@@ -6,6 +6,9 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.Touch;
@@ -91,5 +94,18 @@ public class VisorImagenes extends AppCompatActivity {
         mImageView.setVisibility(View.INVISIBLE);
         super.onDestroy();
         finish();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        mImageView.setVisibility(View.VISIBLE);
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+
     }
 }

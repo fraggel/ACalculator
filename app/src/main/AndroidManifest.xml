@@ -194,31 +194,17 @@
             android:noHistory="true" />
         <activity
             android:name=".VisorVideos"
-            android:clearTaskOnLaunch="true"
-            android:documentLaunchMode="always"
-            android:excludeFromRecents="true"
             android:exported="false"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleTask"
-            android:noHistory="true" />
+            android:excludeFromRecents="true"
+
+            />
         <activity
             android:name=".VisorImagenes"
             android:exported="false"
             android:excludeFromRecents="true"
 
             />
-<!--
-android:finishOnTaskLaunch="true"
- android:clearTaskOnLaunch="true"
- android:launchMode="singleTask"
 
- android:documentLaunchMode="always"
-
-
-
-
-
--->
         <service
             android:name=".AppService"
             android:enabled="true"

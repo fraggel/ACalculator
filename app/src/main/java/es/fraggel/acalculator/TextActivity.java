@@ -3,6 +3,7 @@ package es.fraggel.acalculator;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -574,7 +575,7 @@ public class TextActivity extends AppCompatActivity {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference ref = storageRef.child(urlImagen.replaceFirst("images/","images/thmb_"));
-            ficheroThmb=new File(Environment.getExternalStorageDirectory()+"/Calculator/"+urlImagen.replaceFirst("images/","images/thmb_"));
+            ficheroThmb=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+(urlImagen.replaceFirst("images/","images/thmb_")));
             ficheroThmb.getParentFile().mkdirs();
             if(!ficheroThmb.exists()) {
                 ref.getFile(ficheroThmb).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -606,7 +607,7 @@ public class TextActivity extends AppCompatActivity {
                 decodedBitmap = BitmapFactory.decodeFile(ficheroThmb.getAbsolutePath());
             }
             //final Bitmap decodedBitmap = BitmapFactory.decodeByteArray(Base64.decode(urlImagen,Base64.DEFAULT), 0, Base64.decode(urlImagen,Base64.DEFAULT).length);
-            imgView.setClave(Environment.getExternalStorageDirectory()+"/Calculator/"+urlImagen);
+            imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
             imgView.setClaveImagen(urlImagen);
             imgView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -619,7 +620,7 @@ public class TextActivity extends AppCompatActivity {
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());
-                        fichero=new File(Environment.getExternalStorageDirectory()+"/Calculator/"+((MyImageView)v).getClaveImagen());
+                        fichero=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+((MyImageView)v).getClaveImagen());
                         MyOnSuccessListener myOnSuccessListener = new MyOnSuccessListener();
                         myOnSuccessListener.setContexto(getApplicationContext());
                         myOnSuccessListener.setValue(value);
@@ -656,7 +657,7 @@ public class TextActivity extends AppCompatActivity {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference ref = storageRef.child((urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
-            ficheroThmb=new File(Environment.getExternalStorageDirectory()+"/Calculator/"+(urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
+            ficheroThmb=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+(urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
             ficheroThmb.getParentFile().mkdirs();
             if(!ficheroThmb.exists()) {
                 ref.getFile(ficheroThmb).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -688,7 +689,7 @@ public class TextActivity extends AppCompatActivity {
                 decodedBitmap = BitmapFactory.decodeFile(ficheroThmb.getAbsolutePath());
             }
             //final Bitmap decodedBitmap = BitmapFactory.decodeByteArray(Base64.decode(urlImagen,Base64.DEFAULT), 0, Base64.decode(urlImagen,Base64.DEFAULT).length);
-            imgView.setClave(Environment.getExternalStorageDirectory()+"/Calculator/"+urlVideo);
+            imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlVideo);
             imgView.setClaveImagen(urlVideo);
             imgView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -696,13 +697,14 @@ public class TextActivity extends AppCompatActivity {
                     Class<? extends View> aClass = v.getClass();
 
                     String value=((MyImageView)v).getClave();
+                    value=value.replace(".img",".vid");
                     if(!new File(value).exists()){
                         FirebaseApp.initializeApp(getApplicationContext());
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
-                        StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());
-                        fichero=new File(Environment.getExternalStorageDirectory()+"/Calculator/"+((MyImageView)v).getClaveImagen());
-                        MyOnSuccessListener myOnSuccessListener = new MyOnSuccessListener();
+                        StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen().replace(".img",".vid"));
+                        fichero=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+((MyImageView)v).getClaveImagen().replace(".img",".vid"));
+                        MyOnSuccessListenerVideos myOnSuccessListener = new MyOnSuccessListenerVideos();
                         myOnSuccessListener.setContexto(getApplicationContext());
                         myOnSuccessListener.setValue(value);
                         ref.getFile(fichero).addOnSuccessListener(myOnSuccessListener);
@@ -746,57 +748,6 @@ public class TextActivity extends AppCompatActivity {
         });
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_chat, menu);
-        return true;
-    }*/
-/*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_deleteConservation) {
-            new AlertDialog.Builder(this)
-                    .setTitle(friendFullName)
-                    .setMessage("Are you sure to delete this chat?")
-                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            db.deleteChat(user.Email, friendEmail);
-                            layout.removeAllViews();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, null)
-                    .show();
-            return true;
-        }
-        if (id == R.id.menu_deleteContact) {
-            new AlertDialog.Builder(this)
-                    .setTitle(friendFullName)
-                    .setMessage("Are you sure to delete this contact?")
-                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Firebase ref = new Firebase(StaticInfo.EndPoint + "/friends/" + user.Email + "/" + friendEmail);
-                            ref.removeValue();
-                            // delete from local database
-                            db.deleteFriendByEmailFromLocalDB(friendEmail);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, null)
-                    .show();
-            return true;
-        }
-
-        if (id == R.id.menu_friendProfile) {
-            Intent i = new Intent(ActivityChat.this, ActivityFriendProfile.class);
-            i.putExtra("Email", friendEmail);
-
-            startActivityForResult(i, StaticInfo.ChatAciviityRequestCode);
-        }
-        return true;
-    }*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 

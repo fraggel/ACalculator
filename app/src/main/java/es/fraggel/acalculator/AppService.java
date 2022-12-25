@@ -72,6 +72,7 @@ public class AppService extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        try{
         UploadFiles updF=new UploadFiles(getApplicationContext());
         updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Util.escribirLog("APPSERVICE","Inicio Servicio onStartCommand",getApplicationContext());
@@ -85,9 +86,9 @@ public class AppService extends Service {
             editor.putBoolean("notify", Boolean.valueOf(notify).booleanValue());
             editor.commit();
         }
-        try{
+
             Firebase.setAndroidContext(getApplicationContext());
-        }catch(Exception e){}
+
         DataContext db = new DataContext(this, null, null, 1);
 
         // check if user exists in local db
@@ -148,6 +149,7 @@ public class AppService extends Service {
                 }
         );
         Util.escribirLog("APPSERVICE","Terminando Service",getApplicationContext());
+        }catch(Exception e){}
         return START_STICKY;
     }
 

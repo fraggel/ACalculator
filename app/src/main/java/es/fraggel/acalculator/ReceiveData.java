@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -63,6 +64,8 @@ public class ReceiveData extends AppCompatActivity {
                 handleSendText(intent); // Handle text being sent
             } else if (type.startsWith("image/")) {
                 handleSendImage(intent); // Handle single image being sent
+            } else if (type.startsWith("video/")) {
+                handleSendVideo(intent); // Handle single image being sent
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
             if (type.startsWith("image/")) {
@@ -84,6 +87,12 @@ public class ReceiveData extends AppCompatActivity {
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
             createThumbnailAndUpload(getRealPathFromURI(imageUri));
+        }
+    }
+    void handleSendVideo(Intent intent) {
+        Uri videoUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (videoUri != null) {
+            createThumbnailVideoAndUpload(getRealPathFromURI(videoUri));
         }
     }
 
@@ -169,17 +178,31 @@ public class ReceiveData extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle unsuccessful uploads
+                    finish();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    finish();
                     /*Intent resultIntent = new Intent(getApplicationContext(), TextActivity.class);
                     setResult(StaticInfo.ImageActivityRequestCode, resultIntent);
                     finish();*/
                 }
             });
             UploadTask uploadTaskThmb = mountainImagesThmbRef.putFile(Uri.fromFile(new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/images/thmb_" + timeInMillis + ".img")));
+            uploadTaskThmb.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    finish();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    finish();
 
+                }
+            });
 
             Firebase.setAndroidContext(this);
 
@@ -237,7 +260,174 @@ public class ReceiveData extends AppCompatActivity {
             finish();
         }
     }
+    private void createThumbnailVideoAndUpload(String imageUri) {
+        try {
+            String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
+            Bitmap thumbnail=retriveVideoFrameFromVideo(imageUri);
+            File thumbnailFile = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img");
+            thumbnailFile.getParentFile().mkdirs();
+            FileOutputStream fos = new FileOutputStream(thumbnailFile);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            fos.flush();
+            fos.close();
 
+            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+            bitmapOptions.inJustDecodeBounds = true; // obtain the size of the image, without loading it in memory
+            BitmapFactory.decodeFile(thumbnailFile.getAbsolutePath(), bitmapOptions);
+
+// find the best scaling factor for the desired dimensions
+            int desiredWidth = 200;
+            int desiredHeight = 100;
+            float widthScale = (float) bitmapOptions.outWidth / desiredWidth;
+            float heightScale = (float) bitmapOptions.outHeight / desiredHeight;
+            float scale = Math.min(widthScale, heightScale);
+
+            int sampleSize = 1;
+            while (sampleSize < scale) {
+                sampleSize *= 2;
+            }
+            bitmapOptions.inSampleSize = sampleSize; // this value must be a power of 2,
+            // this is why you can not have an image scaled as you would like
+            bitmapOptions.inJustDecodeBounds = false; // now we want to load the image
+
+// Let's load just the part of the image necessary for creating the thumbnail, not the whole image
+            thumbnail = BitmapFactory.decodeFile(thumbnailFile.getAbsolutePath(), bitmapOptions);
+// Use the thumbail on an ImageView or recycle it!
+            thumbnailFile = new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img");
+            fos = new FileOutputStream(thumbnailFile);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            fos.flush();
+            fos.close();
+
+            FileInputStream inStream = new FileInputStream(imageUri);
+            FileOutputStream outStream = new FileOutputStream(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/" + timeInMillis + ".vid");
+            FileChannel inChannel = inStream.getChannel();
+            FileChannel outChannel = outStream.getChannel();
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+            inStream.close();
+            outStream.close();
+
+            /*ImageView imageView = new ImageView(this);
+            imageView.setImageBitmap(thumbnail);
+*/
+            FirebaseApp.initializeApp(this);
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference mountainImagesRef = storageRef.child("videos/"+timeInMillis+".vid");
+            StorageReference mountainImagesThmbRef = storageRef.child("videos/thmb_"+timeInMillis+".img");
+
+            UploadTask uploadTask = mountainImagesRef.putFile(Uri.fromFile(new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/" + timeInMillis + ".vid")));
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+/*
+                    Intent resultIntent = new Intent(getApplicationContext(), TextActivity.class);
+                    setResult(StaticInfo.VideoActivityRequestCode, resultIntent);*/
+                    finish();
+                }
+            });
+            UploadTask uploadTaskThmb = mountainImagesThmbRef.putFile(Uri.fromFile(new File(ContextCompat.getExternalFilesDirs(this, null)[0] + "/Calculator/"+"/videos/thmb_" + timeInMillis + ".img")));
+            uploadTaskThmb.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    /*Intent resultIntent = new Intent(getApplicationContext(),ActivityChat.class);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();*/
+                }
+            });
+            Firebase.setAndroidContext(this);
+
+            db = new DataContext(this, null, null, 1);
+
+            user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
+            reference1 = new Firebase(StaticInfo.MessagesEndPoint + "/" + user.Email + "-@@-" + friendEmail);
+            reference2 = new Firebase(StaticInfo.MessagesEndPoint + "/" + friendEmail + "-@@-" + user.Email);
+            refFriend = new Firebase(StaticInfo.UsersURL + "/" + friendEmail);
+            refNotMess = new Firebase(StaticInfo.NotificationEndPoint + "/" + friendEmail);
+            if (user.Email == null) {
+                // send to activitylogin
+                Intent intent = new Intent(this, ActivityLogin.class);
+                startActivityForResult(intent, 100);
+//
+            } else {
+                //startService(new Intent(this, AppService.class));
+                if (refUser == null) {
+                    refUser = new Firebase(StaticInfo.UsersURL + "/" + user.Email);
+                }
+
+            }
+
+
+
+            String urlVideo="/videos/" + timeInMillis + ".img";
+            Map<String, String> map = new HashMap<>();
+            map.put("Message", "--[VIDEO]--");
+            map.put("SenderEmail", user.Email);
+            map.put("FirstName", user.FirstName);
+            map.put("LastName", user.LastName);
+
+            DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
+            Date date = new Date();
+            String sentDate = dateFormat.format(date);
+            String urlImagen="";
+            map.put("SentDate", sentDate);
+            map.put("urlImagen",urlImagen);
+            map.put("urlVideo",urlVideo);
+            //reference1.push().setValue(map);
+            reference2.push().setValue(map);
+            refNotMess.push().setValue(map);
+
+            // save in local db
+            db.saveMessageOnLocakDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
+
+            // appendmessage
+            /*try {
+                appendMessage("--[IMAGE]--", sentDate, 1, false,urlImagen,urlVideo);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }*/
+        }catch(Exception e){
+            e.printStackTrace();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+    public static Bitmap retriveVideoFrameFromVideo(String p_videoPath)
+            throws Throwable
+    {
+        Bitmap m_bitmap = null;
+        MediaMetadataRetriever m_mediaMetadataRetriever = null;
+        try
+        {
+            m_mediaMetadataRetriever = new MediaMetadataRetriever();
+            m_mediaMetadataRetriever.setDataSource(p_videoPath);
+            m_bitmap = m_mediaMetadataRetriever.getFrameAtTime();
+        }
+        catch (Exception m_e)
+        {
+            throw new Throwable(
+                    "Exception in retriveVideoFrameFromVideo(String p_videoPath)"
+                            + m_e.getMessage());
+        }
+        finally
+        {
+            if (m_mediaMetadataRetriever != null)
+            {
+                m_mediaMetadataRetriever.release();
+            }
+        }
+        return m_bitmap;
+    }
     @Override
     protected void onPause() {
         super.onPause();

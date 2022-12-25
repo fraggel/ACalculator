@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
         CheckVersion myTask = new CheckVersion(this);
         myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dcr= new DonwloadCompleteReceiver();
-        registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        try {
+            registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        }catch(Exception e){}
         UploadFiles updF=new UploadFiles(getApplicationContext());
         updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Firebase.setAndroidContext(this);
@@ -280,9 +282,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        /*try{
+        try{
             unregisterReceiver(dcr);
-        }catch(Exception e){}*/
+        }catch(Exception e){}
         //finish();
     }
     private boolean checkPermissions() {

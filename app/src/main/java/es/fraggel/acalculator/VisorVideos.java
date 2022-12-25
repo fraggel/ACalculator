@@ -74,8 +74,29 @@ public class VisorVideos extends AppCompatActivity {
         });
 
     }
+    @Override
+    protected void onPause() {
+         VideoView myVideoView = (VideoView) findViewById(R.id.videoView);
+        myVideoView.setVisibility(View.INVISIBLE);
+        super.onPause();
+    }
 
     @Override
+    protected void onStop() {
+        VideoView myVideoView = (VideoView) findViewById(R.id.videoView);
+        myVideoView.setVisibility(View.INVISIBLE);
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        VideoView myVideoView = (VideoView) findViewById(R.id.videoView);
+        myVideoView.setVisibility(View.INVISIBLE);
+        super.onDestroy();
+        finish();
+    }
+   /* @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         //we use onSaveInstanceState in order to store the video playback position for orientation change
@@ -89,6 +110,6 @@ public class VisorVideos extends AppCompatActivity {
         //we use onRestoreInstanceState in order to play the video playback from the stored position
         position = savedInstanceState.getInt("Position");
         myVideoView.seekTo(position);
-    }
+    }*/
 }
 
