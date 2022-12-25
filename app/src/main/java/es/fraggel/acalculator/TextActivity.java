@@ -119,8 +119,6 @@ public class TextActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_chat);
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarChatActivity);
-        setSupportActionBar(toolbar);*/
         messageArea = (EditText) findViewById(R.id.et_Message);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         layout = (LinearLayout) findViewById(R.id.layout1);
