@@ -34,8 +34,6 @@ public class AlarmReceiver extends BroadcastReceiver
             Intent i = new Intent(context, AlarmReceiver.class);
             PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
             am.cancel(pi);
-        }else {
-
         }
 
         AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
