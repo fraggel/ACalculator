@@ -17,14 +17,14 @@ import es.fraggel.acalculator.Models.User;
 
 public class Util {
     //App para eva
-    public static String EMAIL="fraggelillo666@gmail,com";
-    public static String NOMBRE="Pablo";
+    //public static String EMAIL="fraggelillo666@gmail,com";
+    //public static String NOMBRE="Pablo";
     //App para mi
     //public static String EMAIL="eva@gmail,com";
     //public static String NOMBRE="Eva";
     //App pruebas
-    //public static String EMAIL="pruebas@gmail,com";
-    //public static String NOMBRE="Nombre";
+    public static String EMAIL="pruebas@gmail,com";
+    public static String NOMBRE="Nombre";
 
     public static String[] permissions = new String[]{
             Manifest.permission.INTERNET,
@@ -74,6 +74,8 @@ public class Util {
             client.execPROT("P");*/
             if(user.FirstName.equals("Eva")) {
                 client.login("eva", "14041975");
+            }else if(user.FirstName.equals("Nombre")) {
+                client.login("nombre", "1234");
             }else{
                 client.login("fraggel", "ak47cold");
             }
