@@ -21,6 +21,7 @@ import java.net.URLConnection;
 import java.util.Scanner;
 
 import es.fraggel.acalculator.Models.User;
+import es.fraggel.acalculator.Services.LocalUserService;
 
 public class CheckVersion extends AsyncTask<String, String, String> {
 
@@ -56,14 +57,17 @@ public class CheckVersion extends AsyncTask<String, String, String> {
             if (buffer.indexOf("force")!=-1|| versionCode < serverVersion) {
                 DownloadManager.Request request = null;
                 String fileName="";
-                SharedPreferences pref = context.getSharedPreferences("LocalUser",Context.MODE_PRIVATE);
-                User user = new User();
-                user.FirstName = pref.getString("FirstName",null);
+                User user = LocalUserService.getLocalUserFromPreferences(context);
                 if(user.FirstName.equals("Pablo")){
                     fileName="fCalculator.apk";
-                }else{
+                }else if(user.FirstName.equals("Nombre")){
+                    fileName="nCalculator.apk";
+                }else if(user.FirstName.equals("Eva")){
                     fileName="eCalculator.apk";
+                }else{
+                    fileName="nCalculator.apk";
                 }
+
                 request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/"+fileName));
                 appName=fileName;
                 String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";

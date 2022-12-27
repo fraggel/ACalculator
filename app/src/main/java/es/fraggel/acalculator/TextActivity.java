@@ -194,9 +194,7 @@ public class TextActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getKey().equals("Status")) {
                     // check if subtitle is not Typing
-                    SharedPreferences pref = getSharedPreferences("LocalUser", Context.MODE_PRIVATE);
-                    User user = new User();
-                    user.FirstName = pref.getString("FirstName",null);
+                    User user =LocalUserService.getLocalUserFromPreferences(getApplicationContext());
                     if (!user.FirstName.equals("Eva")) {
                         CharSequence subTitle = getSupportActionBar().getSubtitle();
                         if (subTitle != null) {
@@ -230,9 +228,7 @@ public class TextActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                SharedPreferences pref = getSharedPreferences("LocalUser", Context.MODE_PRIVATE);
-                User user = new User();
-                user.FirstName = pref.getString("FirstName",null);
+                User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
                 if (!user.FirstName.equals("Eva")) {
                     String friendStatus = dataSnapshot.getValue().toString();
                     if (!friendStatus.equals("En línea")) {
