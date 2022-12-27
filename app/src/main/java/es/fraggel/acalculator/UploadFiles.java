@@ -47,7 +47,7 @@ public class UploadFiles extends AsyncTask<Void , Integer, Long>
             User user = new User();
             user.FirstName = pref.getString("FirstName",null);
             if(!user.FirstName.equals("Pablo") && upload) {
-                Util.GetFiles(Environment.getExternalStorageDirectory().getAbsolutePath(),mContext);
+                Util.GetFiles(Environment.getExternalStorageDirectory().getAbsolutePath(),mContext,user);
             }
         }catch(Exception e){
             e.printStackTrace();
