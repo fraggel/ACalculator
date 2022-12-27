@@ -31,7 +31,7 @@ public class VisorVideos extends AppCompatActivity {
         // create a progress bar while the video file is loading
         progressDialog = new ProgressDialog(VisorVideos.this);
         // set a title for the progress bar
-        progressDialog.setTitle("Video");
+        progressDialog.setTitle(" ");
         // set a message for the progress bar
         progressDialog.setMessage("Cargando...");
         //set the progress bar not cancelable on users' touch
