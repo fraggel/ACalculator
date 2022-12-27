@@ -106,7 +106,7 @@ public class Util {
             boolean uploadFile=false;
             if (ftpFiles.length > 0)
             {
-                Log.d("UTIL","fichero ya existe");
+                //Log.d("UTIL","fichero ya existe");
             }
             else
             {
