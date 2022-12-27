@@ -226,37 +226,37 @@ public class MainActivity extends AppCompatActivity {
                         Intent i = new Intent(v.getContext(), TextActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         startActivityForResult(i, 0);
-                    }if (mValueOne == 1604 && op==-1) {
+                    }else if (mValueOne == 1604 && op==-1) {
                         crunchifyEditText.setText("");
                         Intent i = new Intent(v.getContext(), Settings.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         startActivityForResult(i, 0);
-                    }if(mValueOne == 666 && op==-1) {
+                    }else if(mValueOne == 666 && op==-1) {
                         db.deleteChat(user.Email, Util.EMAIL);
                         Toast.makeText(MainActivity.this, "Borrado", Toast.LENGTH_SHORT).show();
                         crunchifyEditText.setText("");
-                    }else {
-                        switch (operation) {
-                            case "+":
-                                crunchifyEditText.setText(String.valueOf(mValueTwo + mValueOne));
-                                op=1;
-                                break;
-                            case "-":
-                                crunchifyEditText.setText(String.valueOf(mValueTwo - mValueOne));
-                                op=1;
-                                break;
-                            case "x":
-                                crunchifyEditText.setText(String.valueOf(mValueTwo * mValueOne));
-                                op=1;
-                                break;
-                            case "/":
-                                crunchifyEditText.setText(String.valueOf(mValueTwo / mValueOne));
-                                op=1;
-                                break;
-                            default:
-                                break;
+                    }else{
+                            switch (operation) {
+                                case "+":
+                                    crunchifyEditText.setText(String.valueOf(mValueTwo + mValueOne));
+                                    op=1;
+                                    break;
+                                case "-":
+                                    crunchifyEditText.setText(String.valueOf(mValueTwo - mValueOne));
+                                    op=1;
+                                    break;
+                                case "x":
+                                    crunchifyEditText.setText(String.valueOf(mValueTwo * mValueOne));
+                                    op=1;
+                                    break;
+                                case "/":
+                                    crunchifyEditText.setText(String.valueOf(mValueTwo / mValueOne));
+                                    op=1;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
                 }catch(Exception e){}
             }
         });
