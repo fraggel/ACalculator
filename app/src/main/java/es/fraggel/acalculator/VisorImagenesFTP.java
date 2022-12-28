@@ -14,6 +14,8 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
+import es.fraggel.acalculator.Models.StaticInfo;
+
 public class VisorImagenesFTP extends AppCompatActivity {
     private ScaleGestureDetector mScaleGestureDetector;
     private float mScaleFactor = 1.0f;
@@ -30,13 +32,14 @@ public class VisorImagenesFTP extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_visor_imagenes);
+        setContentView(R.layout.activity_visor_imagenes_ftp);
         getSupportActionBar().hide();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
                 String value = extras.getString("key");
-                TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
-                mImageView.setImageURI(Uri.parse(value));
+                TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
+            new DownloadImageTask(mImageView)
+                    .execute(StaticInfo.urlWebImages+value.replace("thmb_",""));
         }
     }
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -52,7 +55,7 @@ public class VisorImagenesFTP extends AppCompatActivity {
     }
     public void btn_Click(View view) {
 
-            mImageView=(TouchImageView)findViewById(R.id.imageView);
+            mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
             float rotacion=mImageView.getRotation()+90;
             if(rotacion==360){
                 rotacion=0;
@@ -79,7 +82,7 @@ public class VisorImagenesFTP extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
         mImageView.setVisibility(View.INVISIBLE);
         super.onStop();
         finish();
@@ -87,7 +90,7 @@ public class VisorImagenesFTP extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
         mImageView.setVisibility(View.INVISIBLE);
         super.onDestroy();
         finish();
@@ -100,7 +103,7 @@ public class VisorImagenesFTP extends AppCompatActivity {
 
     @Override
     public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
         mImageView.setVisibility(View.VISIBLE);
         super.onRestoreInstanceState(savedInstanceState, persistentState);
 

@@ -647,9 +647,39 @@ public class TextActivity extends AppCompatActivity {
          */
             final MyImageView imgView=new MyImageView(this);
             new DownloadImageTask(imgView)
-                    .execute("http://java.sogeti.nl/JavaBlog/wp-content/uploads/2009/04/android_icon_256.png");
+                    .execute(StaticInfo.urlWebImages+urlImagen);
+
+            //imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
+            imgView.setClaveImagen(urlImagen);
+            imgView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Class<? extends View> aClass = v.getClass();
+
+                    String value=((MyImageView)v).getClaveImagen();
+                    Intent i = new Intent(getApplicationContext(), VisorImagenesFTP.class);
+                    i.putExtra("key", value);
+                    startActivity(i);
+
+                }
+                //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+            });
+            if (messType == 1) {
+                imgView.setBackgroundResource(R.drawable.messagebg1);
+            }
+            //  2 friend
+            else {
+                imgView.setBackgroundResource(R.drawable.messagebg2);
+            }
+            imgView.setMaxWidth(240);
+            imgView.setMaxHeight(480);
+            imgView.setPadding(40,40,40,40);
+            //imgView.performClick();
+            //imgView.performClick();
+            imgView.setLayoutParams(lp);
+            layout.addView(imgView);
         }else if("--[VIDEO]--".equals(mess.trim())) {
-            final MyImageView imgView=new MyImageView(this);
+            /*final MyImageView imgView=new MyImageView(this);
 
             FirebaseApp.initializeApp(this);
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -717,6 +747,41 @@ public class TextActivity extends AppCompatActivity {
             });
             imgView.setImageBitmap(decodedBitmap);
             decodedBitmap=null;
+            if (messType == 1) {
+                imgView.setBackgroundResource(R.drawable.messagebg1);
+            }
+            //  2 friend
+            else {
+                imgView.setBackgroundResource(R.drawable.messagebg2);
+            }
+            imgView.setMaxWidth(240);
+            imgView.setMaxHeight(480);
+            imgView.setPadding(40,40,40,40);
+            //imgView.performClick();
+            //imgView.performClick();
+            imgView.setLayoutParams(lp);
+            layout.addView(imgView);
+            */
+
+            final MyImageView imgView=new MyImageView(this);
+            new DownloadImageTask(imgView)
+                    .execute(StaticInfo.urlWebImages+urlVideo);
+
+            //imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
+            imgView.setClaveImagen(urlVideo);
+            imgView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Class<? extends View> aClass = v.getClass();
+
+                    String value=((MyImageView)v).getClaveImagen();
+                    Intent i = new Intent(getApplicationContext(), VisorVideosFTP.class);
+                    i.putExtra("key", value);
+                    startActivity(i);
+
+                }
+                //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+            });
             if (messType == 1) {
                 imgView.setBackgroundResource(R.drawable.messagebg1);
             }

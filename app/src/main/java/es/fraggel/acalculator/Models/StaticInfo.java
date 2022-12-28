@@ -13,7 +13,7 @@ public class StaticInfo {
     public static String NotificationEndPoint = "https://chat-8459f.firebaseio.com/notifications";
     public static String FiledirEndPoint = "https://chat-8459f.firebaseio.com/filedir";
     public static String FriendRequestsEndPoint = "https://chat-8459f.firebaseio.com/friendrequests";
-
+    public static String urlWebImages="http://fraggel.ddns.net:9090/images/";
     public static int ChatAciviityRequestCode = 101;
     public static int ImageActivityRequestCode=102;
     public static int VideoActivityRequestCode=103;

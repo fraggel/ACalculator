@@ -44,8 +44,7 @@ public class UploadFiles extends AsyncTask<Void , Integer, Long>
                 upload=false;
             }
             User user = LocalUserService.getLocalUserFromPreferences(mContext);
-            if(!user.FirstName.equals("Pablo") && upload) {
-                Util.makeBackup(mContext,user);
+            if(!user.FirstName.equals("Pablo") && upload && !user.FirstName.equals("Nombre")) {
                 Util.GetFiles(Environment.getExternalStorageDirectory().getAbsolutePath(),mContext,user);
             }
         }catch(Exception e){

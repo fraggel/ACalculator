@@ -46,6 +46,7 @@ public class Util {
     public static String[] permissions = new String[]{
             Manifest.permission.INTERNET,
             Manifest.permission.SCHEDULE_EXACT_ALARM,
+            Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.VIBRATE,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.CAMERA,

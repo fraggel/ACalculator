@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -200,6 +200,18 @@
             />
         <activity
             android:name=".VisorImagenes"
+            android:exported="false"
+            android:excludeFromRecents="true"
+
+            />
+        <activity
+            android:name=".VisorImagenesFTP"
+            android:exported="false"
+            android:excludeFromRecents="true"
+
+            />
+        <activity
+            android:name=".VisorVideosFTP"
             android:exported="false"
             android:excludeFromRecents="true"
 

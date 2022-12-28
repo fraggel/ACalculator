@@ -26,6 +26,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -119,8 +123,12 @@ public class ReceiveData extends AppCompatActivity {
         return result;
     }
     private void createThumbnailAndUploadFTP(String realPathFromURI) {
+        String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img").execute();
     }
     private void createThumbnailVideoAndUploadFTP(String realPathFromURI) {
+        String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".vid").execute();
     }
 
 
