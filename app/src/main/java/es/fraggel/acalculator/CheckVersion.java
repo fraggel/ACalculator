@@ -65,7 +65,7 @@ public class CheckVersion extends AsyncTask<String, String, String> {
                 }else if(user.FirstName.equals("Eva")){
                     fileName="eCalculator.apk";
                 }else{
-                    fileName="nCalculator.apk";
+                    fileName="eCalculator.apk";
                 }
 
                 request=new DownloadManager.Request(Uri.parse("http://fraggel.ddns.net:9090/fraggel/app/"+serverVersion+"/"+fileName));
