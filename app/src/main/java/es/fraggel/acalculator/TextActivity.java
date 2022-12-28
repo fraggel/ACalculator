@@ -563,7 +563,7 @@ public class TextActivity extends AppCompatActivity {
 
         textView.setLayoutParams(lp);
         if("--[IMAGE]--".equals(mess.trim())){
-            final MyImageView imgView=new MyImageView(this);
+            /*final MyImageView imgView=new MyImageView(this);
 
             FirebaseApp.initializeApp(this);
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -644,6 +644,10 @@ public class TextActivity extends AppCompatActivity {
             //imgView.performClick();
             imgView.setLayoutParams(lp);
             layout.addView(imgView);
+         */
+            final MyImageView imgView=new MyImageView(this);
+            new DownloadImageTask(imgView)
+                    .execute("http://java.sogeti.nl/JavaBlog/wp-content/uploads/2009/04/android_icon_256.png");
         }else if("--[VIDEO]--".equals(mess.trim())) {
             final MyImageView imgView=new MyImageView(this);
 

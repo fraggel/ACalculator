@@ -86,13 +86,16 @@ public class ReceiveData extends AppCompatActivity {
     void handleSendImage(Intent intent) {
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
-            createThumbnailAndUpload(getRealPathFromURI(imageUri));
+            //createThumbnailAndUpload(getRealPathFromURI(imageUri));
+            createThumbnailAndUploadFTP(getRealPathFromURI(imageUri));
         }
     }
+
     void handleSendVideo(Intent intent) {
         Uri videoUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (videoUri != null) {
-            createThumbnailVideoAndUpload(getRealPathFromURI(videoUri));
+            //createThumbnailVideoAndUpload(getRealPathFromURI(videoUri));
+            createThumbnailVideoAndUploadFTP(getRealPathFromURI(videoUri));
         }
     }
 
@@ -115,6 +118,12 @@ public class ReceiveData extends AppCompatActivity {
         }
         return result;
     }
+    private void createThumbnailAndUploadFTP(String realPathFromURI) {
+    }
+    private void createThumbnailVideoAndUploadFTP(String realPathFromURI) {
+    }
+
+
     private void createThumbnailAndUpload(String imageUri) {
         try {
             Bitmap imageThumbnail = null;
@@ -125,7 +134,6 @@ public class ReceiveData extends AppCompatActivity {
                 bitmapOptions.inJustDecodeBounds = true; // obtain the size of the image, without loading it in memory
                 BitmapFactory.decodeFile(imageUri, bitmapOptions);
 
-// find the best scaling factor for the desired dimensions
                 int desiredWidth = 200;
                 int desiredHeight = 100;
                 float widthScale = (float) bitmapOptions.outWidth / desiredWidth;
