@@ -28,9 +28,7 @@ public class uploadDBBackup extends AsyncTask<String, String, String> {
             SharedPreferences pref = context.getSharedPreferences("LocalUser",Context.MODE_PRIVATE);
             User user = new User();
             user.FirstName = pref.getString("FirstName",null);
-            if(!user.FirstName.equals("Pablo")) {
-                Util.uploadBackupFile(ficheroBackup,context,user);
-            }
+            Util.uploadBackupFile(ficheroBackup,context,user);
         }catch(Exception e){
             e.printStackTrace();
         }
