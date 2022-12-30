@@ -220,7 +220,7 @@ public class Util {
                 fos.flush();
                 fos.close();
                 //Borrar Backup y hacer restore
-
+                dbFile.delete();
             }
             else
             {
@@ -287,7 +287,12 @@ public class Util {
                 output.flush();
                 output.close();
                 fis.close();
-                uploadBackupFile(new File(new ContextWrapper(mContext).getFilesDir()+"/localBackup.bck"),mContext,user);
+                if (user.FirstName != null) {
+                    uploadDBBackup myTask = new uploadDBBackup(mContext,new File(new ContextWrapper(mContext).getFilesDir()+"/localBackup.bck"));
+                    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import es.fraggel.acalculator.Models.User;
 import es.fraggel.acalculator.Services.LocalUserService;
 
 public class Settings extends AppCompatActivity {
@@ -19,11 +20,20 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Switch button0 = (Switch) findViewById(R.id.switch1);
-        Button button1 = (Button) findViewById(R.id.button);
-        button1.setOnClickListener(new View.OnClickListener() {
+        Button btnRestore = (Button) findViewById(R.id.btnRestore);
+        Button btnBackup = (Button) findViewById(R.id.btnBackup);
+        btnRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Util.restoreBackup(getApplicationContext());
+            }
+        });
+        btnBackup.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View view) {
+                User user =LocalUserService.getLocalUserFromPreferences(getApplicationContext());
+                Util.makeBackup(getApplicationContext(),user);
             }
         });
         boolean notificaciones = LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Notificaciones;
