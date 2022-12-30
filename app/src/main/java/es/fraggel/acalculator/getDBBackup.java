@@ -1,5 +1,6 @@
 package es.fraggel.acalculator;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -42,13 +43,13 @@ public class getDBBackup extends AsyncTask<String, String, String> {
         }catch(Exception e){
             e.printStackTrace();
         }
-        return resp;
+        return null;
     }
 
 
     @Override
     protected void onPostExecute(String result) {
-
+        Toast.makeText(context, "Copia Restaurada", Toast.LENGTH_SHORT).show();
     }
 
 

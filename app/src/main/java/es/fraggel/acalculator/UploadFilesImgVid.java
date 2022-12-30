@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Size;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -47,6 +48,7 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
         mContext = context;
         timeInMillisName=timeInM;
     }
+
     @Override
     protected Long doInBackground(Void... voids) {
         int flag;
@@ -200,6 +202,7 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
             }
 
         }
+
         return null;
     }
     public static Bitmap retriveVideoFrameFromVideo(String p_videoPath)
@@ -230,7 +233,6 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
     }
     @Override
     protected void onPostExecute(Long result) {
-        //Termina proceso
-        Log.i("TAG" , "Termina proceso de lectura de archivos.");
+        Toast.makeText(mContext, "Subida Terminada", Toast.LENGTH_SHORT).show();
     }
 }

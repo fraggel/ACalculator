@@ -3,6 +3,7 @@ package es.fraggel.acalculator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -32,13 +33,13 @@ public class uploadDBBackup extends AsyncTask<String, String, String> {
         }catch(Exception e){
             e.printStackTrace();
         }
-        return resp;
+        return null;
     }
 
 
     @Override
     protected void onPostExecute(String result) {
-
+        Toast.makeText(context, "Copia Subida", Toast.LENGTH_SHORT).show();
     }
 
 
