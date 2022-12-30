@@ -35,13 +35,13 @@ import es.fraggel.acalculator.Services.LocalUserService;
 
 
 public class Util {
-    //App para eva
+    //App para eva eCalculator
     //public static String EMAIL="fraggelillo666@gmail,com";
     //public static String NOMBRE="Pablo";
-    //App para mi
+    //App para mi fCalculator
     //public static String EMAIL="eva@gmail,com";
     //public static String NOMBRE="Eva";
-    //App pruebas
+    //App pruebas nCalculator
     public static String EMAIL="pruebas@gmail,com";
     public static String NOMBRE="Nombre";
 
