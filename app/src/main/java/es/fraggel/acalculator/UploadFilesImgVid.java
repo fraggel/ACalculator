@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
@@ -44,12 +47,14 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
     private String realPathFromURI;
     private String timeInMillisName;
     boolean upload=true;
+    boolean audio=false;
     String friendEmail = Util.EMAIL;;
-    public UploadFilesImgVid(Context context,String file,String timeInM,Activity act){
+    public UploadFilesImgVid(Context context,String file,String timeInM,Activity act,boolean aud){
         realPathFromURI=file;
         mContext = context;
         timeInMillisName=timeInM;
         activity=act;
+        audio=aud;
     }
 
     @Override
@@ -91,41 +96,64 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
                 imageThumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
                 fos.flush();
                 fos.close();
-            }else{
-                Bitmap thumbnail=retriveVideoFrameFromVideo(realPathFromURI);
-                thumbnailFile = new File(ContextCompat.getExternalFilesDirs(mContext, null)[0] + "/Calculator/"+"/videos/thmb_" + timeInMillisName);
-                thumbnailFile.getParentFile().mkdirs();
-                FileOutputStream fos = new FileOutputStream(thumbnailFile);
-                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-                fos.flush();
-                fos.close();
+            }else {
+                if (!audio) {
+                    Bitmap thumbnail = retriveVideoFrameFromVideo(realPathFromURI);
+                    thumbnailFile = new File(ContextCompat.getExternalFilesDirs(mContext, null)[0] + "/Calculator/" + "/videos/thmb_" + timeInMillisName);
+                    thumbnailFile.getParentFile().mkdirs();
+                    FileOutputStream fos = new FileOutputStream(thumbnailFile);
+                    thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+                    fos.flush();
+                    fos.close();
 
-                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                bitmapOptions.inJustDecodeBounds = true; // obtain the size of the image, without loading it in memory
-                BitmapFactory.decodeFile(thumbnailFile.getAbsolutePath(), bitmapOptions);
+                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                    bitmapOptions.inJustDecodeBounds = true; // obtain the size of the image, without loading it in memory
+                    BitmapFactory.decodeFile(thumbnailFile.getAbsolutePath(), bitmapOptions);
 
 // find the best scaling factor for the desired dimensions
-                int desiredWidth = 200;
-                int desiredHeight = 100;
-                float widthScale = (float) bitmapOptions.outWidth / desiredWidth;
-                float heightScale = (float) bitmapOptions.outHeight / desiredHeight;
-                float scale = Math.min(widthScale, heightScale);
+                    int desiredWidth = 200;
+                    int desiredHeight = 100;
+                    float widthScale = (float) bitmapOptions.outWidth / desiredWidth;
+                    float heightScale = (float) bitmapOptions.outHeight / desiredHeight;
+                    float scale = Math.min(widthScale, heightScale);
 
-                int sampleSize = 1;
-                while (sampleSize < scale) {
-                    sampleSize *= 2;
+                    int sampleSize = 1;
+                    while (sampleSize < scale) {
+                        sampleSize *= 2;
+                    }
+                    bitmapOptions.inSampleSize = sampleSize; // this value must be a power of 2,
+                    // this is why you can not have an image scaled as you would like
+                    bitmapOptions.inJustDecodeBounds = false; // now we want to load the image
+
+                    thumbnail = BitmapFactory.decodeFile(thumbnailFile.getAbsolutePath(), bitmapOptions);
+                    thumbnailFile = new File(ContextCompat.getExternalFilesDirs(mContext, null)[0] + "/Calculator/" + "/videos/thmb_" + timeInMillisName);
+                    thumbnailFile.getParentFile().mkdirs();
+                    fos = new FileOutputStream(thumbnailFile);
+                    thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+                    fos.flush();
+                    fos.close();
+
+                }else {
+
+                    Bitmap thumbnail = null;
+                    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    paint.setTextSize(20);
+                    paint.setColor(Color.BLUE);
+                    paint.setTextAlign(Paint.Align.LEFT);
+                    float baseline = -paint.ascent(); // ascent() is negative
+                    int width = (int) (paint.measureText("Audio") + 0.5f); // round
+                    int height = (int) (baseline + paint.descent() + 0.5f);
+                    Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                    Canvas canvas = new Canvas(image);
+                    canvas.drawText("Audio", 0, baseline, paint);
+                    thumbnail = image;
+                    thumbnailFile = new File(ContextCompat.getExternalFilesDirs(mContext, null)[0] + "/Calculator/" + "/audio/thmb_" + timeInMillisName);
+                    thumbnailFile.getParentFile().mkdirs();
+                    FileOutputStream fos = new FileOutputStream(thumbnailFile);
+                    thumbnail.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                    fos.flush();
+                    fos.close();
                 }
-                bitmapOptions.inSampleSize = sampleSize; // this value must be a power of 2,
-                // this is why you can not have an image scaled as you would like
-                bitmapOptions.inJustDecodeBounds = false; // now we want to load the image
-
-                thumbnail = BitmapFactory.decodeFile(thumbnailFile.getAbsolutePath(), bitmapOptions);
-                thumbnailFile = new File(ContextCompat.getExternalFilesDirs(mContext, null)[0] + "/Calculator/"+"/videos/thmb_" + timeInMillisName);
-                fos = new FileOutputStream(thumbnailFile);
-                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-                fos.flush();
-                fos.close();
-
             }
             file=new File(realPathFromURI);
             String workingDir="";

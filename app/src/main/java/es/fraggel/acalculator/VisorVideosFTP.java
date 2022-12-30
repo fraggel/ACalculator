@@ -87,7 +87,7 @@ public class VisorVideosFTP extends AppCompatActivity {
 
                     @Override
                     public void hide() {
-
+                        super.show(0);
                     }
                     @Override
                     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -101,6 +101,7 @@ public class VisorVideosFTP extends AppCompatActivity {
                         return super.dispatchKeyEvent(event);
                     }
                 };
+                mediaController.show(0);
                 myVideoView.setMediaController(mediaController);
                 mp=mediaPlayer;
                 mediaPlayer.setVolume(0f,0f);

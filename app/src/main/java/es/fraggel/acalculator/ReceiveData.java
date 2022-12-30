@@ -70,6 +70,8 @@ public class ReceiveData extends AppCompatActivity {
                 handleSendImage(intent); // Handle single image being sent
             } else if (type.startsWith("video/")) {
                 handleSendVideo(intent); // Handle single image being sent
+            } else if (type.startsWith("audio/")) {
+                handleSendAudio(intent); // Handle single image being sent
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
             if (type.startsWith("image/")) {
@@ -99,7 +101,14 @@ public class ReceiveData extends AppCompatActivity {
         Uri videoUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (videoUri != null) {
             //createThumbnailVideoAndUpload(getRealPathFromURI(videoUri));
-            createThumbnailVideoAndUploadFTP(getRealPathFromURI(videoUri));
+            createThumbnailVideoAndUploadFTP(getRealPathFromURI(videoUri),false);
+        }
+    }
+    void handleSendAudio(Intent intent) {
+        Uri videoUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (videoUri != null) {
+            //createThumbnailVideoAndUpload(getRealPathFromURI(videoUri));
+            createThumbnailVideoAndUploadFTP(getRealPathFromURI(videoUri),true);
         }
     }
 
@@ -124,11 +133,11 @@ public class ReceiveData extends AppCompatActivity {
     }
     private void createThumbnailAndUploadFTP(String realPathFromURI) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img",ReceiveData.this).execute();
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img",ReceiveData.this,false).execute();
     }
-    private void createThumbnailVideoAndUploadFTP(String realPathFromURI) {
+    private void createThumbnailVideoAndUploadFTP(String realPathFromURI,boolean audio) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".vid",ReceiveData.this).execute();
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".aud",ReceiveData.this,audio).execute();
     }
 
 
