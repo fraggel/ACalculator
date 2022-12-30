@@ -5,12 +5,17 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import es.fraggel.acalculator.Models.StaticInfo;
+import retrofit2.http.Url;
 
 public class VisorVideosFTP extends AppCompatActivity {
     private VideoView myVideoView;

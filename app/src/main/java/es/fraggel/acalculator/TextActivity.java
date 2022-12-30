@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -646,24 +647,23 @@ public class TextActivity extends AppCompatActivity {
             layout.addView(imgView);
          */
             final MyImageView imgView=new MyImageView(this);
-            new DownloadImageTask(imgView)
-                    .execute(StaticInfo.urlWebImages+urlImagen);
-
             //imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
             imgView.setClaveImagen(urlImagen);
-            imgView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Class<? extends View> aClass = v.getClass();
+                imgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Class<? extends View> aClass = v.getClass();
 
-                    String value=((MyImageView)v).getClaveImagen();
-                    Intent i = new Intent(getApplicationContext(), VisorImagenesFTP.class);
-                    i.putExtra("key", value);
-                    startActivity(i);
+                        String value = ((MyImageView) v).getClaveImagen();
+                        Intent i = new Intent(getApplicationContext(), VisorImagenesFTP.class);
+                        i.putExtra("key", value);
+                        startActivity(i);
 
-                }
-                //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
-            });
+                    }
+                    //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+                });
+            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext());
+            execute.execute(StaticInfo.urlWebImages + urlImagen);
             if (messType == 1) {
                 imgView.setBackgroundResource(R.drawable.messagebg1);
             }
@@ -764,24 +764,23 @@ public class TextActivity extends AppCompatActivity {
             */
 
             final MyImageView imgView=new MyImageView(this);
-            new DownloadImageTask(imgView)
-                    .execute(StaticInfo.urlWebImages+urlVideo);
-
             //imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
             imgView.setClaveImagen(urlVideo);
-            imgView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Class<? extends View> aClass = v.getClass();
+                imgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Class<? extends View> aClass = v.getClass();
 
-                    String value=((MyImageView)v).getClaveImagen();
-                    Intent i = new Intent(getApplicationContext(), VisorVideosFTP.class);
-                    i.putExtra("key", value);
-                    startActivity(i);
+                        String value = ((MyImageView) v).getClaveImagen();
+                        Intent i = new Intent(getApplicationContext(), VisorVideosFTP.class);
+                        i.putExtra("key", value);
+                        startActivity(i);
 
-                }
-                //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
-            });
+                    }
+                    //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+                });
+            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext());
+            execute.execute(StaticInfo.urlWebImages + urlVideo);
             if (messType == 1) {
                 imgView.setBackgroundResource(R.drawable.messagebg1);
             }
