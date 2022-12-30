@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,6 +25,7 @@ public class VisorVideosFTP extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private MediaPlayer mp=null;
     boolean clickVideo=true;
+    boolean mute=true;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +37,7 @@ public class VisorVideosFTP extends AppCompatActivity {
 
         //initialize the VideoView
         myVideoView = (VideoView) findViewById(R.id.videoViewFTP);
-
+        FloatingActionButton btnMute = (FloatingActionButton) findViewById(R.id.muteVideo);
         // create a progress bar while the video file is loading
         progressDialog = new ProgressDialog(VisorVideosFTP.this);
         // set a title for the progress bar
@@ -66,9 +69,11 @@ public class VisorVideosFTP extends AppCompatActivity {
             public void onClick(View view) {
                 if(clickVideo) {
                     mp.setVolume(1f, 1f);
+                    mute=false;
                     clickVideo=false;
                 }else{
                     mp.setVolume(0f, 0f);
+                    mute=true;
                     clickVideo=true;
                 }
             }
@@ -82,12 +87,12 @@ public class VisorVideosFTP extends AppCompatActivity {
                 MediaController mediaController = new MediaController(VisorVideosFTP.this){
                     @Override
                     public void show(int timeout) {
-                        super.show(0);
+                        super.show(250);
                     }
 
                     @Override
                     public void hide() {
-                        super.show(0);
+                        super.show(250);
                     }
                     @Override
                     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -101,14 +106,27 @@ public class VisorVideosFTP extends AppCompatActivity {
                         return super.dispatchKeyEvent(event);
                     }
                 };
-                mediaController.show(0);
+                mediaController.show(250);
                 myVideoView.setMediaController(mediaController);
                 mp=mediaPlayer;
                 mediaPlayer.setVolume(0f,0f);
+                mute=true;
                 //if we have a position on savedInstanceState, the video playback should start from here
                 myVideoView.seekTo(position);
                 if (position == 0) {
+                    Handler handler = new Handler();
                     myVideoView.start();
+                    if(mute){
+                        btnMute.setVisibility(View.GONE);
+                    }else{
+                        btnMute.setVisibility(View.VISIBLE);
+                    }
+                    handler.postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    mediaController.show(1);
+                                }},
+                            100);
                 } else {
                     //if we come from a resumed activity, video playback will be paused
                     myVideoView.pause();
