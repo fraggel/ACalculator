@@ -25,7 +25,6 @@ public class VisorVideosFTP extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private MediaPlayer mp=null;
     boolean clickVideo=true;
-    boolean mute=true;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,12 +68,12 @@ public class VisorVideosFTP extends AppCompatActivity {
             public void onClick(View view) {
                 if(clickVideo) {
                     mp.setVolume(1f, 1f);
-                    mute=false;
                     clickVideo=false;
+                    btnMute.setVisibility(View.GONE);
                 }else{
                     mp.setVolume(0f, 0f);
-                    mute=true;
                     clickVideo=true;
+                    btnMute.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -110,17 +109,12 @@ public class VisorVideosFTP extends AppCompatActivity {
                 myVideoView.setMediaController(mediaController);
                 mp=mediaPlayer;
                 mediaPlayer.setVolume(0f,0f);
-                mute=true;
                 //if we have a position on savedInstanceState, the video playback should start from here
                 myVideoView.seekTo(position);
                 if (position == 0) {
                     Handler handler = new Handler();
                     myVideoView.start();
-                    if(mute){
-                        btnMute.setVisibility(View.GONE);
-                    }else{
-                        btnMute.setVisibility(View.VISIBLE);
-                    }
+                    btnMute.setVisibility(View.VISIBLE);
                     handler.postDelayed(
                             new Runnable() {
                                 public void run() {

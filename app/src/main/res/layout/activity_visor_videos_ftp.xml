@@ -18,8 +18,8 @@
         style="@style/Widget.Design.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|left|top"
-        app:backgroundTint="#000000"
+        android:layout_gravity="start|right|top"
+        app:backgroundTint="#A63B3B"
         app:srcCompat="@android:drawable/stat_notify_call_mute"
         tools:visibility="visible" />
 
