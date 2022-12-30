@@ -124,11 +124,11 @@ public class ReceiveData extends AppCompatActivity {
     }
     private void createThumbnailAndUploadFTP(String realPathFromURI) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img").execute();
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img",ReceiveData.this).execute();
     }
     private void createThumbnailVideoAndUploadFTP(String realPathFromURI) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".vid").execute();
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".vid",ReceiveData.this).execute();
     }
 
 

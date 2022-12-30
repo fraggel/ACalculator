@@ -1,5 +1,6 @@
 package es.fraggel.acalculator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,14 +40,16 @@ import es.fraggel.acalculator.Services.LocalUserService;
 public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
 {
     private Context mContext;
+    Activity activity=null;
     private String realPathFromURI;
     private String timeInMillisName;
     boolean upload=true;
     String friendEmail = Util.EMAIL;;
-    public UploadFilesImgVid(Context context,String file,String timeInM){
+    public UploadFilesImgVid(Context context,String file,String timeInM,Activity act){
         realPathFromURI=file;
         mContext = context;
         timeInMillisName=timeInM;
+        activity=act;
     }
 
     @Override
@@ -234,5 +237,10 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
     @Override
     protected void onPostExecute(Long result) {
         Toast.makeText(mContext, "Subida Terminada", Toast.LENGTH_SHORT).show();
+        try{
+            activity.finish();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

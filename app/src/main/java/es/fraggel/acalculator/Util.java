@@ -5,6 +5,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
@@ -255,11 +256,11 @@ public class Util {
         }
     }
 
-    public static boolean restoreBackup(Context ctx) {
+    public static boolean restoreBackup(Context ctx, Activity act) {
         User user = LocalUserService.getLocalUserFromPreferences(ctx);
 
         if (user.FirstName != null) {
-            getDBBackup myTask = new getDBBackup(ctx);
+            getDBBackup myTask = new getDBBackup(ctx,act);
             myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
 
@@ -267,7 +268,7 @@ public class Util {
         return false;
     }
 
-    public static void makeBackup(Context mContext, User user) {
+    public static void makeBackup(Context mContext, User user,Activity act) {
         if (user.FirstName != null) {
             try {
                 String currentDBPath = mContext.getDatabasePath("mys3chat.db").getPath();
@@ -290,7 +291,7 @@ public class Util {
                 output.close();
                 fis.close();
                 if (user.FirstName != null) {
-                    uploadDBBackup myTask = new uploadDBBackup(mContext,new File(new ContextWrapper(mContext).getFilesDir()+"/localBackup.bck"));
+                    uploadDBBackup myTask = new uploadDBBackup(mContext,new File(new ContextWrapper(mContext).getFilesDir()+"/localBackup.bck"),act);
                     myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 }

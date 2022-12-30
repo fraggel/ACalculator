@@ -27,10 +27,14 @@ public class getDBBackup extends AsyncTask<String, String, String> {
 
     private String resp;
     Context context;
+    Activity activity=null;
     static long idDownload;
     static String appName;
-    public getDBBackup(Context contextin)
-    { context = contextin;}
+    public getDBBackup(Context contextin,Activity act)
+    {
+        context = contextin;
+        activity=act;
+    }
 
     @Override
     protected String doInBackground(String... params) {
@@ -50,6 +54,11 @@ public class getDBBackup extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         Toast.makeText(context, "Copia Restaurada", Toast.LENGTH_SHORT).show();
+        try{
+            activity.finish();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 

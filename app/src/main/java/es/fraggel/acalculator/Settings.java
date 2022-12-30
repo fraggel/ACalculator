@@ -25,7 +25,7 @@ public class Settings extends AppCompatActivity {
         btnRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.restoreBackup(getApplicationContext());
+                Util.restoreBackup(getApplicationContext(),Settings.this);
             }
         });
         btnBackup.setOnClickListener(new View.OnClickListener() {
@@ -33,7 +33,7 @@ public class Settings extends AppCompatActivity {
 
             public void onClick(View view) {
                 User user =LocalUserService.getLocalUserFromPreferences(getApplicationContext());
-                Util.makeBackup(getApplicationContext(),user);
+                Util.makeBackup(getApplicationContext(),user,Settings.this);
             }
         });
         boolean notificaciones = LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Notificaciones;

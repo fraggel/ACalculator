@@ -1,5 +1,6 @@
 package es.fraggel.acalculator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -13,13 +14,15 @@ public class uploadDBBackup extends AsyncTask<String, String, String> {
 
     private String resp;
     Context context;
+    Activity activity=null;
     static long idDownload;
     static String appName;
     static File ficheroBackup=null;
-    public uploadDBBackup(Context contextin,File fichBackup)
+    public uploadDBBackup(Context contextin,File fichBackup,Activity act)
     {
         context = contextin;
         ficheroBackup=fichBackup;
+        activity=act;
     }
 
     @Override
@@ -40,6 +43,11 @@ public class uploadDBBackup extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         Toast.makeText(context, "Copia Subida", Toast.LENGTH_SHORT).show();
+        try{
+            activity.finish();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 
