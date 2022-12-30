@@ -13,6 +13,12 @@
     android:paddingBottom="6dp">
 
     <ImageView
+        android:id="@+id/btnGrabar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:paddingBottom="2dp"
+        android:src="@drawable/emoji_1f399"/>
+    <ImageView
         android:id="@+id/add_btn2"
         android:layout_width="35dp"
         android:layout_height="35dp"

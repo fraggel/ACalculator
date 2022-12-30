@@ -9,10 +9,14 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.MediaRecorder;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -78,7 +82,7 @@ public class TextActivity extends AppCompatActivity {
     Firebase refUser;
     private int pageNo = 2;
     private FloatingActionButton submit_btn;
-    ImageView emoji_btn;
+    ImageView emoji_btn,btnGrabar;
     Bitmap imageBitmap;
     private ChildEventListener reference1Listener;
     private ChildEventListener refFriendListener;
@@ -282,6 +286,21 @@ public class TextActivity extends AppCompatActivity {
         refUser = new Firebase(StaticInfo.UsersURL + "/" + user.Email);
         submit_btn = (FloatingActionButton) findViewById(R.id.submit_btn);
         emoji_btn=(ImageView)findViewById(R.id.emoji_btn);
+        btnGrabar=(ImageView)findViewById(R.id.btnGrabar);
+        btnGrabar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                startActivityForResult(intent, 1);*/
+                MediaRecorder mr=new MediaRecorder();
+                mr.setAudioSource(MediaRecorder.AudioSource.MIC);
+                mr.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    mr.setOutputFile(new File(ContextCompat.getExternalFilesDirs(getApplicationContext(), null)[0] + "/Calculator/"+"/audio/a1"));
+                }
+                mr.start();
+            }
+        });
         messageArea.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
