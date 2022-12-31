@@ -1,6 +1,7 @@
 package es.fraggel.acalculator;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,9 +11,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.provider.DocumentsProvider;
+import android.support.v4.content.ContentResolverCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
+import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 import android.util.Size;
 import android.widget.Toast;
@@ -23,6 +30,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -48,48 +56,52 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
     private String timeInMillisName;
     boolean upload=true;
     boolean audio=false;
+    InputStream stream=null;
     String friendEmail = Util.EMAIL;;
-    public UploadFilesImgVid(Context context,String file,String timeInM,Activity act,boolean aud){
+    public UploadFilesImgVid(Context context,String file,String timeInM,Activity act,boolean aud,InputStream strm){
         realPathFromURI=file;
         mContext = context;
         timeInMillisName=timeInM;
         activity=act;
         audio=aud;
+        stream=strm;
     }
 
     @Override
     protected Long doInBackground(Void... voids) {
         int flag;
-        FileInputStream fis = null;
+        InputStream fis = null;
         File file=null;
         FTPClient client = new FTPClient();
         File thumbnailFile=null;
+        File fileTMP=new File(ContextCompat.getExternalFilesDirs(mContext, null)[0] +"/Calculator/"+ "/images/tmp_" + timeInMillisName);
+        fileTMP.getParentFile().mkdirs();
         try {
             if(timeInMillisName.indexOf(".img")!=-1){
                 Bitmap imageThumbnail = null;
+                InputStream inputStream=null;
+
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    imageThumbnail = ThumbnailUtils.createImageThumbnail(new File(realPathFromURI), new Size(200, 100), null);
-                }else{
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    bitmapOptions.inJustDecodeBounds = true; // obtain the size of the image, without loading it in memory
-                    BitmapFactory.decodeFile(realPathFromURI, bitmapOptions);
+                    Uri uri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".fileprovider", new File(realPathFromURI));
+                    try {
 
-                    int desiredWidth = 200;
-                    int desiredHeight = 100;
-                    float widthScale = (float) bitmapOptions.outWidth / desiredWidth;
-                    float heightScale = (float) bitmapOptions.outHeight / desiredHeight;
-                    float scale = Math.min(widthScale, heightScale);
-
-                    int sampleSize = 1;
-                    while (sampleSize < scale) {
-                        sampleSize *= 2;
+                        inputStream = mContext.getContentResolver().openInputStream(uri);
+                    }catch(Exception e){
+                        inputStream=stream;
                     }
-                    bitmapOptions.inSampleSize = sampleSize; // this value must be a power of 2,
-                    // this is why you can not have an image scaled as you would like
-                    bitmapOptions.inJustDecodeBounds = false; // now we want to load the image
-                    imageThumbnail = BitmapFactory.decodeFile(realPathFromURI, bitmapOptions);
-                }
+                    FileOutputStream foo=new FileOutputStream(fileTMP);
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = inputStream.read(buffer)) > 0) {
+                        foo.write(buffer, 0, length);
+                    }
+                    foo.flush();
+                    foo.close();
 
+                    inputStream.close();
+
+                    imageThumbnail = ThumbnailUtils.createImageThumbnail(fileTMP, new Size(200, 100), null);
+                }
                 thumbnailFile = new File(ContextCompat.getExternalFilesDirs(mContext, null)[0] +"/Calculator/"+ "/images/thmb_" + timeInMillisName);
                 thumbnailFile.getParentFile().mkdirs();
                 FileOutputStream fos = new FileOutputStream(thumbnailFile);
@@ -110,7 +122,6 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
                     bitmapOptions.inJustDecodeBounds = true; // obtain the size of the image, without loading it in memory
                     BitmapFactory.decodeFile(thumbnailFile.getAbsolutePath(), bitmapOptions);
 
-// find the best scaling factor for the desired dimensions
                     int desiredWidth = 200;
                     int desiredHeight = 100;
                     float widthScale = (float) bitmapOptions.outWidth / desiredWidth;
@@ -155,9 +166,14 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
                     fos.close();
                 }
             }
-            file=new File(realPathFromURI);
-            String workingDir="";
-            fis = new FileInputStream(file);
+            String workingDir = "";
+            try {
+                file = new File(realPathFromURI);
+                fis = new FileInputStream(file);
+            }catch (Exception e){
+                fis=new FileInputStream(fileTMP);
+
+            }
             client.connect("fraggel.ddns.net", 2121); // no el puerto es por defecto, podemos usar client.connect("servidor.ftp.com");
             client.login("images", "images");
             client.enterLocalPassiveMode();
@@ -178,6 +194,9 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
             client.logout();
             client.disconnect();
             thumbnailFile.delete();
+            if(fileTMP!=null){
+                fileTMP.delete();
+            }
             Firebase.setAndroidContext(mContext);
 
             DataContext db = new DataContext(mContext, null, null, 1);

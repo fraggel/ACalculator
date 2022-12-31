@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import es.fraggel.acalculator.Models.StaticInfo;
@@ -20,8 +21,9 @@ public class VisorImagenesFTP extends AppCompatActivity {
     private ScaleGestureDetector mScaleGestureDetector;
     private float mScaleFactor = 1.0f;
     private ImageView mImageView;
-    boolean onpause=false;
+
     String value =null;
+    DownloadImageTask d=null;
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         try {
@@ -38,8 +40,8 @@ public class VisorImagenesFTP extends AppCompatActivity {
         if (extras != null) {
                 String value = extras.getString("key");
                 TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
-            new DownloadImageTask(mImageView,getApplicationContext())
-                    .execute(StaticInfo.urlWebImages+value.replace("thmb_",""));
+            d=new DownloadImageTask(mImageView,getApplicationContext());
+                    d.execute(StaticInfo.urlWebImages+value.replace("thmb_",""));
         }
     }
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -75,14 +77,19 @@ public class VisorImagenesFTP extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        /*TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
-        mImageView.setVisibility(View.INVISIBLE);*/
+        if(d.getPlaying()) {
+            FrameLayout mImageView = (FrameLayout) findViewById(R.id.layoutImagenes);
+            mImageView.setVisibility(View.INVISIBLE);
+        }
         super.onPause();
+        if(d.getPlaying()){
+            finish();
+        }
     }
 
     @Override
     protected void onStop() {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
+        FrameLayout mImageView = (FrameLayout) findViewById(R.id.layoutImagenes);
         mImageView.setVisibility(View.INVISIBLE);
         super.onStop();
         finish();
@@ -90,7 +97,7 @@ public class VisorImagenesFTP extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
+        FrameLayout mImageView = (FrameLayout) findViewById(R.id.layoutImagenes);
         mImageView.setVisibility(View.INVISIBLE);
         super.onDestroy();
         finish();
@@ -103,7 +110,7 @@ public class VisorImagenesFTP extends AppCompatActivity {
 
     @Override
     public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
+        FrameLayout mImageView = (FrameLayout) findViewById(R.id.layoutImagenes);
         mImageView.setVisibility(View.VISIBLE);
         super.onRestoreInstanceState(savedInstanceState, persistentState);
 

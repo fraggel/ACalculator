@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -25,6 +27,7 @@ public class VisorVideosFTP extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private MediaPlayer mp=null;
     boolean clickVideo=true;
+    boolean playing=false;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,7 @@ public class VisorVideosFTP extends AppCompatActivity {
                 String value = extras.getString("key");
                 Uri url = Uri.parse(StaticInfo.urlWebImages + value.replace("thmb_", ""));
                 myVideoView.setVideoURI(url);
+
             }
 
 
@@ -121,9 +125,11 @@ public class VisorVideosFTP extends AppCompatActivity {
                                     mediaController.show(1);
                                 }},
                             100);
+                    playing=true;
                 } else {
                     //if we come from a resumed activity, video playback will be paused
                     myVideoView.pause();
+                    playing=true;
                 }
             }
         });
@@ -131,14 +137,19 @@ public class VisorVideosFTP extends AppCompatActivity {
     }
     @Override
     protected void onPause() {
-        /*VideoView myVideoView = (VideoView) findViewById(R.id.videoViewFTP);
-        myVideoView.setVisibility(View.INVISIBLE);*/
+        if(playing) {
+            FrameLayout myVideoView = (FrameLayout) findViewById(R.id.layoutVideo);
+            myVideoView.setVisibility(View.INVISIBLE);
+        }
         super.onPause();
+            if(playing) {
+                finish();
+            }
     }
 
     @Override
     protected void onStop() {
-        VideoView myVideoView = (VideoView) findViewById(R.id.videoViewFTP);
+        FrameLayout myVideoView = (FrameLayout) findViewById(R.id.layoutVideo);
         myVideoView.setVisibility(View.INVISIBLE);
         super.onStop();
         finish();
@@ -146,7 +157,7 @@ public class VisorVideosFTP extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        VideoView myVideoView = (VideoView) findViewById(R.id.videoViewFTP);
+        FrameLayout myVideoView = (FrameLayout) findViewById(R.id.layoutVideo);
         myVideoView.setVisibility(View.INVISIBLE);
         super.onDestroy();
         finish();

@@ -17,10 +17,15 @@ import java.io.InputStream;
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
     Context ctx=null;
+    boolean playing=false;
 
     public DownloadImageTask(ImageView bmImage, Context context) {
         this.bmImage = bmImage;
         ctx=context;
+
+    }
+    public boolean getPlaying(){
+        return playing;
     }
     protected Bitmap doInBackground(String... urls) {
         String urldisplay = urls[0];
@@ -55,5 +60,6 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
     protected void onPostExecute(Bitmap result) {
         bmImage.setImageBitmap(result);
+        playing=true;
     }
 }

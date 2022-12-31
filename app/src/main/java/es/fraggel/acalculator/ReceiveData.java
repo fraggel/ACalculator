@@ -7,9 +7,13 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.renderscript.ScriptGroup;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Size;
@@ -31,8 +35,11 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -93,7 +100,12 @@ public class ReceiveData extends AppCompatActivity {
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
             //createThumbnailAndUpload(getRealPathFromURI(imageUri));
-            createThumbnailAndUploadFTP(getRealPathFromURI(imageUri));
+
+            try {
+                createThumbnailAndUploadFTP(Util.getRealPathFromURI(imageUri,getApplicationContext()),getContentResolver().openInputStream(imageUri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -101,14 +113,22 @@ public class ReceiveData extends AppCompatActivity {
         Uri videoUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (videoUri != null) {
             //createThumbnailVideoAndUpload(getRealPathFromURI(videoUri));
-            createThumbnailVideoAndUploadFTP(getRealPathFromURI(videoUri),false);
+            try {
+                createThumbnailVideoAndUploadFTP(Util.getRealPathFromURI(videoUri,getApplicationContext()),getContentResolver().openInputStream(videoUri),false);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
     void handleSendAudio(Intent intent) {
         Uri videoUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (videoUri != null) {
             //createThumbnailVideoAndUpload(getRealPathFromURI(videoUri));
-            createThumbnailVideoAndUploadFTP(getRealPathFromURI(videoUri),true);
+            try {
+                createThumbnailAudioAndUploadFTP(Util.getRealPathFromURI(videoUri,getApplicationContext()),getContentResolver().openInputStream(videoUri),true);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -118,26 +138,19 @@ public class ReceiveData extends AppCompatActivity {
             // Update UI to reflect multiple images being shared
         }
     }
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
-    }
-    private void createThumbnailAndUploadFTP(String realPathFromURI) {
+
+    private void createThumbnailAndUploadFTP(String realPathFromURI,InputStream stream) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img",ReceiveData.this,false).execute();
+
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img",ReceiveData.this,false,stream).execute();
     }
-    private void createThumbnailVideoAndUploadFTP(String realPathFromURI,boolean audio) {
+    private void createThumbnailVideoAndUploadFTP(String realPathFromURI,InputStream stream,boolean audio) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".aud",ReceiveData.this,audio).execute();
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".vid",ReceiveData.this,audio,null).execute();
+    }
+    private void createThumbnailAudioAndUploadFTP(String realPathFromURI,InputStream stream,boolean audio) {
+        String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".aud",ReceiveData.this,audio,null).execute();
     }
 
 
