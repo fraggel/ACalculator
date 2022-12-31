@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
         dcr= new DonwloadCompleteReceiver();
         try {
             registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        }catch(Exception e){}
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         UploadFiles updF=new UploadFiles(getApplicationContext());
         updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Firebase.setAndroidContext(this);
