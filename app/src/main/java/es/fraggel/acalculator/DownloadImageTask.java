@@ -18,11 +18,12 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
     Context ctx=null;
     boolean playing=false;
+    boolean video=false;
 
-    public DownloadImageTask(ImageView bmImage, Context context) {
+    public DownloadImageTask(ImageView bmImage, Context context,boolean vid) {
         this.bmImage = bmImage;
         ctx=context;
-
+        video=vid;
     }
     public boolean getPlaying(){
         return playing;
@@ -59,6 +60,19 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
+        if(video) {
+            Bitmap mutable=result.copy(Bitmap.Config.ARGB_8888, true);
+            Bitmap watermarkBitmap = null;
+            watermarkBitmap = BitmapFactory.decodeResource(ctx.getResources(), hani.momanii.supernova_emoji_library.R.drawable.emoji_25b6);
+// Creating a canvas with mainBitmap
+            Canvas canvas = new Canvas(mutable);
+// The actual watermarking
+            int x = mutable.getWidth() / 2 - (watermarkBitmap.getWidth() / 2);
+            int position;
+            int y =  position = mutable.getHeight() / 2 - (watermarkBitmap.getHeight() / 2);
+            canvas.drawBitmap(watermarkBitmap, x, y, null);
+            result=mutable;
+        }
         bmImage.setImageBitmap(result);
         playing=true;
     }

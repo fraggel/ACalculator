@@ -40,7 +40,7 @@ public class VisorImagenesFTP extends AppCompatActivity {
         if (extras != null) {
                 String value = extras.getString("key");
                 TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
-            d=new DownloadImageTask(mImageView,getApplicationContext());
+            d=new DownloadImageTask(mImageView,getApplicationContext(),false);
                     d.execute(StaticInfo.urlWebImages+value.replace("thmb_",""));
         }
     }

@@ -662,7 +662,7 @@ public class TextActivity extends AppCompatActivity {
                     }
                     //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
                 });
-            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext());
+            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext(),false);
             execute.execute(StaticInfo.urlWebImages + urlImagen);
             if (messType == 1) {
                 imgView.setBackgroundResource(R.drawable.messagebg1);
@@ -779,7 +779,7 @@ public class TextActivity extends AppCompatActivity {
                     }
                     //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
                 });
-            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext());
+                    DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext(),true);
             execute.execute(StaticInfo.urlWebImages + urlVideo);
             if (messType == 1) {
                 imgView.setBackgroundResource(R.drawable.messagebg1);
