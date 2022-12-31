@@ -95,7 +95,9 @@ public class VisorVideosFTP extends AppCompatActivity {
 
                     @Override
                     public void hide() {
-                        super.show(250);
+                        try {
+                            super.show(250);
+                        }catch(Exception e){}
                     }
                     @Override
                     public boolean dispatchKeyEvent(KeyEvent event) {

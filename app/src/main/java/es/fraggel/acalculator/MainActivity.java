@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dcr= new DonwloadCompleteReceiver();
         try {
+            unregisterReceiver(dcr);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try {
             registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         }catch(Exception e){
             e.printStackTrace();
