@@ -9,5 +9,7 @@
     <external-path
         name="Camera"
         path="DCIM/"/>
-
+    <root-path
+        name="sdcard"
+        path="/storage/3335-3033/"/>-->
 </paths>

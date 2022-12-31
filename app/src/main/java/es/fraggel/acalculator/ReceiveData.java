@@ -1,5 +1,6 @@
 package es.fraggel.acalculator;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -61,6 +62,7 @@ public class ReceiveData extends AppCompatActivity {
     String friendEmail = Util.EMAIL;;
     Firebase refUser;
     Firebase reference1, reference2, refNotMess, refFriend;
+    private ProgressDialog progressDialog=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +71,15 @@ public class ReceiveData extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
-
+        progressDialog = new ProgressDialog(ReceiveData.this);
+        // set a title for the progress bar
+        progressDialog.setTitle(" ");
+        // set a message for the progress bar
+        progressDialog.setMessage("Cargando...");
+        //set the progress bar not cancelable on users' touch
+        progressDialog.setCancelable(false);
+        // show the progress bar
+        progressDialog.show();
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if ("text/plain".equals(type)) {
                 handleSendText(intent); // Handle text being sent
@@ -142,15 +152,15 @@ public class ReceiveData extends AppCompatActivity {
     private void createThumbnailAndUploadFTP(String realPathFromURI,InputStream stream) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
 
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img",ReceiveData.this,false,stream).execute();
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".img",ReceiveData.this,false,stream,progressDialog).execute();
     }
     private void createThumbnailVideoAndUploadFTP(String realPathFromURI,InputStream stream,boolean audio) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".vid",ReceiveData.this,audio,null).execute();
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".vid",ReceiveData.this,audio,null,progressDialog).execute();
     }
     private void createThumbnailAudioAndUploadFTP(String realPathFromURI,InputStream stream,boolean audio) {
         String timeInMillis=String.valueOf(Calendar.getInstance().getTimeInMillis());
-        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".aud",ReceiveData.this,audio,null).execute();
+        new UploadFilesImgVid(getApplicationContext(),realPathFromURI,timeInMillis+".aud",ReceiveData.this,audio,null,progressDialog).execute();
     }
 
 

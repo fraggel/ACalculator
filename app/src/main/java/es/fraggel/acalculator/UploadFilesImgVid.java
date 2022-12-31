@@ -1,6 +1,7 @@
 package es.fraggel.acalculator;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -50,21 +52,23 @@ import es.fraggel.acalculator.Services.LocalUserService;
 
 public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
 {
-    private Context mContext;
+    private static Context mContext;
     Activity activity=null;
     private String realPathFromURI;
     private String timeInMillisName;
     boolean upload=true;
     boolean audio=false;
     InputStream stream=null;
-    String friendEmail = Util.EMAIL;;
-    public UploadFilesImgVid(Context context,String file,String timeInM,Activity act,boolean aud,InputStream strm){
+    String friendEmail = Util.EMAIL;
+    ProgressDialog progressDialog=null;
+    public UploadFilesImgVid(Context context, String file, String timeInM, Activity act, boolean aud, InputStream strm, ProgressDialog prog){
         realPathFromURI=file;
         mContext = context;
         timeInMillisName=timeInM;
         activity=act;
         audio=aud;
         stream=strm;
+        progressDialog=prog;
     }
 
     @Override
@@ -82,9 +86,9 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
                 InputStream inputStream=null;
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    Uri uri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".fileprovider", new File(realPathFromURI));
+                    Uri uri=null;
                     try {
-
+                        uri= FileProvider.getUriForFile(mContext, mContext.getPackageName() + ".fileprovider", new File(realPathFromURI));
                         inputStream = mContext.getContentResolver().openInputStream(uri);
                     }catch(Exception e){
                         inputStream=stream;
@@ -263,7 +267,12 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
         try
         {
             m_mediaMetadataRetriever = new MediaMetadataRetriever();
-            m_mediaMetadataRetriever.setDataSource(p_videoPath);
+            try {
+                m_mediaMetadataRetriever.setDataSource(p_videoPath);
+            }catch(Exception e){
+                Uri uri = FileProvider.getUriForFile(mContext,mContext.getPackageName()+".fileprovider",new File(p_videoPath));
+                m_mediaMetadataRetriever.setDataSource(mContext,uri);
+            }
             m_bitmap = m_mediaMetadataRetriever.getFrameAtTime();
         }
         catch (Exception m_e)
@@ -284,6 +293,7 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
     @Override
     protected void onPostExecute(Long result) {
         Toast.makeText(mContext, "Subida Terminada", Toast.LENGTH_SHORT).show();
+        progressDialog.dismiss();
         try{
             activity.finish();
         }catch(Exception e){
