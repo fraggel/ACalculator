@@ -1,28 +1,29 @@
 package es.fraggel.acalculator;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.method.Touch;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-public class VisorImagenes extends AppCompatActivity {
+import es.fraggel.acalculator.Models.StaticInfo;
+
+public class VisorImagenesFTP extends AppCompatActivity {
     private ScaleGestureDetector mScaleGestureDetector;
     private float mScaleFactor = 1.0f;
     private ImageView mImageView;
-    boolean onpause=false;
+
     String value =null;
+    DownloadImageTask d=null;
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         try {
@@ -33,13 +34,14 @@ public class VisorImagenes extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_visor_imagenes);
+        setContentView(R.layout.activity_visor_imagenes_ftp);
         getSupportActionBar().hide();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
                 String value = extras.getString("key");
-                TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
-                mImageView.setImageURI(Uri.parse(value));
+                TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
+            d=new DownloadImageTask(mImageView,getApplicationContext(),false);
+                    d.execute(StaticInfo.urlWebImages+value.replace("thmb_",""));
         }
     }
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -55,7 +57,7 @@ public class VisorImagenes extends AppCompatActivity {
     }
     public void btn_Click(View view) {
 
-            mImageView=(TouchImageView)findViewById(R.id.imageView);
+            mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
             float rotacion=mImageView.getRotation()+90;
             if(rotacion==360){
                 rotacion=0;
@@ -75,14 +77,19 @@ public class VisorImagenes extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        /*TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
-        mImageView.setVisibility(View.INVISIBLE);*/
+        if(d.getPlaying()) {
+            FrameLayout mImageView = (FrameLayout) findViewById(R.id.layoutImagenes);
+            mImageView.setVisibility(View.INVISIBLE);
+        }
         super.onPause();
+        if(d.getPlaying()){
+            finish();
+        }
     }
 
     @Override
     protected void onStop() {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        FrameLayout mImageView = (FrameLayout) findViewById(R.id.layoutImagenes);
         mImageView.setVisibility(View.INVISIBLE);
         super.onStop();
         finish();
@@ -90,7 +97,7 @@ public class VisorImagenes extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        FrameLayout mImageView = (FrameLayout) findViewById(R.id.layoutImagenes);
         mImageView.setVisibility(View.INVISIBLE);
         super.onDestroy();
         finish();
@@ -103,7 +110,7 @@ public class VisorImagenes extends AppCompatActivity {
 
     @Override
     public void onRestoreInstanceState(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageView);
+        FrameLayout mImageView = (FrameLayout) findViewById(R.id.layoutImagenes);
         mImageView.setVisibility(View.VISIBLE);
         super.onRestoreInstanceState(savedInstanceState, persistentState);
 

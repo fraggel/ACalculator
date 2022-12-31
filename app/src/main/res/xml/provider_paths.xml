@@ -3,4 +3,13 @@
     <external-path
         name="Descarga"
         path="Download/"/>
+    <external-path
+        name="Galeria"
+        path="Android/data/com.miui.gallery/cache/SecurityShare/"/>
+    <external-path
+        name="Camera"
+        path="DCIM/"/>
+    <root-path
+        name="sdcard"
+        path="/storage/3335-3033/"/>-->
 </paths>

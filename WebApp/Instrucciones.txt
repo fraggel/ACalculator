@@ -12,3 +12,5 @@ de dicha version
 En upload.html
 upload=true o upload=false
 esto indica si se debe subir por ftp desde la app o no
+
+El directorio conf contiene el xml para desplegar el proyecto que apunta al ftp donde se suben las imagenes y videos

@@ -1261,4 +1261,5 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         matrix.getValues(n);
         Log.d(DEBUG, "Scale: " + n[Matrix.MSCALE_X] + " TransX: " + n[Matrix.MTRANS_X] + " TransY: " + n[Matrix.MTRANS_Y]);
     }
+
 }

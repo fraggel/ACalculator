@@ -3,33 +3,45 @@ package es.fraggel.acalculator;
 import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-public class VisorVideos extends AppCompatActivity {
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import es.fraggel.acalculator.Models.StaticInfo;
+import retrofit2.http.Url;
+
+public class VisorVideosFTP extends AppCompatActivity {
     private VideoView myVideoView;
     private int position = 0;
     private ProgressDialog progressDialog;
     private MediaPlayer mp=null;
     boolean clickVideo=true;
+    boolean playing=false;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // set the main layout of the activity
-        setContentView(R.layout.activity_visor_videos);
+        setContentView(R.layout.activity_visor_videos_ftp);
         getSupportActionBar().hide();
         //set the media controller buttons
 
         //initialize the VideoView
-        myVideoView = (VideoView) findViewById(R.id.videoView);
-
+        myVideoView = (VideoView) findViewById(R.id.videoViewFTP);
+        FloatingActionButton btnMute = (FloatingActionButton) findViewById(R.id.muteVideo);
         // create a progress bar while the video file is loading
-        progressDialog = new ProgressDialog(VisorVideos.this);
+        progressDialog = new ProgressDialog(VisorVideosFTP.this);
         // set a title for the progress bar
         progressDialog.setTitle(" ");
         // set a message for the progress bar
@@ -44,8 +56,9 @@ public class VisorVideos extends AppCompatActivity {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 String value = extras.getString("key");
-                myVideoView.setVideoURI(Uri.parse(value));
-                myVideoView.start();
+                Uri url = Uri.parse(StaticInfo.urlWebImages + value.replace("thmb_", ""));
+                myVideoView.setVideoURI(url);
+
             }
 
 
@@ -60,9 +73,11 @@ public class VisorVideos extends AppCompatActivity {
                 if(clickVideo) {
                     mp.setVolume(1f, 1f);
                     clickVideo=false;
+                    btnMute.setVisibility(View.GONE);
                 }else{
                     mp.setVolume(0f, 0f);
                     clickVideo=true;
+                    btnMute.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -72,15 +87,17 @@ public class VisorVideos extends AppCompatActivity {
             public void onPrepared(MediaPlayer mediaPlayer) {
                 // close the progress bar and play the video
                 progressDialog.dismiss();
-                MediaController mediaController = new MediaController(VisorVideos.this){
+                MediaController mediaController = new MediaController(VisorVideosFTP.this){
                     @Override
                     public void show(int timeout) {
-                        super.show(0);
+                        super.show(250);
                     }
 
                     @Override
                     public void hide() {
-
+                        try {
+                            super.show(250);
+                        }catch(Exception e){}
                     }
                     @Override
                     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -94,16 +111,27 @@ public class VisorVideos extends AppCompatActivity {
                         return super.dispatchKeyEvent(event);
                     }
                 };
+                mediaController.show(250);
                 myVideoView.setMediaController(mediaController);
                 mp=mediaPlayer;
                 mediaPlayer.setVolume(0f,0f);
                 //if we have a position on savedInstanceState, the video playback should start from here
                 myVideoView.seekTo(position);
                 if (position == 0) {
+                    Handler handler = new Handler();
                     myVideoView.start();
+                    btnMute.setVisibility(View.VISIBLE);
+                    handler.postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    mediaController.show(1);
+                                }},
+                            100);
+                    playing=true;
                 } else {
                     //if we come from a resumed activity, video playback will be paused
                     myVideoView.pause();
+                    playing=true;
                 }
             }
         });
@@ -111,14 +139,19 @@ public class VisorVideos extends AppCompatActivity {
     }
     @Override
     protected void onPause() {
-         VideoView myVideoView = (VideoView) findViewById(R.id.videoView);
-        myVideoView.setVisibility(View.INVISIBLE);
+        if(playing) {
+            FrameLayout myVideoView = (FrameLayout) findViewById(R.id.layoutVideo);
+            myVideoView.setVisibility(View.INVISIBLE);
+        }
         super.onPause();
+            if(playing) {
+                finish();
+            }
     }
 
     @Override
     protected void onStop() {
-        VideoView myVideoView = (VideoView) findViewById(R.id.videoView);
+        FrameLayout myVideoView = (FrameLayout) findViewById(R.id.layoutVideo);
         myVideoView.setVisibility(View.INVISIBLE);
         super.onStop();
         finish();
@@ -126,7 +159,7 @@ public class VisorVideos extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        VideoView myVideoView = (VideoView) findViewById(R.id.videoView);
+        FrameLayout myVideoView = (FrameLayout) findViewById(R.id.layoutVideo);
         myVideoView.setVisibility(View.INVISIBLE);
         super.onDestroy();
         finish();

@@ -3,11 +3,13 @@ package es.fraggel.acalculator;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -101,7 +103,7 @@ public class TextActivity extends AppCompatActivity {
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         if (user.Email == null) {
             // send to activitylogin
-           Intent intent = new Intent(this, ActivityLogin.class);
+            Intent intent = new Intent(this, ActivityLogin.class);
             startActivityForResult(intent, 100);
 //
         } else {
@@ -118,8 +120,6 @@ public class TextActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_chat);
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarChatActivity);
-        setSupportActionBar(toolbar);*/
         messageArea = (EditText) findViewById(R.id.et_Message);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         layout = (LinearLayout) findViewById(R.id.layout1);
@@ -195,9 +195,7 @@ public class TextActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getKey().equals("Status")) {
                     // check if subtitle is not Typing
-                    SharedPreferences pref = getSharedPreferences("LocalUser", Context.MODE_PRIVATE);
-                    User user = new User();
-                    user.FirstName = pref.getString("FirstName",null);
+                    User user =LocalUserService.getLocalUserFromPreferences(getApplicationContext());
                     if (!user.FirstName.equals("Eva")) {
                         CharSequence subTitle = getSupportActionBar().getSubtitle();
                         if (subTitle != null) {
@@ -231,9 +229,7 @@ public class TextActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                SharedPreferences pref = getSharedPreferences("LocalUser", Context.MODE_PRIVATE);
-                User user = new User();
-                user.FirstName = pref.getString("FirstName",null);
+                User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
                 if (!user.FirstName.equals("Eva")) {
                     String friendStatus = dataSnapshot.getValue().toString();
                     if (!friendStatus.equals("En línea")) {
@@ -568,13 +564,13 @@ public class TextActivity extends AppCompatActivity {
 
         textView.setLayoutParams(lp);
         if("--[IMAGE]--".equals(mess.trim())){
-            final MyImageView imgView=new MyImageView(this);
+            /*final MyImageView imgView=new MyImageView(this);
 
             FirebaseApp.initializeApp(this);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference ref = storageRef.child(urlImagen.replaceFirst("images/","images/thmb_"));
-            ficheroThmb=new File(Environment.getExternalStorageDirectory()+"/Calculator/"+urlImagen.replaceFirst("images/","images/thmb_"));
+            ficheroThmb=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+(urlImagen.replaceFirst("images/","images/thmb_")));
             ficheroThmb.getParentFile().mkdirs();
             if(!ficheroThmb.exists()) {
                 ref.getFile(ficheroThmb).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -606,7 +602,7 @@ public class TextActivity extends AppCompatActivity {
                 decodedBitmap = BitmapFactory.decodeFile(ficheroThmb.getAbsolutePath());
             }
             //final Bitmap decodedBitmap = BitmapFactory.decodeByteArray(Base64.decode(urlImagen,Base64.DEFAULT), 0, Base64.decode(urlImagen,Base64.DEFAULT).length);
-            imgView.setClave(Environment.getExternalStorageDirectory()+"/Calculator/"+urlImagen);
+            imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
             imgView.setClaveImagen(urlImagen);
             imgView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -619,7 +615,7 @@ public class TextActivity extends AppCompatActivity {
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());
-                        fichero=new File(Environment.getExternalStorageDirectory()+"/Calculator/"+((MyImageView)v).getClaveImagen());
+                        fichero=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+((MyImageView)v).getClaveImagen());
                         MyOnSuccessListener myOnSuccessListener = new MyOnSuccessListener();
                         myOnSuccessListener.setContexto(getApplicationContext());
                         myOnSuccessListener.setValue(value);
@@ -649,14 +645,47 @@ public class TextActivity extends AppCompatActivity {
             //imgView.performClick();
             imgView.setLayoutParams(lp);
             layout.addView(imgView);
-        }else if("--[VIDEO]--".equals(mess.trim())) {
+         */
             final MyImageView imgView=new MyImageView(this);
+            //imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
+            imgView.setClaveImagen(urlImagen);
+                imgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Class<? extends View> aClass = v.getClass();
+
+                        String value = ((MyImageView) v).getClaveImagen();
+                        Intent i = new Intent(getApplicationContext(), VisorImagenesFTP.class);
+                        i.putExtra("key", value);
+                        startActivity(i);
+
+                    }
+                    //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+                });
+            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext(),false);
+            execute.execute(StaticInfo.urlWebImages + urlImagen);
+            if (messType == 1) {
+                imgView.setBackgroundResource(R.drawable.messagebg1);
+            }
+            //  2 friend
+            else {
+                imgView.setBackgroundResource(R.drawable.messagebg2);
+            }
+            imgView.setMaxWidth(240);
+            imgView.setMaxHeight(480);
+            imgView.setPadding(40,40,40,40);
+            //imgView.performClick();
+            //imgView.performClick();
+            imgView.setLayoutParams(lp);
+            layout.addView(imgView);
+        }else if("--[VIDEO]--".equals(mess.trim())) {
+            /*final MyImageView imgView=new MyImageView(this);
 
             FirebaseApp.initializeApp(this);
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference ref = storageRef.child((urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
-            ficheroThmb=new File(Environment.getExternalStorageDirectory()+"/Calculator/"+(urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
+            ficheroThmb=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+(urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
             ficheroThmb.getParentFile().mkdirs();
             if(!ficheroThmb.exists()) {
                 ref.getFile(ficheroThmb).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -688,7 +717,7 @@ public class TextActivity extends AppCompatActivity {
                 decodedBitmap = BitmapFactory.decodeFile(ficheroThmb.getAbsolutePath());
             }
             //final Bitmap decodedBitmap = BitmapFactory.decodeByteArray(Base64.decode(urlImagen,Base64.DEFAULT), 0, Base64.decode(urlImagen,Base64.DEFAULT).length);
-            imgView.setClave(Environment.getExternalStorageDirectory()+"/Calculator/"+urlVideo);
+            imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlVideo);
             imgView.setClaveImagen(urlVideo);
             imgView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -696,13 +725,14 @@ public class TextActivity extends AppCompatActivity {
                     Class<? extends View> aClass = v.getClass();
 
                     String value=((MyImageView)v).getClave();
+                    value=value.replace(".img",".vid");
                     if(!new File(value).exists()){
                         FirebaseApp.initializeApp(getApplicationContext());
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
-                        StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());
-                        fichero=new File(Environment.getExternalStorageDirectory()+"/Calculator/"+((MyImageView)v).getClaveImagen());
-                        MyOnSuccessListener myOnSuccessListener = new MyOnSuccessListener();
+                        StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen().replace(".img",".vid"));
+                        fichero=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+((MyImageView)v).getClaveImagen().replace(".img",".vid"));
+                        MyOnSuccessListenerVideos myOnSuccessListener = new MyOnSuccessListenerVideos();
                         myOnSuccessListener.setContexto(getApplicationContext());
                         myOnSuccessListener.setValue(value);
                         ref.getFile(fichero).addOnSuccessListener(myOnSuccessListener);
@@ -717,6 +747,40 @@ public class TextActivity extends AppCompatActivity {
             });
             imgView.setImageBitmap(decodedBitmap);
             decodedBitmap=null;
+            if (messType == 1) {
+                imgView.setBackgroundResource(R.drawable.messagebg1);
+            }
+            //  2 friend
+            else {
+                imgView.setBackgroundResource(R.drawable.messagebg2);
+            }
+            imgView.setMaxWidth(240);
+            imgView.setMaxHeight(480);
+            imgView.setPadding(40,40,40,40);
+            //imgView.performClick();
+            //imgView.performClick();
+            imgView.setLayoutParams(lp);
+            layout.addView(imgView);
+            */
+
+            final MyImageView imgView=new MyImageView(this);
+            //imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
+            imgView.setClaveImagen(urlVideo);
+                imgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Class<? extends View> aClass = v.getClass();
+
+                        String value = ((MyImageView) v).getClaveImagen();
+                        Intent i = new Intent(getApplicationContext(), VisorVideosFTP.class);
+                        i.putExtra("key", value);
+                        startActivity(i);
+
+                    }
+                    //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+                });
+                    DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext(),true);
+            execute.execute(StaticInfo.urlWebImages + urlVideo);
             if (messType == 1) {
                 imgView.setBackgroundResource(R.drawable.messagebg1);
             }
@@ -746,57 +810,6 @@ public class TextActivity extends AppCompatActivity {
         });
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_chat, menu);
-        return true;
-    }*/
-/*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_deleteConservation) {
-            new AlertDialog.Builder(this)
-                    .setTitle(friendFullName)
-                    .setMessage("Are you sure to delete this chat?")
-                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            db.deleteChat(user.Email, friendEmail);
-                            layout.removeAllViews();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, null)
-                    .show();
-            return true;
-        }
-        if (id == R.id.menu_deleteContact) {
-            new AlertDialog.Builder(this)
-                    .setTitle(friendFullName)
-                    .setMessage("Are you sure to delete this contact?")
-                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Firebase ref = new Firebase(StaticInfo.EndPoint + "/friends/" + user.Email + "/" + friendEmail);
-                            ref.removeValue();
-                            // delete from local database
-                            db.deleteFriendByEmailFromLocalDB(friendEmail);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, null)
-                    .show();
-            return true;
-        }
-
-        if (id == R.id.menu_friendProfile) {
-            Intent i = new Intent(ActivityChat.this, ActivityFriendProfile.class);
-            i.putExtra("Email", friendEmail);
-
-            startActivityForResult(i, StaticInfo.ChatAciviityRequestCode);
-        }
-        return true;
-    }*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 

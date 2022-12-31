@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 button7, button8, button9, buttonAdd, buttonSub, buttonDivision,
                 buttonMul, button10, buttonC, buttonEqual;
         TextView crunchifyEditText;
-            savedInstanceState=null;
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+        savedInstanceState=null;
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         Bundle extras = getIntent().getExtras();
         if(extras!=null){
             String cerrarApp = extras.getString("cerrarApp");
@@ -58,7 +58,16 @@ public class MainActivity extends AppCompatActivity {
         CheckVersion myTask = new CheckVersion(this);
         myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dcr= new DonwloadCompleteReceiver();
-        registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        try {
+            unregisterReceiver(dcr);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        try {
+            registerReceiver(dcr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         UploadFiles updF=new UploadFiles(getApplicationContext());
         updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         Firebase.setAndroidContext(this);
@@ -77,163 +86,163 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-            int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.cancel(id_channel);
-            button0 = (Button) findViewById(R.id.button0);
-            button1 = (Button) findViewById(R.id.button1);
-            button2 = (Button) findViewById(R.id.button2);
-            button3 = (Button) findViewById(R.id.button3);
-            button4 = (Button) findViewById(R.id.button4);
-            button5 = (Button) findViewById(R.id.button5);
-            button6 = (Button) findViewById(R.id.button6);
-            button7 = (Button) findViewById(R.id.button7);
-            button8 = (Button) findViewById(R.id.button8);
-            button9 = (Button) findViewById(R.id.button9);
-            button10 = (Button) findViewById(R.id.buttonDot);
-            buttonAdd = (Button) findViewById(R.id.buttonadd);
-            buttonSub = (Button) findViewById(R.id.buttonsub);
-            buttonMul = (Button) findViewById(R.id.buttonmul);
-            buttonDivision = (Button) findViewById(R.id.buttondiv);
-            buttonC = (Button) findViewById(R.id.buttonDel);
-            buttonEqual = (Button) findViewById(R.id.buttoneql);
-            crunchifyEditText = (TextView) findViewById(R.id.edit_text);
+        int id_channel = Tools.createUniqueIdPerUser(Util.EMAIL);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.cancel(id_channel);
+        button0 = (Button) findViewById(R.id.button0);
+        button1 = (Button) findViewById(R.id.button1);
+        button2 = (Button) findViewById(R.id.button2);
+        button3 = (Button) findViewById(R.id.button3);
+        button4 = (Button) findViewById(R.id.button4);
+        button5 = (Button) findViewById(R.id.button5);
+        button6 = (Button) findViewById(R.id.button6);
+        button7 = (Button) findViewById(R.id.button7);
+        button8 = (Button) findViewById(R.id.button8);
+        button9 = (Button) findViewById(R.id.button9);
+        button10 = (Button) findViewById(R.id.buttonDot);
+        buttonAdd = (Button) findViewById(R.id.buttonadd);
+        buttonSub = (Button) findViewById(R.id.buttonsub);
+        buttonMul = (Button) findViewById(R.id.buttonmul);
+        buttonDivision = (Button) findViewById(R.id.buttondiv);
+        buttonC = (Button) findViewById(R.id.buttonDel);
+        buttonEqual = (Button) findViewById(R.id.buttoneql);
+        crunchifyEditText = (TextView) findViewById(R.id.edit_text);
 
 
-            button1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "1");
-                }
-            });
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "1");
+            }
+        });
 
-            button2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "2");
-                }
-            });
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "2");
+            }
+        });
 
-            button3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "3");
-                }
-            });
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "3");
+            }
+        });
 
-            button4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "4");
-                }
-            });
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "4");
+            }
+        });
 
-            button5.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "5");
-                }
-            });
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "5");
+            }
+        });
 
-            button6.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "6");
-                }
-            });
+        button6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "6");
+            }
+        });
 
-            button7.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "7");
-                }
-            });
+        button7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "7");
+            }
+        });
 
-            button8.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "8");
-                }
-            });
+        button8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "8");
+            }
+        });
 
-            button9.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "9");
-                }
-            });
+        button9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "9");
+            }
+        });
 
-            button0.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + "0");
-                }
-            });
+        button0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + "0");
+            }
+        });
 
-            buttonAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
-                        crunchifyEditText.setText(null);
-                        operation = "+";
-                    }catch(Exception e){}
-                }
-            });
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
+                    crunchifyEditText.setText(null);
+                    operation = "+";
+                }catch(Exception e){}
+            }
+        });
 
-            buttonSub.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
-                        crunchifyEditText.setText(null);
-                        operation="-";
-                    }catch(Exception e){}
-                    }
-            });
+        buttonSub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
+                    crunchifyEditText.setText(null);
+                    operation="-";
+                }catch(Exception e){}
+            }
+        });
 
-            buttonMul.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
-                        crunchifyEditText.setText(null);
-                        operation="x";
-                    }catch(Exception e){}
-                }
-            });
+        buttonMul.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
+                    crunchifyEditText.setText(null);
+                    operation="x";
+                }catch(Exception e){}
+            }
+        });
 
-            buttonDivision.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
-                        crunchifyEditText.setText(null);
-                        operation="/";
-                    }catch(Exception e){}
-                }
-            });
+        buttonDivision.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    mValueTwo = Float.parseFloat(crunchifyEditText.getText() + "");
+                    crunchifyEditText.setText(null);
+                    operation="/";
+                }catch(Exception e){}
+            }
+        });
 
-            buttonEqual.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        mValueOne = Float.parseFloat(crunchifyEditText.getText() + "");
-                        if (mValueOne == 1404 && op==-1) {
-                            crunchifyEditText.setText("");
-                            Intent i = new Intent(v.getContext(), TextActivity.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                            startActivityForResult(i, 0);
-                        }if (mValueOne == 1604 && op==-1) {
-                            crunchifyEditText.setText("");
-                            Intent i = new Intent(v.getContext(), Settings.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                            startActivityForResult(i, 0);
-                        }if(mValueOne == 666 && op==-1) {
-                            db.deleteChat(user.Email, Util.EMAIL);
-                            Toast.makeText(MainActivity.this, "Borrado", Toast.LENGTH_SHORT).show();
-                            crunchifyEditText.setText("");
-                        }else {
+        buttonEqual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mValueOne = Float.parseFloat(crunchifyEditText.getText() + "");
+                    if (mValueOne == 1404 && op==-1) {
+                        crunchifyEditText.setText("");
+                        Intent i = new Intent(v.getContext(), TextActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                        startActivityForResult(i, 0);
+                    }else if (mValueOne == 1604 && op==-1) {
+                        crunchifyEditText.setText("");
+                        Intent i = new Intent(v.getContext(), Settings.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                        startActivityForResult(i, 0);
+                    }else if(mValueOne == 666 && op==-1) {
+                        db.deleteChat(user.Email, Util.EMAIL);
+                        Toast.makeText(MainActivity.this, "Borrado", Toast.LENGTH_SHORT).show();
+                        crunchifyEditText.setText("");
+                    }else{
                             switch (operation) {
                                 case "+":
                                     crunchifyEditText.setText(String.valueOf(mValueTwo + mValueOne));
@@ -255,34 +264,34 @@ public class MainActivity extends AppCompatActivity {
                                     break;
                             }
                         }
-                    }catch(Exception e){}
-                }
-            });
+                }catch(Exception e){}
+            }
+        });
 
-            buttonC.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText("");
-                    mValueOne=0;
-                    mValueTwo=0;
-                    op=-1;
-                }
-            });
+        buttonC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText("");
+                mValueOne=0;
+                mValueTwo=0;
+                op=-1;
+            }
+        });
 
-            button10.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    crunchifyEditText.setText(crunchifyEditText.getText() + ".");
-                }
-            });
-        }
+        button10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crunchifyEditText.setText(crunchifyEditText.getText() + ".");
+            }
+        });
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        /*try{
+        try{
             unregisterReceiver(dcr);
-        }catch(Exception e){}*/
+        }catch(Exception e){}
         //finish();
     }
     private boolean checkPermissions() {

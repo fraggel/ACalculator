@@ -26,7 +26,7 @@ public class DonwloadCompleteReceiver extends BroadcastReceiver {
             final Uri uri = FileProvider.getUriForFile(context,context.getPackageName()+".fileprovider",new File(destination));
             Intent intent2 = new Intent(Intent.ACTION_INSTALL_PACKAGE);
             intent2.setDataAndType(uri, "application/vnd.android.package-archive");
-            intent2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent2.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent2);
         }
     }
