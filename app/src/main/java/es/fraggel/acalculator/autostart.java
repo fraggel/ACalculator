@@ -17,11 +17,11 @@ public class autostart extends BroadcastReceiver
     {
         if(arg1.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
             //TODO ALARM
-            /*boolean notificaciones = LocalUserService.getLocalUserFromPreferences(context).Notificaciones;
+            boolean notificaciones = LocalUserService.getLocalUserFromPreferences(context).Notificaciones;
             User user = LocalUserService.getLocalUserFromPreferences(context);
-            if(notificaciones && user.FirstName.equals("Pablo")) {
+            if(notificaciones) {
                 Util.setAlarmNow(context);
-            }*/
+            }
 
         }
     }

@@ -56,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
         boolean notificaciones = LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Notificaciones;
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         //TODO ALARM
-        /*if(notificaciones && user.FirstName.equals("Pablo")) {
+        if(notificaciones) {
             AlarmReceiver alarm = new AlarmReceiver();
             alarm.setAlarm(this, true);
-        }*/
+        }
         CheckVersion myTask = new CheckVersion(this);
         myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dcr= new DonwloadCompleteReceiver();
