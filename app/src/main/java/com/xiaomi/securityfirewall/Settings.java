@@ -45,16 +45,14 @@ public class Settings extends AppCompatActivity {
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putBoolean("notify", b);
                 editor.commit();
-                //TODO ALARM
-                    /*
                     Intent i=new Intent(getApplicationContext(), AppService.class);
                     i.putExtra("notify",String.valueOf(b));
                     startService(i);
-                    User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
-                    if(b && user.FirstName.equals("Pablo")) {
+                    //TODO ALARM
+                    if(b) {
                         AlarmReceiver alarm = new AlarmReceiver();
                         alarm.setAlarm(getApplicationContext(), true);
-                    }*/
+                    }
             }
         });
     }
