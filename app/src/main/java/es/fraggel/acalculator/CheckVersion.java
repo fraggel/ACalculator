@@ -1,5 +1,6 @@
 package es.fraggel.acalculator;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -29,8 +30,12 @@ public class CheckVersion extends AsyncTask<String, String, String> {
     Context context;
     static long idDownload;
     static String appName;
-    public CheckVersion(Context contextin)
-    { context = contextin;}
+    Activity activity=null;
+    public CheckVersion(Context contextin,Activity act)
+    {
+        context = contextin;
+        activity=act;
+    }
 
     @Override
     protected String doInBackground(String... params) {
@@ -55,6 +60,7 @@ public class CheckVersion extends AsyncTask<String, String, String> {
             }catch (Exception e){}
 
             if (buffer.indexOf("force")!=-1|| versionCode < serverVersion) {
+
                 DownloadManager.Request request = null;
                 String fileName="";
                 User user = LocalUserService.getLocalUserFromPreferences(context);
@@ -82,9 +88,15 @@ public class CheckVersion extends AsyncTask<String, String, String> {
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
                 DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
                 idDownload = manager.enqueue(request);
-                Toast.makeText(context, "Descargando actualización, por favor permanezca en esta pantalla", Toast.LENGTH_SHORT).show();
+                activity.runOnUiThread(new Runnable() {
 
-            }else{
+                    public void run() {
+
+                        Toast.makeText(context, "Descargando actualización, por favor permanezca en esta pantalla", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -101,6 +113,7 @@ public class CheckVersion extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPreExecute() {
+
 
     }
 

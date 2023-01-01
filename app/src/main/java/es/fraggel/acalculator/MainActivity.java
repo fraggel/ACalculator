@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             AlarmReceiver alarm = new AlarmReceiver();
             alarm.setAlarm(this, true);
         }*/
-        CheckVersion myTask = new CheckVersion(this);
+        CheckVersion myTask = new CheckVersion(this,this);
         myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         dcr= new DonwloadCompleteReceiver();
         try {
