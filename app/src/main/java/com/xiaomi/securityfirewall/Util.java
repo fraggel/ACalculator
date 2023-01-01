@@ -243,13 +243,9 @@ public class Util {
 
     }
     static void setAlarmNow(Context context) {
-        //TODO ALARM
-        /*boolean notificaciones = LocalUserService.getLocalUserFromPreferences(context).Notificaciones;
-        User user = LocalUserService.getLocalUserFromPreferences(context);
-        if(notificaciones && user.FirstName.equals("Pablo")) {
-            AlarmReceiver alarm = new AlarmReceiver();
-            alarm.setAlarm(context,true);
-        }*/
+        AlarmReceiver alarm = new AlarmReceiver();
+        alarm.setAlarm(context,true);
+
     }
     static void escribirLog(String TAG,String texto,Context context) {
         try{

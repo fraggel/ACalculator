@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver
@@ -32,19 +33,19 @@ public class AlarmReceiver extends BroadcastReceiver
             Util.escribirLog("ALARMRECEIVER", "Alarma YA establecida la borramos",context);
             AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(context, AlarmReceiver.class);
-            PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+            PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
             am.cancel(pi);
         }
 
         AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, AlarmReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         assert am != null;
         if(ahora){
             Util.escribirLog("ALARMRECEIVER", "Alarma establecida ahora",context);
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis() / 1000L + 2L) * 1000L, pi);
         }else {
-            Util.escribirLog("ALARMRECEIVER", "Alarma establecida 300",context);
+            Util.escribirLog("ALARMRECEIVER", "Alarma establecida 600",context);
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis() / 1000L + 600L) * 1000L, pi);
         }
     }

@@ -48,12 +48,11 @@ public class Settings extends AppCompatActivity {
                     Intent i=new Intent(getApplicationContext(), AppService.class);
                     i.putExtra("notify",String.valueOf(b));
                     startService(i);
-                    User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
                     //TODO ALARM
-                    /*if(b && user.FirstName.equals("Pablo")) {
+                    if(b) {
                         AlarmReceiver alarm = new AlarmReceiver();
                         alarm.setAlarm(getApplicationContext(), true);
-                    }*/
+                    }
             }
         });
     }
