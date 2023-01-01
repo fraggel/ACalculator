@@ -45,11 +45,11 @@ public class Util {
     //public static String EMAIL="fraggelillo666@gmail,com";
     //public static String NOMBRE="Pablo";
     //App para mi fCalculator
-    //public static String EMAIL="eva@gmail,com";
-    //public static String NOMBRE="Eva";
+    public static String EMAIL="eva@gmail,com";
+    public static String NOMBRE="Eva";
     //App pruebas nCalculator
-    public static String EMAIL="pruebas@gmail,com";
-    public static String NOMBRE="Nombre";
+    //public static String EMAIL="pruebas@gmail,com";
+    //public static String NOMBRE="Nombre";
 
     public static String[] permissions = new String[]{
             Manifest.permission.INTERNET,
@@ -243,13 +243,9 @@ public class Util {
 
     }
     static void setAlarmNow(Context context) {
-        //TODO ALARM
-        /*boolean notificaciones = LocalUserService.getLocalUserFromPreferences(context).Notificaciones;
-        User user = LocalUserService.getLocalUserFromPreferences(context);
-        if(notificaciones && user.FirstName.equals("Pablo")) {
-            AlarmReceiver alarm = new AlarmReceiver();
-            alarm.setAlarm(context,true);
-        }*/
+        AlarmReceiver alarm = new AlarmReceiver();
+        alarm.setAlarm(context,true);
+
     }
     static void escribirLog(String TAG,String texto,Context context) {
         try{
