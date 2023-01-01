@@ -73,8 +73,8 @@ public class AppService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try{
-        UploadFiles updF=new UploadFiles(getApplicationContext());
-        updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        /*UploadFiles updF=new UploadFiles(getApplicationContext());
+        updF.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
         Util.escribirLog("APPSERVICE","Inicio Servicio onStartCommand",getApplicationContext());
         String notify = intent.getStringExtra("notify");
         User user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
