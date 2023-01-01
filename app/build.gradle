@@ -11,8 +11,8 @@ android {
         applicationId "es.fraggel.acalculator"
         minSdk 23
         targetSdk 32
-        versionCode 8
-        versionName "1.0.8"
+        versionCode 9
+        versionName "1.0.9"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

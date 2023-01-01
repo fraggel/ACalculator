@@ -16,8 +16,12 @@ public class autostart extends BroadcastReceiver
     public void onReceive(Context context, Intent arg1)
     {
         if(arg1.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
-            //context.startService(new Intent(context,AppService.class));
-            Util.setAlarmNow(context);
+            //TODO ALARM
+            /*boolean notificaciones = LocalUserService.getLocalUserFromPreferences(context).Notificaciones;
+            User user = LocalUserService.getLocalUserFromPreferences(context);
+            if(notificaciones && user.FirstName.equals("Pablo")) {
+                Util.setAlarmNow(context);
+            }*/
 
         }
     }

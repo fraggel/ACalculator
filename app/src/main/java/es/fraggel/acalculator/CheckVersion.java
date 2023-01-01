@@ -82,7 +82,7 @@ public class CheckVersion extends AsyncTask<String, String, String> {
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
                 DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
                 idDownload = manager.enqueue(request);
-
+                Toast.makeText(context, "Descargando actualización, por favor permanezca en esta pantalla", Toast.LENGTH_SHORT).show();
 
             }else{
             }

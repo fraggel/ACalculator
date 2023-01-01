@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import es.fraggel.acalculator.Models.StaticInfo;
 import es.fraggel.acalculator.Models.User;
@@ -240,19 +243,24 @@ public class Util {
 
     }
     static void setAlarmNow(Context context) {
-        AlarmReceiver alarm = new AlarmReceiver();
-        alarm.setAlarm(context,true);
+        //TODO ALARM
+        /*boolean notificaciones = LocalUserService.getLocalUserFromPreferences(context).Notificaciones;
+        User user = LocalUserService.getLocalUserFromPreferences(context);
+        if(notificaciones && user.FirstName.equals("Pablo")) {
+            AlarmReceiver alarm = new AlarmReceiver();
+            alarm.setAlarm(context,true);
+        }*/
     }
     static void escribirLog(String TAG,String texto,Context context) {
         try{
             Log.d(TAG,texto);
-            /*SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
             Date currentDate = new Date();
             String cuurentDateString = dateFormat.format(currentDate);
             FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(context, null)[0]+"logCalculadora.txt",true);
             fos.write((cuurentDateString+" "+texto+"\n").getBytes());
             fos.flush();
-            fos.close();*/
+            fos.close();
         }catch(Exception e){
             e.printStackTrace();
 
