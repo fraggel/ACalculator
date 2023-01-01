@@ -228,9 +228,9 @@
             android:process=":remote"
             android:stopWithTask="false" />
 
-        <!--<receiver
+        <receiver
             android:name=".AlarmReceiver"
-            android:process=":remote" />-->
+            android:process=":remote" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
