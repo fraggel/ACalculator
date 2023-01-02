@@ -44,8 +44,8 @@ public class CheckVersion extends AsyncTask<String, String, String> {
             StringBuffer buffer = null;
             int versionCode = BuildConfig.VERSION_CODE;
             try {
-
-                URL url = new URL("http://fraggel.ddns.net:9090/fraggel/app/version.html?versionCode="+versionCode);
+                User user = LocalUserService.getLocalUserFromPreferences(context);
+                URL url = new URL("http://fraggel.ddns.net:9090/fraggel/app/version.html?versionCode="+versionCode+"&user="+user.FirstName);
                 InputStream is = url.openStream();
                 int ptr = 0;
                 buffer = new StringBuffer();
