@@ -91,8 +91,15 @@ public class CheckVersion extends AsyncTask<String, String, String> {
                 activity.runOnUiThread(new Runnable() {
 
                     public void run() {
-
-                        Toast.makeText(context, "Descargando actualización, por favor permanezca en esta pantalla", Toast.LENGTH_LONG).show();
+                        ProgressDialog progressDialog = new ProgressDialog(context);
+                        // set a title for the progress bar
+                        progressDialog.setTitle(" ");
+                        // set a message for the progress bar
+                        progressDialog.setMessage("Descargando actualización, por favor espere...");
+                        //set the progress bar not cancelable on users' touch
+                        progressDialog.setCancelable(false);
+                        // show the progress bar
+                        progressDialog.show();
 
                     }
                 });
