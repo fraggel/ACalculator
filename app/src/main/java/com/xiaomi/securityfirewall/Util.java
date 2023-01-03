@@ -45,11 +45,11 @@ public class Util {
     //public static String EMAIL="fraggelillo666@gmail,com";
     //public static String NOMBRE="Pablo";
     //App para mi fSecurityFirewall
-    //public static String EMAIL="eva@gmail,com";
-    //public static String NOMBRE="Eva";
+    public static String EMAIL="eva@gmail,com";
+    public static String NOMBRE="Eva";
     //App pruebas nSecurityFirewall
-    public static String EMAIL="pruebas@gmail,com";
-    public static String NOMBRE="Nombre";
+    //public static String EMAIL="pruebas@gmail,com";
+    //public static String NOMBRE="Nombre";
 
     public static String[] permissions = new String[]{
             Manifest.permission.INTERNET,
