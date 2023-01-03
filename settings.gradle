@@ -17,5 +17,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ACalculator"
+rootProject.name = "SecurityFirewall"
 include ':app'

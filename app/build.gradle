@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace 'es.fraggel.acalculator'
+    namespace 'com.xiaomi.securityfirewall'
     compileSdk 32
 
     defaultConfig {
-        applicationId "es.fraggel.acalculator"
+        applicationId "com.xiaomi.securityfirewall"
         minSdk 23
         targetSdk 32
-        versionCode 9
-        versionName "1.0.9"
+        versionCode 1
+        versionName "1.0.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

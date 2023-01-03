@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -26,6 +27,7 @@
         android:theme="@style/Theme.AppCompat"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".ReceiveData"
             android:clearTaskOnLaunch="true"
@@ -35,8 +37,10 @@
             android:launchMode="singleTask"
             android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="image/*" />
@@ -46,8 +50,10 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="image/*" />
@@ -57,19 +63,10 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
-            <action android:name="android.intent.action.SENDTO"/>
-            <category android:name="android.intent.category.DEFAULT"/>
-            <data android:mimeType="application/*" />
-            <data android:mimeType="audio/*" />
-            <data android:mimeType="image/*" />
-            <data android:mimeType="message/*" />
-            <data android:mimeType="multipart/*" />
-            <data android:mimeType="text/*" />
-            <data android:mimeType="video/*" />
-        </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.ATTACH_DATA"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.SENDTO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="image/*" />
@@ -79,8 +76,10 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.CHOOSER"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.ATTACH_DATA" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="image/*" />
@@ -90,8 +89,10 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.INSERT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.CHOOSER" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="image/*" />
@@ -101,8 +102,10 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.OPEN_DOCUMENT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.INSERT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="image/*" />
@@ -112,8 +115,10 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.INSERT_OR_EDIT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.OPEN_DOCUMENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="image/*" />
@@ -123,8 +128,23 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.INSERT_OR_EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="message/*" />
+                <data android:mimeType="multipart/*" />
+                <data android:mimeType="text/*" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="application/*" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="image/*" />
@@ -198,40 +218,39 @@
             android:noHistory="true" />
         <activity
             android:name=".VisorVideos"
-            android:exported="false"
             android:excludeFromRecents="true"
-
-            />
+            android:exported="false" />
         <activity
             android:name=".VisorImagenes"
-            android:exported="false"
             android:excludeFromRecents="true"
-
-            />
+            android:exported="false" />
         <activity
             android:name=".VisorImagenesFTP"
-            android:exported="false"
             android:excludeFromRecents="true"
-
-            />
+            android:exported="false" />
         <activity
             android:name=".VisorVideosFTP"
-            android:exported="false"
             android:excludeFromRecents="true"
-
-            />
-
+            android:exported="false" />
+        <activity
+            android:name=".AppActivity"
+            android:clearTaskOnLaunch="true"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"/>
         <service
             android:name=".AppService"
             android:enabled="true"
             android:exported="false"
             android:process=":remote"
             android:stopWithTask="false" />
-
-        <!--<receiver
+        <!--
+<receiver
             android:name=".AlarmReceiver"
-            android:process=":remote" />-->
-
+            android:process=":remote" />
+        -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -241,10 +260,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <receiver
             android:name=".DonwloadCompleteReceiver"
-            android:permission="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
