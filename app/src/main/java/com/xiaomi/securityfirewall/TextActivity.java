@@ -74,7 +74,7 @@ public class TextActivity extends AppCompatActivity {
     LinearLayout layout;
     Firebase reference1, reference2, refNotMess, refFriend;
     User user;
-    String friendEmail;
+    String friendEmail = Util.EMAIL;
     Firebase refUser;
     private int pageNo = 2;
     private FloatingActionButton submit_btn;
@@ -95,7 +95,7 @@ public class TextActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         savedInstanceState=null;
         super.onCreate(savedInstanceState);
-
+        StaticInfo.UserCurrentChatFriendEmail = friendEmail;
         Firebase.setAndroidContext(this);
 
         db = new DataContext(this, null, null, 1);
