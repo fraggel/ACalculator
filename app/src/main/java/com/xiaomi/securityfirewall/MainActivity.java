@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         checkPermissions();
-        startService(new Intent(this, AppService.class));
+        //startService(new Intent(this, AppService.class));
         boolean notificaciones = LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Notificaciones;
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
         //TODO ALARM
