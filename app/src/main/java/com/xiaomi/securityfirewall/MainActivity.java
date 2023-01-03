@@ -40,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataContext db = new DataContext(this, null, null, 1);
+        try{
+            DataContext db = new DataContext(this, null, null, 1);
+
 
         savedInstanceState=null;
         super.onCreate(savedInstanceState);
@@ -109,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
         button11 = (Button) findViewById(R.id.buttonDot);
         crunchifyEditText = (TextView) findViewById(R.id.edit_text);
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
-
+            crunchifyEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    crunchifyEditText.setText("");
+                }
+            });
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,7 +222,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        }catch(Exception e){
 
+        }
 
     }
 
@@ -251,4 +260,5 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
     }
+
 }
