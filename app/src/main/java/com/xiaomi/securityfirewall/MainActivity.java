@@ -111,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
         button11 = (Button) findViewById(R.id.buttonDot);
         crunchifyEditText = (TextView) findViewById(R.id.edit_text);
         user = LocalUserService.getLocalUserFromPreferences(getApplicationContext());
-
+            crunchifyEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    crunchifyEditText.setText("");
+                }
+            });
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
