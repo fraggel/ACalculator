@@ -40,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DataContext db = new DataContext(this, null, null, 1);
+        try{
+            DataContext db = new DataContext(this, null, null, 1);
+
 
         savedInstanceState=null;
         super.onCreate(savedInstanceState);
@@ -215,7 +217,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        }catch(Exception e){
 
+        }
 
     }
 
@@ -251,4 +255,5 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
     }
+
 }
