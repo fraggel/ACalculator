@@ -186,6 +186,62 @@ public class DataContext extends SQLiteOpenHelper {
         }
 
     }
+    @SuppressLint("Range")
+    public List<Message> getChatImages(String userMail, String friendMail, int pageNo) {
+        List<Message> messageList = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            int limit = (5 * pageNo) + 35;
+            String whereCondition = "((FromMail = '" + userMail + "' and ToMail='" + friendMail + "') or (ToMail = '" + userMail + "' and FromMail='" + friendMail + "')) and Message like \'%--[IMAGE]--%\'";
+            String query = "select * from ( select rowid, * from Messages where " + whereCondition + " order by rowid desc limit " + limit + ")  order by rowid ";
+            Cursor c = db.rawQuery(query, null);
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                Message mess = new Message();
+                mess.FromMail = c.getString(c.getColumnIndex("FromMail"));
+                mess.ToMail = c.getString(c.getColumnIndex("ToMail"));
+                mess.Message = c.getString(c.getColumnIndex("Message"));
+                mess.urlImagen= c.getString(c.getColumnIndex("urlImagen"));
+                mess.urlVideo= c.getString(c.getColumnIndex("urlVideo"));
+                mess.SentDate = c.getString(c.getColumnIndex("SentDate"));
+                messageList.add(mess);
+                c.moveToNext();
+            }
+            c.close();
+            return messageList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return messageList;
+        }
+    }
+    @SuppressLint("Range")
+    public List<Message> getChatVideos(String userMail, String friendMail, int pageNo) {
+        List<Message> messageList = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            int limit = (5 * pageNo) + 35;
+            String whereCondition = "((FromMail = '" + userMail + "' and ToMail='" + friendMail + "') or (ToMail = '" + userMail + "' and FromMail='" + friendMail + "')) and Message like \'%--[VIDEO]--%\'";
+            String query = "select * from ( select rowid, * from Messages where " + whereCondition + " order by rowid desc limit " + limit + ")  order by rowid ";
+            Cursor c = db.rawQuery(query, null);
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                Message mess = new Message();
+                mess.FromMail = c.getString(c.getColumnIndex("FromMail"));
+                mess.ToMail = c.getString(c.getColumnIndex("ToMail"));
+                mess.Message = c.getString(c.getColumnIndex("Message"));
+                mess.urlImagen= c.getString(c.getColumnIndex("urlImagen"));
+                mess.urlVideo= c.getString(c.getColumnIndex("urlVideo"));
+                mess.SentDate = c.getString(c.getColumnIndex("SentDate"));
+                messageList.add(mess);
+                c.moveToNext();
+            }
+            c.close();
+            return messageList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return messageList;
+        }
+    }
 
     public void deleteChat(String userMail, String friendMail) {
         String deleteQuery = "delete from  Messages where (FromMail = '" + userMail + "' and ToMail='" + friendMail + "') or (ToMail = '" + userMail + "' and FromMail='" + friendMail + "')  ";
