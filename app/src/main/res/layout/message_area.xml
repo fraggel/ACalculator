@@ -13,12 +13,19 @@
     android:paddingBottom="6dp">
 
     <ImageView
-        android:id="@+id/add_btn2"
+        android:id="@+id/showVideoBtn"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:paddingBottom="2dp"
-        android:src="@drawable/emoji_2795"
-        android:visibility="invisible" />
+        android:src="@drawable/emoji_25b6"
+        android:visibility="visible" />
+    <ImageView
+        android:id="@+id/showImageBtn"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:paddingBottom="2dp"
+        android:src="@drawable/emoji_1f5bc"
+        android:visibility="visible" />
 
     <ImageView
         android:id="@+id/emoji_btn"

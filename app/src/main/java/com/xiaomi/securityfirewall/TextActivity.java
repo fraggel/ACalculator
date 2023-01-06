@@ -90,7 +90,9 @@ public class TextActivity extends AppCompatActivity {
     File ficheroThmb=null;
     long timeInMillis;
     byte[] data2;
-
+    boolean mostrandoTexto=true;
+    boolean mostrandoVideos=false;
+    boolean mostrandoImagenes=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         savedInstanceState=null;
@@ -309,7 +311,109 @@ public class TextActivity extends AppCompatActivity {
         View rootView = findViewById(R.id.rootLayout);
         EmojiconEditText emojiconEditText = (EmojiconEditText) findViewById(R.id.et_Message);
         ImageView emojiImageView = (ImageView) findViewById(R.id.emoji_btn);
-        ImageView add2BtnImageView = (ImageView) findViewById(R.id.add_btn2);
+        ImageView showVideoBtn = (ImageView) findViewById(R.id.showVideoBtn);
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        showVideoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mostrandoTexto || mostrandoImagenes) {
+                    layout.removeAllViews();
+                    List<Message> chatList = db.getChatVideos(user.Email, friendEmail, 1);
+                    for (Message item : chatList) {
+                        int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
+                        try {
+                            appendMessage(item.Message, item.SentDate, messageType, false, item.urlImagen, item.urlVideo);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    });
+                    pageNo++;
+                    mostrandoTexto=false;
+                    mostrandoImagenes=false;
+                    mostrandoVideos=true;
+
+                }else{
+                    List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
+                    layout.removeAllViews();
+                    for (Message item : chatList) {
+                        int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
+                        try {
+                            appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    pageNo++;
+                    mostrandoTexto=true;
+                    mostrandoImagenes=false;
+                    mostrandoVideos=false;
+                }
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+            }
+        });
+
+        ImageView showImageBtn = (ImageView) findViewById(R.id.showImageBtn);
+        showImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mostrandoTexto || mostrandoVideos) {
+                    layout.removeAllViews();
+                    List<Message> chatList = db.getChatImages(user.Email, friendEmail, 1);
+                    for (Message item : chatList) {
+                        int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
+                        try {
+                            appendMessage(item.Message, item.SentDate, messageType, false, item.urlImagen, item.urlVideo);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    });
+                    pageNo++;
+                    mostrandoTexto=false;
+                    mostrandoImagenes=true;
+                    mostrandoVideos=false;
+                }else{
+                    List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
+                    layout.removeAllViews();
+                    for (Message item : chatList) {
+                        int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
+                        try {
+                            appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    pageNo++;
+                    mostrandoTexto=true;
+                    mostrandoImagenes=false;
+                    mostrandoVideos=false;
+                }
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+            }
+        });
+
+        /*ImageView add2BtnImageView = (ImageView) findViewById(R.id.add_btn2);
         add2BtnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -319,7 +423,7 @@ public class TextActivity extends AppCompatActivity {
                 i.putExtra("timeinmillis",timeInMillis);
                 startActivityForResult(i,0);
             }
-        });
+        });*/
         final EmojIconActions emojIcon = new EmojIconActions(this, rootView, emojiconEditText, emojiImageView, "#1c2764", "#e8e8e8", "#f4f4f4");
         emojIcon.ShowEmojIcon();
 
@@ -341,7 +445,6 @@ public class TextActivity extends AppCompatActivity {
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
