@@ -91,7 +91,8 @@ public class TextActivity extends AppCompatActivity {
     long timeInMillis;
     byte[] data2;
     boolean mostrandoTexto=true;
-
+    boolean mostrandoVideos=false;
+    boolean mostrandoImagenes=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         savedInstanceState=null;
@@ -315,9 +316,8 @@ public class TextActivity extends AppCompatActivity {
         showVideoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mostrandoTexto) {
+                if(mostrandoTexto || mostrandoImagenes) {
                     layout.removeAllViews();
-                    scrollView.fullScroll(View.FOCUS_UP);
                     List<Message> chatList = db.getChatVideos(user.Email, friendEmail, 1);
                     for (Message item : chatList) {
                         int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
@@ -327,9 +327,17 @@ public class TextActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    swipeRefreshLayout.setRefreshing(false);
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    });
                     pageNo++;
                     mostrandoTexto=false;
+                    mostrandoImagenes=false;
+                    mostrandoVideos=true;
+
                 }else{
                     List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
                     layout.removeAllViews();
@@ -341,20 +349,26 @@ public class TextActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    swipeRefreshLayout.setRefreshing(false);
                     pageNo++;
                     mostrandoTexto=true;
-                    scrollView.fullScroll(View.FOCUS_UP);
+                    mostrandoImagenes=false;
+                    mostrandoVideos=false;
                 }
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
             }
         });
+
         ImageView showImageBtn = (ImageView) findViewById(R.id.showImageBtn);
         showImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mostrandoTexto) {
+                if(mostrandoTexto || mostrandoVideos) {
                     layout.removeAllViews();
-                    scrollView.fullScroll(View.FOCUS_UP);
                     List<Message> chatList = db.getChatImages(user.Email, friendEmail, 1);
                     for (Message item : chatList) {
                         int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
@@ -364,9 +378,16 @@ public class TextActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    swipeRefreshLayout.setRefreshing(false);
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                        }
+                    });
                     pageNo++;
                     mostrandoTexto=false;
+                    mostrandoImagenes=true;
+                    mostrandoVideos=false;
                 }else{
                     List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
                     layout.removeAllViews();
@@ -378,13 +399,20 @@ public class TextActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                    swipeRefreshLayout.setRefreshing(false);
                     pageNo++;
                     mostrandoTexto=true;
-                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    mostrandoImagenes=false;
+                    mostrandoVideos=false;
                 }
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
             }
         });
+
         /*ImageView add2BtnImageView = (ImageView) findViewById(R.id.add_btn2);
         add2BtnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
