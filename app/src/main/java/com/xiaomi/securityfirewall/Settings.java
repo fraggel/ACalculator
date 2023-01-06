@@ -1,5 +1,6 @@
 package com.xiaomi.securityfirewall;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,15 @@ public class Settings extends AppCompatActivity {
         btnRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(Settings.this);
+                // set a title for the progress bar
+                progressDialog.setTitle(" ");
+                // set a message for the progress bar
+                progressDialog.setMessage("Cargando...");
+                //set the progress bar not cancelable on users' touch
+                progressDialog.setCancelable(false);
+                // show the progress bar
+                progressDialog.show();
                 Util.restoreBackup(getApplicationContext(),Settings.this);
             }
         });
@@ -32,6 +42,15 @@ public class Settings extends AppCompatActivity {
             @Override
 
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(Settings.this);
+                // set a title for the progress bar
+                progressDialog.setTitle(" ");
+                // set a message for the progress bar
+                progressDialog.setMessage("Cargando...");
+                //set the progress bar not cancelable on users' touch
+                progressDialog.setCancelable(false);
+                // show the progress bar
+                progressDialog.show();
                 User user =LocalUserService.getLocalUserFromPreferences(getApplicationContext());
                 Util.makeBackup(getApplicationContext(),user,Settings.this);
             }
