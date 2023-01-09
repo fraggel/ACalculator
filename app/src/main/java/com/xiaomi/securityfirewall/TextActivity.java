@@ -463,24 +463,40 @@ public class TextActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
-                layout.removeAllViews();
-                StaticInfo.numMultimedia=0;
-                for (Message item : chatList) {
-                    if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
-                        StaticInfo.numMultimedia++;
+                    layout.removeAllViews();
+                List<Message> chatList=null;
+                    if(mostrandoImagenes){
+                        chatList= db.getChatImages(user.Email, friendEmail, pageNo);
+                    }else if(mostrandoVideos){
+                        chatList= db.getChatVideos(user.Email, friendEmail, pageNo);
+                    }else{
+                        chatList= db.getChatImages(user.Email, friendEmail, pageNo);
                     }
-                }
-                for (Message item : chatList) {
-                    int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
-                    try {
-                        appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo,true);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+
+                    StaticInfo.numMultimedia=0;
+                    for (Message item : chatList) {
+                        if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
+                            StaticInfo.numMultimedia++;
+                        }
                     }
-                }
-                swipeRefreshLayout.setRefreshing(false);
-                pageNo++;
+                    for (Message item : chatList) {
+                        int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
+                        try {
+                            appendMessage(item.Message, item.SentDate, messageType, false, item.urlImagen, item.urlVideo, true);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    pageNo++;
+                    swipeRefreshLayout.setRefreshing(false);
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                            Log.d("SCROLL","4");
+                        }
+                    });
+
             }
         });
 
@@ -491,13 +507,13 @@ public class TextActivity extends AppCompatActivity {
         super.onStart();
         Bundle extras = getIntent().getExtras();
         friendEmail = Util.EMAIL;//extras.getString("FriendEmail");
-            scrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.fullScroll(View.FOCUS_DOWN);
-                    Log.d("SCROLL","7");
-                }
-            });
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+                Log.d("SCROLL","7");
+            }
+        });
         StaticInfo.UserCurrentChatFriendEmail = friendEmail;
         // update status to online
         refUser.child("Status").setValue("En línea");
