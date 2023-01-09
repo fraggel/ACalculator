@@ -2,16 +2,9 @@ package com.xiaomi.securityfirewall;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +17,6 @@ import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -36,12 +28,6 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 
 import java.io.File;
@@ -49,7 +35,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +78,7 @@ public class TextActivity extends AppCompatActivity {
     boolean mostrandoTexto=true;
     boolean mostrandoVideos=false;
     boolean mostrandoImagenes=false;
+    boolean primerArranque=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         savedInstanceState=null;
@@ -145,9 +131,9 @@ public class TextActivity extends AppCompatActivity {
                         db.saveMessageOnLocakDB(senderEmail, user.Email, mess, sentDate,urlImagen,urlVideo);
                         if (senderEmail.equals(user.Email)) {
                             // login user
-                            appendMessage(mess, sentDate, 1, false,urlImagen,urlVideo);
+                            appendMessage(mess, sentDate, 1, false,urlImagen,urlVideo, false);
                         } else {
-                            appendMessage(mess, sentDate, 2, false,urlImagen,urlVideo);
+                            appendMessage(mess, sentDate, 2, false,urlImagen,urlVideo, false);
                         }
                     } catch (Exception e) {
 
@@ -263,18 +249,28 @@ public class TextActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         friendEmail = Util.EMAIL;//extras.getString("FriendEmail");
         List<Message> chatList = db.getChat(user.Email, friendEmail, 1);
+        StaticInfo.numMultimedia=0;
+        for (Message item : chatList) {
+            if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
+                StaticInfo.numMultimedia++;
+            }
+        }
         for (Message item : chatList) {
             int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
             try {
-                appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo);
+                appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo, false);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    Log.d("SCROLL","1");
+                }
+            });
         friendFullName = Util.NOMBRE;//extras.getString("FriendFullName");
-
-        //getSupportActionBar().setTitle(friendFullName);
         reference1 = new Firebase(StaticInfo.MessagesEndPoint + "/" + user.Email + "-@@-" + friendEmail);
         reference2 = new Firebase(StaticInfo.MessagesEndPoint + "/" + friendEmail + "-@@-" + user.Email);
         refFriend = new Firebase(StaticInfo.UsersURL + "/" + friendEmail);
@@ -319,32 +315,45 @@ public class TextActivity extends AppCompatActivity {
                 if(mostrandoTexto || mostrandoImagenes) {
                     layout.removeAllViews();
                     List<Message> chatList = db.getChatVideos(user.Email, friendEmail, 1);
+                    StaticInfo.numMultimedia=0;
+                    for (Message item : chatList) {
+
+                        if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
+                            StaticInfo.numMultimedia++;
+                        }
+                    }
                     for (Message item : chatList) {
                         int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
                         try {
-                            appendMessage(item.Message, item.SentDate, messageType, false, item.urlImagen, item.urlVideo);
+                            appendMessage(item.Message, item.SentDate, messageType, false, item.urlImagen, item.urlVideo, false);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
-                    scrollView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scrollView.fullScroll(View.FOCUS_DOWN);
-                        }
-                    });
                     pageNo++;
                     mostrandoTexto=false;
                     mostrandoImagenes=false;
                     mostrandoVideos=true;
-
+                        scrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+                                Log.d("SCROLL","2");
+                            }
+                        });
                 }else{
                     List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
                     layout.removeAllViews();
+                    StaticInfo.numMultimedia=0;
+                    for (Message item : chatList) {
+                        if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
+                            StaticInfo.numMultimedia++;
+                        }
+                    }
                     for (Message item : chatList) {
                         int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
                         try {
-                            appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                            appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo, false);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -353,13 +362,14 @@ public class TextActivity extends AppCompatActivity {
                     mostrandoTexto=true;
                     mostrandoImagenes=false;
                     mostrandoVideos=false;
+                        scrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+                                Log.d("SCROLL","3");
+                            }
+                        });
                 }
-                scrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                });
             }
         });
 
@@ -370,31 +380,44 @@ public class TextActivity extends AppCompatActivity {
                 if(mostrandoTexto || mostrandoVideos) {
                     layout.removeAllViews();
                     List<Message> chatList = db.getChatImages(user.Email, friendEmail, 1);
+                    StaticInfo.numMultimedia=0;
+                    for (Message item : chatList) {
+                        if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
+                            StaticInfo.numMultimedia++;
+                        }
+                    }
                     for (Message item : chatList) {
                         int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
                         try {
-                            appendMessage(item.Message, item.SentDate, messageType, false, item.urlImagen, item.urlVideo);
+                            appendMessage(item.Message, item.SentDate, messageType, false, item.urlImagen, item.urlVideo, false);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
-                    scrollView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            scrollView.fullScroll(View.FOCUS_DOWN);
-                        }
-                    });
                     pageNo++;
                     mostrandoTexto=false;
                     mostrandoImagenes=true;
                     mostrandoVideos=false;
+                        scrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+                                Log.d("SCROLL","4");
+                            }
+                        });
                 }else{
                     List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
                     layout.removeAllViews();
+                    StaticInfo.numMultimedia=0;
+                    for (Message item : chatList) {
+                        if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
+                            StaticInfo.numMultimedia++;
+                        }
+                    }
                     for (Message item : chatList) {
                         int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
                         try {
-                            appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                            appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo, false);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -403,27 +426,17 @@ public class TextActivity extends AppCompatActivity {
                     mostrandoTexto=true;
                     mostrandoImagenes=false;
                     mostrandoVideos=false;
+                        scrollView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+                                Log.d("SCROLL","5");
+                            }
+                        });
                 }
-                scrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                });
             }
         });
 
-        /*ImageView add2BtnImageView = (ImageView) findViewById(R.id.add_btn2);
-        add2BtnImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),MediaSelection.class);
-                Calendar cal=Calendar.getInstance();
-                timeInMillis=cal.getTimeInMillis();
-                i.putExtra("timeinmillis",timeInMillis);
-                startActivityForResult(i,0);
-            }
-        });*/
         final EmojIconActions emojIcon = new EmojIconActions(this, rootView, emojiconEditText, emojiImageView, "#1c2764", "#e8e8e8", "#f4f4f4");
         emojIcon.ShowEmojIcon();
 
@@ -435,6 +448,7 @@ public class TextActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         scrollView.fullScroll(View.FOCUS_DOWN);
+                        Log.d("SCROLL","6");
                     }
                 });
             }
@@ -451,10 +465,16 @@ public class TextActivity extends AppCompatActivity {
             public void onRefresh() {
                 List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
                 layout.removeAllViews();
+                StaticInfo.numMultimedia=0;
+                for (Message item : chatList) {
+                    if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
+                        StaticInfo.numMultimedia++;
+                    }
+                }
                 for (Message item : chatList) {
                     int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
                     try {
-                        appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
+                        appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo,true);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -465,33 +485,19 @@ public class TextActivity extends AppCompatActivity {
         });
 
 
-        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        /*toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Intent i = new Intent(ActivityChat.this, ActivityFriendProfile.class);
-                i.putExtra("Email", friendEmail);
-
-                startActivityForResult(i, StaticInfo.ChatAciviityRequestCode);*/
-         /*   }
-        });*/
-
     }
     @Override
     protected void onStart() {
         super.onStart();
         Bundle extras = getIntent().getExtras();
         friendEmail = Util.EMAIL;//extras.getString("FriendEmail");
-
-        // getSupportActionBar().setTitle(extras.getString("FriendFullName"));
-        // getSupportActionBar().setIcon(R.drawable.dp_placeholder_sm);
-
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.fullScroll(View.FOCUS_DOWN);
-            }
-        });
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    Log.d("SCROLL","7");
+                }
+            });
         StaticInfo.UserCurrentChatFriendEmail = friendEmail;
         // update status to online
         refUser.child("Status").setValue("En línea");
@@ -568,15 +574,27 @@ public class TextActivity extends AppCompatActivity {
         friendFullName = extras.getString("FriendFullName");
         //getSupportActionBar().setTitle(friendFullName);
         List<Message> chatList = db.getChat(user.Email, friendEmail, 1);
+        StaticInfo.numMultimedia=0;
+        for (Message item : chatList) {
+            if(!"".equals(item.urlVideo) || !"".equals(item.urlImagen)){
+                StaticInfo.numMultimedia++;
+            }
+        }
         for (Message item : chatList) {
             int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
             try {
-                appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo);
+                appendMessage(item.Message, item.SentDate, messageType, false,item.urlImagen,item.urlVideo, false);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    Log.d("SCROLL","8");
+                }
+            });
         StaticInfo.UserCurrentChatFriendEmail = friendEmail;
         reference1.removeEventListener(reference1Listener);
         reference1 = new Firebase(StaticInfo.MessagesEndPoint + "/" + user.Email + "-@@-" + friendEmail);
@@ -618,14 +636,14 @@ public class TextActivity extends AppCompatActivity {
             // save in local db
             db.saveMessageOnLocakDB(user.Email, friendEmail, message, sentDate,urlImagen,urlVideo);
             // appendmessage
-            appendMessage(message, sentDate, 1, false,urlImagen,urlVideo);
+            appendMessage(message, sentDate, 1, false,urlImagen,urlVideo, false);
 
         }
     }
     public void removeMessage(String mess, String sentDate, int messType, final boolean scrollUp,String urlImagen,String urlVideo) {
 
     }
-    public void appendMessage(String mess, String sentDate, int messType, final boolean scrollUp,String urlImagen,String urlVideo) throws ParseException {
+    public void appendMessage(String mess, String sentDate, int messType, final boolean scrollUp, String urlImagen, String urlVideo, boolean swipeRefresh) throws ParseException {
 
         EmojiconTextView textView = new EmojiconTextView(this);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -667,90 +685,7 @@ public class TextActivity extends AppCompatActivity {
 
         textView.setLayoutParams(lp);
         if("--[IMAGE]--".equals(mess.trim())){
-            /*final MyImageView imgView=new MyImageView(this);
-
-            FirebaseApp.initializeApp(this);
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            StorageReference ref = storageRef.child(urlImagen.replaceFirst("images/","images/thmb_"));
-            ficheroThmb=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+(urlImagen.replaceFirst("images/","images/thmb_")));
-            ficheroThmb.getParentFile().mkdirs();
-            if(!ficheroThmb.exists()) {
-                ref.getFile(ficheroThmb).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        //  updateDb(timestamp,localFile.toString(),position);
-                        decodedBitmap = BitmapFactory.decodeFile(ficheroThmb.getAbsolutePath());
-                        imgView.setImageBitmap(decodedBitmap);
-                        List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
-                        layout.removeAllViews();
-                        for (Message item : chatList) {
-                            int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
-                            try {
-                                appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        pageNo++;
-                        scrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e("firebase ", ";local tem file not created  created " + exception.toString());
-                    }
-                });
-            }else{
-                decodedBitmap = BitmapFactory.decodeFile(ficheroThmb.getAbsolutePath());
-            }
-            //final Bitmap decodedBitmap = BitmapFactory.decodeByteArray(Base64.decode(urlImagen,Base64.DEFAULT), 0, Base64.decode(urlImagen,Base64.DEFAULT).length);
-            imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
-            imgView.setClaveImagen(urlImagen);
-            imgView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Class<? extends View> aClass = v.getClass();
-
-                    String value=((MyImageView)v).getClave();
-                    if(!new File(value).exists()){
-                        FirebaseApp.initializeApp(getApplicationContext());
-                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReference();
-                        StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen());
-                        fichero=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+((MyImageView)v).getClaveImagen());
-                        MyOnSuccessListener myOnSuccessListener = new MyOnSuccessListener();
-                        myOnSuccessListener.setContexto(getApplicationContext());
-                        myOnSuccessListener.setValue(value);
-                        ref.getFile(fichero).addOnSuccessListener(myOnSuccessListener);
-                        Intent i = new Intent(getApplicationContext(), VisorImagenes.class);
-                    }else {
-                        Intent i = new Intent(getApplicationContext(), VisorImagenes.class);
-                        i.putExtra("key", value);
-                        startActivity(i);
-                    }
-                }
-                //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
-            });
-            imgView.setImageBitmap(decodedBitmap);
-            decodedBitmap=null;
-            if (messType == 1) {
-                imgView.setBackgroundResource(R.drawable.messagebg1);
-            }
-            //  2 friend
-            else {
-                imgView.setBackgroundResource(R.drawable.messagebg2);
-            }
-            imgView.setMaxWidth(240);
-            imgView.setMaxHeight(480);
-            imgView.setPadding(40,40,40,40);
-            //imgView.performClick();
-            //imgView.performClick();
-            imgView.setLayoutParams(lp);
-            layout.addView(imgView);
-         */
             final MyImageView imgView=new MyImageView(this);
-            //imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
             imgView.setClaveImagen(urlImagen);
                 imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -763,9 +698,8 @@ public class TextActivity extends AppCompatActivity {
                         startActivity(i);
 
                     }
-                    //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
                 });
-            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext(),false);
+            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext(),scrollView,swipeRefresh,false);
             execute.execute(StaticInfo.urlWebImages + urlImagen);
             if (messType == 1) {
                 imgView.setBackgroundResource(R.drawable.messagebg1);
@@ -777,112 +711,24 @@ public class TextActivity extends AppCompatActivity {
             imgView.setMaxWidth(240);
             imgView.setMaxHeight(480);
             imgView.setPadding(40,40,40,40);
-            //imgView.performClick();
-            //imgView.performClick();
             imgView.setLayoutParams(lp);
             layout.addView(imgView);
         }else if("--[VIDEO]--".equals(mess.trim())) {
-            /*final MyImageView imgView=new MyImageView(this);
-
-            FirebaseApp.initializeApp(this);
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            StorageReference ref = storageRef.child((urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
-            ficheroThmb=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+(urlVideo.replaceFirst("videos/","videos/thmb_")).replace(".vid",".img"));
-            ficheroThmb.getParentFile().mkdirs();
-            if(!ficheroThmb.exists()) {
-                ref.getFile(ficheroThmb).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        //  updateDb(timestamp,localFile.toString(),position);
-                        decodedBitmap = BitmapFactory.decodeFile(ficheroThmb.getAbsolutePath());
-                        imgView.setImageBitmap(decodedBitmap);
-                        List<Message> chatList = db.getChat(user.Email, friendEmail, pageNo);
-                        layout.removeAllViews();
-                        for (Message item : chatList) {
-                            int messageType = item.FromMail.equals(user.Email) ? 1 : 2;
-                            try {
-                                appendMessage(item.Message, item.SentDate, messageType, true,item.urlImagen,item.urlVideo);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        pageNo++;
-                        scrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e("firebase ", ";local tem file not created  created " + exception.toString());
-                    }
-                });
-            }else{
-                decodedBitmap = BitmapFactory.decodeFile(ficheroThmb.getAbsolutePath());
-            }
-            //final Bitmap decodedBitmap = BitmapFactory.decodeByteArray(Base64.decode(urlImagen,Base64.DEFAULT), 0, Base64.decode(urlImagen,Base64.DEFAULT).length);
-            imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlVideo);
+            final MyImageView imgView=new MyImageView(this);
             imgView.setClaveImagen(urlVideo);
             imgView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Class<? extends View> aClass = v.getClass();
 
-                    String value=((MyImageView)v).getClave();
-                    value=value.replace(".img",".vid");
-                    if(!new File(value).exists()){
-                        FirebaseApp.initializeApp(getApplicationContext());
-                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReference();
-                        StorageReference ref = storageRef.child(((MyImageView)v).getClaveImagen().replace(".img",".vid"));
-                        fichero=new File(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+((MyImageView)v).getClaveImagen().replace(".img",".vid"));
-                        MyOnSuccessListenerVideos myOnSuccessListener = new MyOnSuccessListenerVideos();
-                        myOnSuccessListener.setContexto(getApplicationContext());
-                        myOnSuccessListener.setValue(value);
-                        ref.getFile(fichero).addOnSuccessListener(myOnSuccessListener);
-                        Intent i = new Intent(getApplicationContext(), VisorVideos.class);
-                    }else {
-                        Intent i = new Intent(getApplicationContext(), VisorVideos.class);
-                        i.putExtra("key", value);
-                        startActivity(i);
-                    }
+                    String value = ((MyImageView) v).getClaveImagen();
+                    Intent i = new Intent(getApplicationContext(), VisorVideosFTP.class);
+                    i.putExtra("key", value);
+                    startActivity(i);
+
                 }
-                //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
             });
-            imgView.setImageBitmap(decodedBitmap);
-            decodedBitmap=null;
-            if (messType == 1) {
-                imgView.setBackgroundResource(R.drawable.messagebg1);
-            }
-            //  2 friend
-            else {
-                imgView.setBackgroundResource(R.drawable.messagebg2);
-            }
-            imgView.setMaxWidth(240);
-            imgView.setMaxHeight(480);
-            imgView.setPadding(40,40,40,40);
-            //imgView.performClick();
-            //imgView.performClick();
-            imgView.setLayoutParams(lp);
-            layout.addView(imgView);
-            */
-
-            final MyImageView imgView=new MyImageView(this);
-            //imgView.setClave(new ContextWrapper(getApplicationContext()).getFilesDir()+"/"+urlImagen);
-            imgView.setClaveImagen(urlVideo);
-                imgView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Class<? extends View> aClass = v.getClass();
-
-                        String value = ((MyImageView) v).getClaveImagen();
-                        Intent i = new Intent(getApplicationContext(), VisorVideosFTP.class);
-                        i.putExtra("key", value);
-                        startActivity(i);
-
-                    }
-                    //imgView.setScaleType(ImageView.ScaleType.FIT_XY);
-                });
-                    DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext(),true);
+            DownloadImageTask execute = new DownloadImageTask(imgView, getApplicationContext(), scrollView, swipeRefresh,true);
             execute.execute(StaticInfo.urlWebImages + urlVideo);
             if (messType == 1) {
                 imgView.setBackgroundResource(R.drawable.messagebg1);
@@ -894,23 +740,24 @@ public class TextActivity extends AppCompatActivity {
             imgView.setMaxWidth(240);
             imgView.setMaxHeight(480);
             imgView.setPadding(40,40,40,40);
-            //imgView.performClick();
-            //imgView.performClick();
             imgView.setLayoutParams(lp);
             layout.addView(imgView);
         }else{
             layout.addView(textView);
         }
-
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (scrollUp)
-                    scrollView.fullScroll(View.FOCUS_UP);
-                else
-                    scrollView.fullScroll(View.FOCUS_DOWN);
-            }
-        });
+        if(!swipeRefresh){
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(scrollUp){
+                        scrollView.fullScroll(View.FOCUS_UP);
+                    }else {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                    Log.d("SCROLL","9");
+                }
+            });
+        }
     }
 
     @Override
@@ -945,7 +792,7 @@ public class TextActivity extends AppCompatActivity {
 
             // appendmessage
             try {
-                appendMessage("--[IMAGE]--", sentDate, 1, false,urlImagen,urlVideo);
+                appendMessage("--[IMAGE]--", sentDate, 1, false,urlImagen,urlVideo, false);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -974,7 +821,7 @@ public class TextActivity extends AppCompatActivity {
 
             // appendmessage
             try {
-                appendMessage("--[VIDEO]--", sentDate, 1, false,urlImagen,urlVideo);
+                appendMessage("--[VIDEO]--", sentDate, 1, false,urlImagen,urlVideo, false);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

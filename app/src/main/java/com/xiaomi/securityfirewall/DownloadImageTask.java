@@ -1,7 +1,6 @@
 package com.xiaomi.securityfirewall;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,19 +10,26 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
+
+import com.xiaomi.securityfirewall.Models.StaticInfo;
 
 import java.io.InputStream;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
     Context ctx=null;
+    ScrollView scroll=null;
     boolean playing=false;
     boolean video=false;
+    boolean swipe=false;
 
-    public DownloadImageTask(ImageView bmImage, Context context,boolean vid) {
+    public DownloadImageTask(ImageView bmImage, Context context, ScrollView scrollView, boolean swipeRefresh, boolean vid) {
         this.bmImage = bmImage;
         ctx=context;
         video=vid;
+        scroll=scrollView;
+        swipe=swipeRefresh;
     }
     public boolean getPlaying(){
         return playing;
@@ -75,5 +81,19 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         }
         bmImage.setImageBitmap(result);
         playing=true;
+        if(scroll!=null) {
+            if ((StaticInfo.numMultimedia == 1||StaticInfo.numMultimedia == 0) && !swipe) {
+                scroll.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scroll.fullScroll(View.FOCUS_DOWN);
+                        Log.d("SCROLL","9");
+                    }
+                });
+                StaticInfo.numMultimedia = 0;
+            } else {
+                StaticInfo.numMultimedia--;
+            }
+        }
     }
 }

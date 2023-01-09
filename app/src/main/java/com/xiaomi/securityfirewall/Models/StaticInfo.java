@@ -17,5 +17,6 @@ public class StaticInfo {
     public static int ChatAciviityRequestCode = 101;
     public static int ImageActivityRequestCode=102;
     public static int VideoActivityRequestCode=103;
+    public static int numMultimedia=0;
 
 }

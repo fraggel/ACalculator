@@ -3,7 +3,6 @@ package com.xiaomi.securityfirewall;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -40,7 +39,7 @@ public class VisorImagenesFTP extends AppCompatActivity {
         if (extras != null) {
                 String value = extras.getString("key");
                 TouchImageView mImageView=(TouchImageView)findViewById(R.id.imageViewFTP);
-            d=new DownloadImageTask(mImageView,getApplicationContext(),false);
+            d=new DownloadImageTask(mImageView,getApplicationContext(), null, false, false);
                     d.execute(StaticInfo.urlWebImages+value.replace("thmb_",""));
         }
     }
