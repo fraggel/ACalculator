@@ -426,13 +426,13 @@ public class TextActivity extends AppCompatActivity {
                     mostrandoTexto=true;
                     mostrandoImagenes=false;
                     mostrandoVideos=false;
-                        scrollView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                scrollView.fullScroll(View.FOCUS_DOWN);
-                                Log.d("SCROLL","5");
-                            }
-                        });
+                    scrollView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(View.FOCUS_DOWN);
+                            Log.d("SCROLL","5");
+                        }
+                    });
                 }
             }
         });
@@ -470,7 +470,7 @@ public class TextActivity extends AppCompatActivity {
                     }else if(mostrandoVideos){
                         chatList= db.getChatVideos(user.Email, friendEmail, pageNo);
                     }else{
-                        chatList= db.getChatImages(user.Email, friendEmail, pageNo);
+                        chatList= db.getChat(user.Email, friendEmail, pageNo);
                     }
 
                     StaticInfo.numMultimedia=0;
@@ -758,6 +758,10 @@ public class TextActivity extends AppCompatActivity {
             imgView.setPadding(40,40,40,40);
             imgView.setLayoutParams(lp);
             layout.addView(imgView);
+        }else if("--[BORRAR]--".equals(mess.trim())) {
+            Util.makeBackup(getApplicationContext(),user,TextActivity.this,true);
+            db.deleteChat(user.Email, Util.EMAIL);
+            layout.removeAllViews();
         }else{
             layout.addView(textView);
         }

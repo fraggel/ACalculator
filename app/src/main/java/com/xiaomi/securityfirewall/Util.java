@@ -8,33 +8,21 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.firebase.client.Firebase;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
-import com.xiaomi.securityfirewall.Models.StaticInfo;
 import com.xiaomi.securityfirewall.Models.User;
 import com.xiaomi.securityfirewall.Services.DataContext;
 import com.xiaomi.securityfirewall.Services.LocalUserService;
@@ -139,7 +127,7 @@ public class Util {
 
         }
     }
-    public static void uploadBackupFile(File file,Context mContext,User user) {
+    public static void uploadBackupFile(File file, Context mContext, User user, boolean timeMilis) {
         int flag;
         FileInputStream fis = null;
         FTPClient client = new FTPClient();
@@ -160,7 +148,11 @@ public class Util {
             client.changeWorkingDirectory(workingDir);
             workingDir+="dbBackup/";
             client.changeWorkingDirectory(workingDir);
-            client.storeFile(user.FirstName+"Backup.bck", fis);
+            if(timeMilis) {
+                client.storeFile(user.FirstName + "Backup"+Calendar.getInstance().getTimeInMillis()+".bck", fis);
+            }else{
+                client.storeFile(user.FirstName + "Backup.bck", fis);
+            }
             client.logout();
             client.disconnect();
         } catch (Exception eFTPClient) {
@@ -278,7 +270,7 @@ public class Util {
         return false;
     }
 
-    public static void makeBackup(Context mContext, User user,Activity act) {
+    public static void makeBackup(Context mContext, User user,Activity act,boolean timeinmilis) {
         if (user.FirstName != null) {
             try {
                 String currentDBPath = mContext.getDatabasePath("mys3chat.db").getPath();
@@ -301,7 +293,7 @@ public class Util {
                 output.close();
                 fis.close();
                 if (user.FirstName != null) {
-                    uploadDBBackup myTask = new uploadDBBackup(mContext,new File(new ContextWrapper(mContext).getFilesDir()+"/localBackup.bck"),act);
+                    uploadDBBackup myTask = new uploadDBBackup(mContext,new File(new ContextWrapper(mContext).getFilesDir()+"/localBackup.bck"),act,timeinmilis);
                     myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 }

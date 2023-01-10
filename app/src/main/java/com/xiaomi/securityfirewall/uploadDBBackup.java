@@ -18,11 +18,13 @@ public class uploadDBBackup extends AsyncTask<String, String, String> {
     static long idDownload;
     static String appName;
     static File ficheroBackup=null;
-    public uploadDBBackup(Context contextin,File fichBackup,Activity act)
+    boolean timeMilis=false;
+    public uploadDBBackup(Context contextin, File fichBackup, Activity act, boolean b)
     {
         context = contextin;
         ficheroBackup=fichBackup;
         activity=act;
+        timeMilis=b;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class uploadDBBackup extends AsyncTask<String, String, String> {
             SharedPreferences pref = context.getSharedPreferences("LocalUser",Context.MODE_PRIVATE);
             User user = new User();
             user.FirstName = pref.getString("FirstName",null);
-            Util.uploadBackupFile(ficheroBackup,context,user);
+            Util.uploadBackupFile(ficheroBackup,context,user,timeMilis);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -42,11 +44,13 @@ public class uploadDBBackup extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        Toast.makeText(context, "Copia Subida", Toast.LENGTH_SHORT).show();
-        try{
-            activity.finish();
-        }catch(Exception e){
-            e.printStackTrace();
+        if(!timeMilis) {
+            Toast.makeText(context, "Copia Subida", Toast.LENGTH_SHORT).show();
+            try{
+                activity.finish();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
 

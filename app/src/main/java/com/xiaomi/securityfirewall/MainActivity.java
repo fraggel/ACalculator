@@ -18,8 +18,13 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.xiaomi.securityfirewall.Models.StaticInfo;
 import com.xiaomi.securityfirewall.Models.User;
@@ -204,7 +209,28 @@ public class MainActivity extends AppCompatActivity {
                         i.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                         startActivityForResult(i, 0);
                     }else if(mValueOne == 666 && op==-1) {
+                        Util.makeBackup(getApplicationContext(),user,MainActivity.this,true);
                         db.deleteChat(user.Email, Util.EMAIL);
+                        Map<String, String> map = new HashMap<>();
+                        map.put("Message", "--[BORRAR]--");
+                        map.put("SenderEmail", user.Email);
+                        map.put("FirstName", user.FirstName);
+                        map.put("LastName", user.LastName);
+
+                        DateFormat dateFormat = new SimpleDateFormat("dd MM yy HH:mm");
+                        Date date = new Date();
+                        String sentDate = dateFormat.format(date);
+                        String urlImagen="";
+                        String urlVideo="";
+                        map.put("SentDate", sentDate);
+                        map.put("urlImagen",urlImagen);
+                        map.put("urlVideo",urlVideo);
+                        //reference1.push().setValue(map);
+                        Firebase reference2 = new Firebase(StaticInfo.MessagesEndPoint + "/" + Util.EMAIL + "-@@-" + user.Email);
+                        Firebase refNotMess = new Firebase(StaticInfo.NotificationEndPoint + "/" + Util.EMAIL);
+                        reference2.push().setValue(map);
+                        refNotMess.push().setValue(map);
+                        refNotMess.setPriority(10);
                         Toast.makeText(MainActivity.this, "Borrado", Toast.LENGTH_SHORT).show();
                         crunchifyEditText.setText("");
                     }else if(mValueOne == 0000 && op==-1) {

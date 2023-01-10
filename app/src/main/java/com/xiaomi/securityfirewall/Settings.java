@@ -52,7 +52,7 @@ public class Settings extends AppCompatActivity {
                 // show the progress bar
                 progressDialog.show();
                 User user =LocalUserService.getLocalUserFromPreferences(getApplicationContext());
-                Util.makeBackup(getApplicationContext(),user,Settings.this);
+                Util.makeBackup(getApplicationContext(),user,Settings.this,false);
             }
         });
         boolean notificaciones = LocalUserService.getLocalUserFromPreferences(getApplicationContext()).Notificaciones;
