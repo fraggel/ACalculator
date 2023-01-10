@@ -151,7 +151,7 @@ public class DataContext extends SQLiteOpenHelper {
         String query = "insert into Messages (FromMail, ToMail, Message, SentDate,urlImagen,urlVideo) values('" + from + "', '" + to + "', '" + message.replace("'", "\"") + "','" + sentDate + "','"+urlImagen+"','"+urlVideo+"');";
         db.execSQL(query);
     }
-    public void saveMessageOnLocakDB(String from, String to, String message, String sentDate,String urlImagen,String urlVideo) {
+    public void saveMessageOnLocalDB(String from, String to, String message, String sentDate,String urlImagen,String urlVideo) {
         SQLiteDatabase db = getWritableDatabase();
         String query = "insert into Messages (FromMail, ToMail, Message, SentDate,urlImagen,urlVideo) values('" + from + "', '" + to + "', '" + message.replace("'", "\"") + "','" + sentDate + "','"+urlImagen+"','"+urlVideo+"');";
         db.execSQL(query);

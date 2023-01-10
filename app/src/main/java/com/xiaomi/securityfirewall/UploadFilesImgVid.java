@@ -238,9 +238,9 @@ public class UploadFilesImgVid extends AsyncTask<Void , Integer, Long>
 
             // save in local db
             if(timeInMillisName.indexOf(".img")!=-1){
-                db.saveMessageOnLocakDB(user.Email, friendEmail, "--[IMAGE]--", sentDate,urlImagen,urlVideo);
+                db.saveMessageOnLocalDB(user.Email, friendEmail, "--[IMAGE]--", sentDate,urlImagen,urlVideo);
             }else{
-                db.saveMessageOnLocakDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
+                db.saveMessageOnLocalDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
             }
 
         } catch (Exception eFTPClient) {

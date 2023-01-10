@@ -128,7 +128,7 @@ public class TextActivity extends AppCompatActivity {
                         // remove from server
                         reference1.child(dataSnapshot.getKey()).removeValue();
                         // save message on local db
-                        db.saveMessageOnLocakDB(senderEmail, user.Email, mess, sentDate,urlImagen,urlVideo);
+                        db.saveMessageOnLocalDB(senderEmail, user.Email, mess, sentDate,urlImagen,urlVideo);
                         if (senderEmail.equals(user.Email)) {
                             // login user
                             appendMessage(mess, sentDate, 1, false,urlImagen,urlVideo, false);
@@ -650,7 +650,7 @@ public class TextActivity extends AppCompatActivity {
 
 
             // save in local db
-            db.saveMessageOnLocakDB(user.Email, friendEmail, message, sentDate,urlImagen,urlVideo);
+            db.saveMessageOnLocalDB(user.Email, friendEmail, message, sentDate,urlImagen,urlVideo);
             // appendmessage
             appendMessage(message, sentDate, 1, false,urlImagen,urlVideo, false);
 
@@ -808,7 +808,7 @@ public class TextActivity extends AppCompatActivity {
             refNotMess.push().setValue(map);
 
             // save in local db
-            db.saveMessageOnLocakDB(user.Email, friendEmail, "--[IMAGE]--", sentDate,urlImagen,urlVideo);
+            db.saveMessageOnLocalDB(user.Email, friendEmail, "--[IMAGE]--", sentDate,urlImagen,urlVideo);
 
             // appendmessage
             try {
@@ -837,7 +837,7 @@ public class TextActivity extends AppCompatActivity {
             refNotMess.push().setValue(map);
 
             // save in local db
-            db.saveMessageOnLocakDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
+            db.saveMessageOnLocalDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
 
             // appendmessage
             try {

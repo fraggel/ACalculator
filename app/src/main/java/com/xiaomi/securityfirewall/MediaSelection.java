@@ -211,7 +211,7 @@ public class MediaSelection extends AppCompatActivity {
             refNotMess.push().setValue(map);
 
             // save in local db
-            db.saveMessageOnLocakDB(user.Email, friendEmail, "--[IMAGE]--", sentDate,urlImagen,urlVideo);
+            db.saveMessageOnLocalDB(user.Email, friendEmail, "--[IMAGE]--", sentDate,urlImagen,urlVideo);
 
             // appendmessage
             try {
@@ -240,7 +240,7 @@ public class MediaSelection extends AppCompatActivity {
             refNotMess.push().setValue(map);
 
             // save in local db
-            db.saveMessageOnLocakDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
+            db.saveMessageOnLocalDB(user.Email, friendEmail, "--[VIDEO]--", sentDate,urlImagen,urlVideo);
 
             // appendmessage
             try {
